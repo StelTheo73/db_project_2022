@@ -16,6 +16,7 @@ class Window(tk.Tk):
         
         self.geometry("600x400")
         self.title("My Championship")
+        self.minsize(width = 550, height = 200)
 
 
 
@@ -29,4 +30,4 @@ class Window(tk.Tk):
         if self._frame is not None:
             self._frame.destroy()
         self._frame = new_frame
-        self._frame.pack(expand = True, fill="both")
+        self._frame.pack(expand = True, fill = "both")

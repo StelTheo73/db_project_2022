@@ -1,21 +1,41 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 
-class MainFrame(tk.Frame):
+class MainFrame(ttk.Frame):
     def __init__(self, master):
-        tk.Frame.__init__(self, master)
+        ttk.Frame.__init__(self, master)
 
-        pageOneButton = ttk.Button(self, text="Add Player",
+
+        canvas = tk.Canvas(self)
+        scrollbarY = ttk.Scrollbar(self, orient="vertical", command=canvas.yview)
+        self.scrollable_frame = ttk.Frame(canvas)
+
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(
+                scrollregion=canvas.bbox("all")
+            )
+        )
+
+        canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbarY.pack(side="right", fill="y")
+        canvas["yscrollcommand"] = scrollbarY.set
+
+        pageOneButton = ttk.Button(self.scrollable_frame, text="Add Player",
                   command=lambda: master.switchFrame("Add Player"))
         pageOneButton.grid(row=0, column=0)
         
-        pageTwoButton = ttk.Button(self, text="Open page two",
+        pageTwoButton = ttk.Button(self.scrollable_frame, text="Open page two",
                   command=lambda: master.switchFrame("PageTwo"))
         pageTwoButton.grid(row=0, column=1)
         
-        startPageButton = ttk.Button(self, text="Open start page",
+        startPageButton = ttk.Button(self.scrollable_frame, text="Open start page",
                   command=lambda: master.switchFrame("StartPage"))
         startPageButton.grid(row=0, column=2)
+
+
 
 
 

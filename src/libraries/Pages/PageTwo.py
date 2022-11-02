@@ -5,7 +5,7 @@ from libraries.MainFrame import MainFrame
 class PageTwo(MainFrame):
     def __init__(self, master):
         MainFrame.__init__(self, master)
-        tk.Label(self, text="This is page two").grid(row=1, column=1)
+        tk.Label(self.scrollable_frame, text="This is page two").grid(row=1, column=1)
 
 
 
