@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from libraries.Pages.StartPage import StartPage
 from libraries.Pages.AddPlayerPage import AddPlayerPage
-from libraries.Pages.PageTwo import PageTwo
+from libraries.Pages.AddRefereePage import AddRefereePage
 
 class Window(tk.Tk):
     def __init__(self):
@@ -11,14 +11,12 @@ class Window(tk.Tk):
         self._frames = {
             "StartPage": StartPage,
             "Add Player": AddPlayerPage,
-            "PageTwo": PageTwo
+            "Add Referee": AddRefereePage
         }
         
         self.geometry("600x400")
         self.title("My Championship")
         self.minsize(width = 550, height = 200)
-
-
 
         self.switchFrame("StartPage")
 
