@@ -1,6 +1,5 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from libraries.Autocomplete.AutocompleteEntry import AutocompleteCombobox, AutocompleteEntry
 from libraries.Pages.AddPersonPage import AddPersonPage
 from libraries.dbIO.QuerySelector import QuerySelector
 

@@ -29,7 +29,11 @@ class MainFrame(ttk.Frame):
         pageTwoButton = ttk.Button(self.scrollable_frame, text="Add Referee",
                   command=lambda: master.switchFrame("Add Referee"))
         pageTwoButton.grid(row=0, column=1)
+
+        pageThreeButton = ttk.Button(self.scrollable_frame, text="Add Team",
+                  command=lambda: master.switchFrame("Add Team"))
+        pageThreeButton.grid(row=0, column=2)
         
         startPageButton = ttk.Button(self.scrollable_frame, text="Open start page",
                   command=lambda: master.switchFrame("StartPage"))
-        startPageButton.grid(row=0, column=2)
+        startPageButton.grid(row=0, column=3)

@@ -3,15 +3,17 @@ import tkinter.ttk as ttk
 from libraries.Pages.StartPage import StartPage
 from libraries.Pages.AddPlayerPage import AddPlayerPage
 from libraries.Pages.AddRefereePage import AddRefereePage
+from libraries.Pages.AddTeamPage import AddTeamPage
 
 class Window(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self._frame = None
         self._frames = {
-            "StartPage": StartPage,
-            "Add Player": AddPlayerPage,
-            "Add Referee": AddRefereePage
+            "StartPage"  : StartPage,
+            "Add Player" : AddPlayerPage,
+            "Add Referee": AddRefereePage,
+            "Add Team"   : AddTeamPage
         }
         
         self.geometry("600x400")
