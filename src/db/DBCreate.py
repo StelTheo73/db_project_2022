@@ -1,6 +1,6 @@
 import sqlite3
 
-db = sqlite3.connect('./src/database.db')
+db = sqlite3.connect('./src/db/database.db')
 
 def manually_createdb():
     # DROP OLD TABLES
@@ -43,7 +43,7 @@ def manually_createdb():
 
 # EXECUTE THE EXTERNAL SQL SCRIPT
 
-with open('./src/libraries/dbIO/DBCreationScript.sql', 'r') as sql_file:
+with open('./src/db/DBCreationScript.sql', 'r') as sql_file:
     db.executescript(sql_file.read())
 
 db.commit()
@@ -56,5 +56,7 @@ print("Clubs:")
 [print(club) for club in db.execute("SELECT * FROM clubs")]
 print("Matches:")
 [print(match) for match in db.execute("SELECT * FROM matches")]
+print("Participations:")
+[print(match) for match in db.execute("SELECT * FROM participations")]
 
 db.close()
