@@ -1,8 +1,16 @@
-import sqlite3
+## IMPORTANT: Run while in folder 'DB_PROJECT_2022' (for the paths)
 
-db = sqlite3.connect('./src/db/database.db')
+import sqlite3, os
+DB_PATH = './src/db/database.db'
+SQL_PATH = './src/db/DBCreationScript.sql'
 
-def manually_createdb():
+# DELETE ALL DATABASE for initialization purposes
+if os.path.exists(DB_PATH): os.remove(DB_PATH)
+
+# CREATE AND CONNECT DB
+db = sqlite3.connect(DB_PATH)
+
+def manually_createdb(): #deprecated
     # DROP OLD TABLES
 
     db.execute("DROP TABLE IF EXISTS people")
@@ -43,20 +51,30 @@ def manually_createdb():
 
 # EXECUTE THE EXTERNAL SQL SCRIPT
 
-with open('./src/db/DBCreationScript.sql', 'r') as sql_file:
+with open(SQL_PATH, 'r') as sql_file:
     db.executescript(sql_file.read())
 
 db.commit()
 
+
 # TEST OUTPUTS
 
-print("People:")
+print("\nPeople:")
 [print(person) for person in db.execute("SELECT * FROM people")]
-print("Clubs:")
+print("\nPlayers:")
+[print(player) for player in db.execute("SELECT * FROM players")]
+print("\nReferees:")
+[print(referee) for referee in db.execute("SELECT * FROM referees")]
+print("\nMatch Controls by refs:")
+[print(control) for control in db.execute("SELECT * FROM controls")]
+print("\nPlayers' Statistics:")
+[print(stat) for stat in db.execute("SELECT * FROM stats")]
+print("\nClubs:")
 [print(club) for club in db.execute("SELECT * FROM clubs")]
-print("Matches:")
+print("\nMatches:")
 [print(match) for match in db.execute("SELECT * FROM matches")]
-print("Participations:")
-[print(match) for match in db.execute("SELECT * FROM participations")]
+print("\nParticipations:")
+[print(participation) for participation in db.execute("SELECT * FROM participations")]
+
 
 db.close()
