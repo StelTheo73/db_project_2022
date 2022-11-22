@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+from libraries.dbIO.QuerySelector import QuerySelector as Queries
 
 class MainFrame(ttk.Frame):
     def __init__(self, master):
@@ -37,3 +38,11 @@ class MainFrame(ttk.Frame):
         startPageButton = ttk.Button(self.scrollable_frame, text="Open start page",
                   command=lambda: master.switchFrame("StartPage"))
         startPageButton.grid(row=0, column=3)
+        
+        startPageButton = ttk.Button(self.scrollable_frame, text="Submit",
+                  command= self.onSubmit, width=40)
+        startPageButton.grid(row=100, column=1, columnspan=2)
+    
+    def onSubmit(self, inputs={}, page=None):
+        Queries.submit(inputs, page)
+

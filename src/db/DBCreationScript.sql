@@ -17,7 +17,7 @@ PRAGMA foreign_keys = ON; -- ENABLE FOREIGN KEYS
 
 --People
 CREATE TABLE IF NOT EXISTS people(id TEXT NOT NULL PRIMARY KEY,
-name TEXT, surname TEXT, birthdate DATE, address TEXT, tel TEXT, nationality TEXT);
+name TEXT, surname TEXT, birthdate DATE, tel TEXT, nationality TEXT);
 
 --Players
 CREATE TABLE IF NOT EXISTS players(player_id TEXT NOT NULL PRIMARY KEY,
@@ -68,9 +68,9 @@ FOREIGN KEY (away_team) REFERENCES clubs(name)
 
 -- INSERT INPUTS
 INSERT INTO people VALUES
-('AN123456',  'John', 'Pipas', DATE('2001-11-20'), 'Thali 23, Patras, Greece', '+306918273645', 'Albanian');
+('AN123456',  'John', 'Pipas', DATE('2001-11-20'), '+306918273645', 'Albanian');
 INSERT INTO people VALUES
-('AM987654',  'Jack', 'Kalos', DATE('1989-05-13'), 'Zaimi 2, Patras, Greece', '6946875120', 'French');
+('AM987654',  'Jack', 'Kalos', DATE('1989-05-13'), '6946875120', 'French');
 
 INSERT INTO clubs VALUES ('Panatha', 'Athens', DATE('1908-02-03'));
 INSERT INTO clubs VALUES ('PAOK', 'Salonica', DATE('1926-04-20'));

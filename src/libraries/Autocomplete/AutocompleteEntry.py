@@ -1,5 +1,3 @@
-import sys
-import os
 import tkinter
 import tkinter.ttk
 

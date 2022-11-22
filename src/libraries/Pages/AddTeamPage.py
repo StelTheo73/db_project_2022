@@ -3,12 +3,15 @@ import tkinter.ttk as ttk
 from libraries.MainFrame import MainFrame
 
 class AddTeamPage(MainFrame):
-    def __init__(self, master, personType=""):
+    def __init__(self, master):
         MainFrame.__init__(self, master)
 
         self.teamInfoFrame = self.createTeamInfoFrame(self.scrollable_frame)
         tk.Label(self.scrollable_frame, text = "Team Info").grid(row = 2, column = 0, sticky = tk.W)
         self.teamInfoFrame.grid(row = 3, column = 0, columnspan = 6, rowspan = 4, sticky = tk.W)
+
+    def onSubmit(self, inputs={}):
+        super().onSubmit(inputs, "Team")
 
     def createTeamInfoFrame(self, container):
         contentFrame = ttk.Frame(container, borderwidth = 5, relief = "ridge")

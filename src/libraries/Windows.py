@@ -1,5 +1,4 @@
 import tkinter as tk
-import tkinter.ttk as ttk
 from libraries.Pages.StartPage import StartPage
 from libraries.Pages.AddPlayerPage import AddPlayerPage
 from libraries.Pages.AddRefereePage import AddRefereePage
@@ -16,7 +15,7 @@ class Window(tk.Tk):
             "Add Team"   : AddTeamPage
         }
         
-        self.geometry("600x400")
+        self.geometry("800x500")
         self.title("My Championship")
         self.minsize(width = 550, height = 200)
 

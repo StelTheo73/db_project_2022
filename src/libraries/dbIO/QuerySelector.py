@@ -3,8 +3,21 @@ class QuerySelector():
         pass
 
     @staticmethod
+    def submit(inputs: dict, page=None):
+        QuerySelector.slctTable(page)
+        for func in inputs:
+            print(func+":", inputs[func].get())
+            inputs[func].delete(0,'end')
+
+    @staticmethod
+    def slctTable(page):
+        print("\nSubmited", page)
+    
+
+    
+    @staticmethod
     def getTeams():
-        return ("Team1", "Team2", "Team3", "Team12", "Team15", "Team100", "TeamABCDE", "Team1234ABCD", "Team7", "Team8")
+        return ("Team1", "Team2", "Team3", "Team4", "Team5", "Team6", "Team7", "Team8", "Team9", "Team10")
 
     @staticmethod
     def getPositions():

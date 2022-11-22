@@ -7,3 +7,6 @@ class AddRefereePage(AddPersonPage):
     def __init__(self, master):
         AddPersonPage.__init__(self, master, personType = "Referee")
         tk.Label(self.scrollable_frame, text="Add Referee").grid(row=1, column=0, sticky = tk.W)
+    
+    # ADD Referee ID
+    
