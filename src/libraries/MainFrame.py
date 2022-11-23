@@ -43,6 +43,11 @@ class MainFrame(ttk.Frame):
                   command= self.onSubmit, width=40)
         startPageButton.grid(row=100, column=1, columnspan=2)
     
-    def onSubmit(self, inputs={}, page=None):
-        Queries.submit(inputs, page)
+    def onSubmit(self, entries={}, method=''):
+        methods = {'':None,
+            'player': Queries.update_players,
+            'referee': Queries.update_referees,
+            'club': Queries.update_clubs,
+            'match': Queries.update_matches}
+        Queries.submit(entries, methods[method])
 

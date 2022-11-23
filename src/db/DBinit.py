@@ -1,4 +1,5 @@
 ## IMPORTANT: Run while in folder 'DB_PROJECT_2022' (for the paths)
+## Run pythonw .\src\db\DBinit.py to initialise without printing
 
 import sqlite3, os
 DB_PATH = './src/db/database.db'

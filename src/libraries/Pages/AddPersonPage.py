@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-# from libraries.Autocomplete.AutocompleteEntry import AutocompleteCombobox, AutocompleteEntry
+from tkcalendar import Calendar
 from libraries.MainFrame import MainFrame
 
 class AddPersonPage(MainFrame):
@@ -19,13 +19,12 @@ class AddPersonPage(MainFrame):
         
         tk.Label(self.scrollable_frame, text = "Birthday").grid(row = 7, column = 0, sticky = tk.W)
         self.birthdayFrame.grid(row = 8, column = 0, columnspan = 6, rowspan = 2, sticky = tk.W)
-    #   DATE PICKER FOR TKINTER: https://www.geeksforgeeks.org/create-a-date-picker-calendar-tkinter/
 
         tk.Label(self.scrollable_frame, text = "Contact Info").grid(row = 10, column = 0, sticky = tk.W)
         self.contactInfoFrame.grid(row = 11, column = 0, columnspan = 6, rowspan = 6, sticky = tk.W)
 
     def onSubmit(self):
-        super().onSubmit(self.inputs, self.personType)
+        super().onSubmit(self.inputs, self.personType.lower())
 
     def createPersonalInfoFrame(self, container):
         contentFrame = ttk.Frame(container, borderwidth = 5, relief = "ridge")
@@ -74,10 +73,19 @@ class AddPersonPage(MainFrame):
     def createBirthdayFrame(self, container):
         contentFrame = ttk.Frame(container, borderwidth = 5, relief = "ridge")
 
+        # # Doesn't have combobox to select year and month
+        # # DATE PICKER FOR TKINTER: https://www.geeksforgeeks.org/create-a-date-picker-calendar-tkinter/
+        # age = tk.Label(contentFrame, text = "")
+        # age.pack()
+        # ageSelector = Calendar(contentFrame, year=2001, month=8)
+        # ageSelector.pack()
+        # self.inputs["birth"] = ageSelector
+
+
         ageYear = ttk.Label(contentFrame, text = "Year")
         selectedYear = tk.IntVar()
         yearSelector = ttk.Combobox(contentFrame, textvariable = selectedYear, state = "readonly")
-        yearSelector["values"] = [year for year in range(1970, 2008, 1)]
+        yearSelector["values"] = [year for year in range(1970, 2008)]
         # TODO : CREATE FUNTCION THAT RETURNS ALL YEARS FROM 1970 TILL CURRENT_YEAR - 15
         self.inputs["year"] = yearSelector
         
@@ -85,15 +93,15 @@ class AddPersonPage(MainFrame):
         ageMonth = ttk.Label(contentFrame, text = "Month")
         selectedMonth = tk.StringVar()
         monthSelector = ttk.Combobox(contentFrame, textvariable = selectedMonth, state = "readonly")
-        monthSelector["values"] = [month for month in ["JAN", "FEB", "MAR", "APR", "JUN", 
-                                                            "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]]
+        monthSelector["values"] = [str(month).zfill(2) for month in range(1, 13)]
+            # [month for month in ["JAN", "FEB", "MAR", "APR", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]]
         # TODO : CREATE FUNTCION THAT RETURNS ALL MONTHS
         self.inputs["month"] = monthSelector
 
         ageDay = ttk.Label(contentFrame, text = "Day")
         selectedDay = tk.IntVar()
         daySelector = ttk.Combobox(contentFrame, textvariable = selectedDay, state = "readonly")
-        daySelector["values"] = [day for day in range(1, 32, 1)]
+        daySelector["values"] = [str(day).zfill(2) for day in range(1, 32)]
         # TODO : CREATE FUNTCION THAT RETURNS DAYS OF SELECTED MONTH
         self.inputs["day"] = daySelector
  
@@ -112,9 +120,9 @@ class AddPersonPage(MainFrame):
         contentFrame = ttk.Frame(container, borderwidth = 5, relief = "ridge")
         phoneLabel = ttk.Label(contentFrame, text = "Phone")
         phoneEntry = ttk.Entry(contentFrame)
-        self.inputs["phone"] = phoneEntry
+        self.inputs["tel"] = phoneEntry
 
-        emailLabel = ttk.Label(contentFrame, text = "Email")
+        emailLabel = ttk.Label(contentFrame, text = "Email - not needed")
         emailEntry = ttk.Entry(contentFrame)
         self.inputs["email"] = emailEntry
 
