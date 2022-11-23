@@ -1,9 +1,8 @@
-from tkcalendar import Calendar
 import sqlite3
 
 class QuerySelector():  # Maybe make it two different classes?
 
-    # Static Variables
+    ## Static Variables
     DB_PATH = './src/db/database.db'
     db = sqlite3.connect(DB_PATH)   # These have to be kinda global for all files (or not)
 
@@ -12,40 +11,35 @@ class QuerySelector():  # Maybe make it two different classes?
     def submit(entries={}, method=None): # Needs a looot of Error Handling
         inputs = {}
         for func in entries:
-            if entries[func].__class__ == Calendar:
-                input = entries[func].get_date()
-                input = "19"+"-".join(reversed(input.split("/"))) # FUCK MEEE .!.
-            else:
-                entries[func].get()
-                input = entries[func].get()
-                entries[func].delete(0,'end')
+            entries[func].get()
+            input = entries[func].get()
+            entries[func].delete(0,'end')
             
             inputs[func] = input
 
         # print(inputs)
         if method != None: method(inputs)
-            
+        
 
     @staticmethod
     def update_players(inputs):
         print("Submited player!")
 
+        QuerySelector.update_persons(inputs)
+
         QuerySelector.db.execute("INSERT INTO players VALUES (?,?,?,?)",
             [inputs['card'], inputs['id'], inputs['club'], inputs['position']])
         QuerySelector.db.commit()
-
-        QuerySelector.update_persons(inputs)
     
     @staticmethod
     def update_referees(inputs):
         print("Submited referee!")
 
-        ## IMPLEMENT GUI REFEREE POSITIONS
-        # QuerySelector.db.execute("INSERT INTO referees VALUES (?,?,?,?)",
-        #     [inputs['card'], inputs['id'], inputs['position']])
-        # QuerySelector.db.commit()
-
         QuerySelector.update_persons(inputs)
+
+        QuerySelector.db.execute("INSERT INTO referees VALUES (?,?,?)",
+            [inputs['card'], inputs['id'], inputs['position']])
+        QuerySelector.db.commit()
     
     @staticmethod
     def update_persons(inputs):
@@ -69,10 +63,11 @@ class QuerySelector():  # Maybe make it two different classes?
         print("Submited match!")
 
         ## IMPLEMENT GUI MATCHES
-        # date = '-'.join([inputs['year'], inputs['month'], inputs['day']])
-        # QuerySelector.db.execute("INSERT INTO matches VALUES (?,?,?,?)",
-        #     [inputs['id'], date, inputs['home_score'], inputs['away_score']])
-        # QuerySelector.db.commit()
+        return
+        date = '-'.join([inputs['year'], inputs['month'], inputs['day']])
+        QuerySelector.db.execute("INSERT INTO matches VALUES (?,?,?,?)",
+            [inputs['id'], date, inputs['home_score'], inputs['away_score']])
+        QuerySelector.db.commit()
 
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -85,7 +80,7 @@ class QuerySelector():  # Maybe make it two different classes?
 
     @staticmethod
     def getPositions():
-        return ["Attacker", "Midfielder", "Defender", "Goalkeeper"]
+        return QuerySelector.getSpecificPositions() #["Attacker", "Midfielder", "Defender", "Goalkeeper"]
 
     @staticmethod
     def getSpecificPositions():
@@ -94,4 +89,8 @@ class QuerySelector():  # Maybe make it two different classes?
             "LM", "CM", "CAM", "CDM", "RM",
             "LWB", "LB", "CB", "RB", "RWB",
             "GK"]
+    
+    @staticmethod
+    def getRefPositions():
+        return ["main ref#0", "assistant ref#1", "assistant ref#2"]
 

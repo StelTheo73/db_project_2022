@@ -12,9 +12,6 @@ class AddPlayerPage(AddPersonPage):
 
         tk.Label(self.scrollable_frame, text = "Team Info").grid(row = 17, column = 0, sticky = tk.W)
         self.teamInfoFrame.grid(row = 18, column = 0, columnspan = 6, rowspan = 10, sticky = tk.W)
-
-    def onSubmit(self):
-        super().onSubmit()
     
     def createTeamInfoFrame(self, container):
         contentFrame = ttk.Frame(container, borderwidth = 5, relief = "ridge")

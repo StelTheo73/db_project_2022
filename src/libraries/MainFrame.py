@@ -48,6 +48,7 @@ class MainFrame(ttk.Frame):
             'player': Queries.update_players,
             'referee': Queries.update_referees,
             'club': Queries.update_clubs,
-            'match': Queries.update_matches}
+            'match': Queries.update_matches
+        }
         Queries.submit(entries, methods[method])
 

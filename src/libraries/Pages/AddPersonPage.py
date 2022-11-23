@@ -1,6 +1,5 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from tkcalendar import Calendar
 from libraries.MainFrame import MainFrame
 
 class AddPersonPage(MainFrame):
@@ -72,14 +71,6 @@ class AddPersonPage(MainFrame):
 
     def createBirthdayFrame(self, container):
         contentFrame = ttk.Frame(container, borderwidth = 5, relief = "ridge")
-
-        # # Doesn't have combobox to select year and month
-        # # DATE PICKER FOR TKINTER: https://www.geeksforgeeks.org/create-a-date-picker-calendar-tkinter/
-        # age = tk.Label(contentFrame, text = "")
-        # age.pack()
-        # ageSelector = Calendar(contentFrame, year=2001, month=8)
-        # ageSelector.pack()
-        # self.inputs["birth"] = ageSelector
 
 
         ageYear = ttk.Label(contentFrame, text = "Year")
