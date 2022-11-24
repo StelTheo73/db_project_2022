@@ -3,35 +3,29 @@ import tkinter.ttk as ttk
 from libraries.MainFrame import MainFrame
 
 class AddPersonPage(MainFrame):
-    def __init__(self, master, personType=""):
+    def __init__(self, master, personType:str):
         MainFrame.__init__(self, master)
-
-        self.personType = personType
-        self.inputs = {}
-
-        self.personalInfoFrame = self.createPersonalInfoFrame(self.scrollable_frame)
-        self.birthdayFrame = self.createBirthdayFrame(self.scrollable_frame)
-        self.contactInfoFrame =  self.createContactInfoFrame(self.scrollable_frame)
+        self.personType, self.inputs = personType, {}
         
         tk.Label(self.scrollable_frame, text = "Personal Info").grid(row = 2, column = 0, sticky = tk.W)
-        self.personalInfoFrame.grid(row = 3, column = 0, columnspan = 8, rowspan = 4, sticky = tk.W)
+        self.createPersonalInfoFrame().grid(row = 3, column = 0, columnspan = 8, rowspan = 4, sticky = tk.W)
         
         tk.Label(self.scrollable_frame, text = "Birthday").grid(row = 7, column = 0, sticky = tk.W)
-        self.birthdayFrame.grid(row = 8, column = 0, columnspan = 6, rowspan = 2, sticky = tk.W)
+        self.createBirthdayFrame().grid(row = 8, column = 0, columnspan = 6, rowspan = 2, sticky = tk.W)
 
         tk.Label(self.scrollable_frame, text = "Contact Info").grid(row = 10, column = 0, sticky = tk.W)
-        self.contactInfoFrame.grid(row = 11, column = 0, columnspan = 6, rowspan = 6, sticky = tk.W)
+        self.createContactInfoFrame().grid(row = 11, column = 0, columnspan = 6, rowspan = 6, sticky = tk.W)
 
     def onSubmit(self):
         super().onSubmit(self.inputs, self.personType.lower())
 
-    def createPersonalInfoFrame(self, container):
-        contentFrame = ttk.Frame(container, borderwidth = 5, relief = "ridge")
+    def createPersonalInfoFrame(self):
+        contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
 
         nameLabel = ttk.Label(contentFrame, text = "Name")
         nameEntry = ttk.Entry(contentFrame)
         self.inputs["name"] = nameEntry
-        # nameEntry.focus_set()
+        nameEntry.focus_set()
 
         surnameLabel = ttk.Label(contentFrame, text = "Surname")
         surnameEntry = ttk.Entry(contentFrame)
@@ -69,8 +63,8 @@ class AddPersonPage(MainFrame):
 
         return contentFrame
 
-    def createBirthdayFrame(self, container):
-        contentFrame = ttk.Frame(container, borderwidth = 5, relief = "ridge")
+    def createBirthdayFrame(self):
+        contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
 
 
         ageYear = ttk.Label(contentFrame, text = "Year")
@@ -107,8 +101,8 @@ class AddPersonPage(MainFrame):
 
         return contentFrame
 
-    def createContactInfoFrame(self, container):
-        contentFrame = ttk.Frame(container, borderwidth = 5, relief = "ridge")
+    def createContactInfoFrame(self):
+        contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
         phoneLabel = ttk.Label(contentFrame, text = "Phone")
         phoneEntry = ttk.Entry(contentFrame)
         self.inputs["tel"] = phoneEntry

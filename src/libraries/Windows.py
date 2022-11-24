@@ -3,6 +3,7 @@ from libraries.Pages.StartPage import StartPage
 from libraries.Pages.AddPlayerPage import AddPlayerPage
 from libraries.Pages.AddRefereePage import AddRefereePage
 from libraries.Pages.AddTeamPage import AddTeamPage
+from libraries.Pages.AddMatchPage import AddMatchPage
 
 class Window(tk.Tk):
     def __init__(self):
@@ -12,12 +13,13 @@ class Window(tk.Tk):
             "StartPage"  : StartPage,
             "Add Player" : AddPlayerPage,
             "Add Referee": AddRefereePage,
-            "Add Team"   : AddTeamPage
+            "Add Team"   : AddTeamPage,
+            "Add Match"   : AddMatchPage,
         }
         
         self.geometry("800x500")
         self.title("My Championship")
-        self.minsize(width = 550, height = 200)
+        self.minsize(width=500, height=300)
 
         self.switchFrame("StartPage")
 
@@ -26,7 +28,7 @@ class Window(tk.Tk):
         frameClass = self._frames[frame_id]
 
         new_frame = frameClass(self)
-        if self._frame is not None:
+        if self._frame:
             self._frame.destroy()
         self._frame = new_frame
-        self._frame.pack(expand = True, fill = "both")
+        self._frame.pack(expand=True, fill="both")

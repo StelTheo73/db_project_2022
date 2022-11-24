@@ -34,10 +34,14 @@ class MainFrame(ttk.Frame):
         pageThreeButton = ttk.Button(self.scrollable_frame, text="Add Team",
                   command=lambda: master.switchFrame("Add Team"))
         pageThreeButton.grid(row=0, column=2)
+
+        startPageButton = ttk.Button(self.scrollable_frame, text="Add Match",
+                  command=lambda: master.switchFrame("Add Match"))
+        startPageButton.grid(row=0, column=3)
         
         startPageButton = ttk.Button(self.scrollable_frame, text="Open start page",
                   command=lambda: master.switchFrame("StartPage"))
-        startPageButton.grid(row=0, column=3)
+        startPageButton.grid(row=0, column=4)
         
         startPageButton = ttk.Button(self.scrollable_frame, text="Submit",
                   command= self.onSubmit, width=40)
@@ -48,7 +52,8 @@ class MainFrame(ttk.Frame):
             'player': Queries.update_players,
             'referee': Queries.update_referees,
             'club': Queries.update_clubs,
-            'match': Queries.update_matches
+            'match': Queries.update_matches,
+            'stat':Queries.update_stats,
         }
         Queries.submit(entries, methods[method])
 
