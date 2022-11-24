@@ -8,13 +8,13 @@ class AddPlayerPage(AddPersonPage):
         AddPersonPage.__init__(self, master, personType="Player")
         tk.Label(self.scrollable_frame, text="Add Player").grid(row=1, column=0, sticky = tk.W)
 
-        self.teamInfoFrame = self.createTeamInfoFrame(self.scrollable_frame)
+        self.teamInfoFrame = self.createTeamInfoFrame()
 
         tk.Label(self.scrollable_frame, text = "Team Info").grid(row = 17, column = 0, sticky = tk.W)
         self.teamInfoFrame.grid(row = 18, column = 0, columnspan = 6, rowspan = 10, sticky = tk.W)
     
-    def createTeamInfoFrame(self, container):
-        contentFrame = ttk.Frame(container, borderwidth = 5, relief = "ridge")
+    def createTeamInfoFrame(self):
+        contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
 
         teamLabel = ttk.Label(contentFrame, text = "Team")
         teamSelector = ttk.Combobox(contentFrame, state = "readonly")

@@ -34,7 +34,7 @@ FOREIGN KEY (person_id) REFERENCES people(id)
 );
 
 --Controls = Diefthinseis Agwnwn
-CREATE TABLE IF NOT EXISTS controls(match_id INTEGER NOT NULL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS controls(match_id INTEGER NOT NULL,
 referee_id TEXT,
 FOREIGN KEY (match_id) REFERENCES matches(id),
 FOREIGN KEY (referee_id) REFERENCES referees(referee_id)
@@ -54,7 +54,7 @@ home TEXT, founded DATE);
 
 --Matches
 CREATE TABLE IF NOT EXISTS matches(id INTEGER NOT NULL PRIMARY KEY,
-date DATE, home_team_goals INTEGER, visiting_team_goals INTEGER);
+datime DATETIME, home_goals INTEGER, away_goals INTEGER);
 
 --Participations
 CREATE TABLE IF NOT EXISTS participations(
@@ -70,19 +70,19 @@ FOREIGN KEY (away_team) REFERENCES clubs(name)
 INSERT INTO people VALUES
 ('AN123456',  'John', 'Pipas', DATE('2001-11-20'), '+306918273645', 'Albanian');
 INSERT INTO people VALUES
-('AM987654',  'Jack', 'Kalos', DATE('1989-05-13'), '6946875120', 'French');
+('AM987654',  'Julian', 'Koulevski', DATE('1989-05-13'), '6946875120', 'French');
 
 INSERT INTO clubs VALUES ('Panatha', 'Athens', DATE('1908-02-03'));
 INSERT INTO clubs VALUES ('PAOK', 'Salonica', DATE('1926-04-20'));
 INSERT INTO clubs VALUES ('ARIS', 'Salonica', DATE('1914-03-25'));
 
-INSERT INTO matches (date, home_team_goals, visiting_team_goals) VALUES (DATE('2022-02-03'), 2,1 );
+INSERT INTO matches (datime, home_goals, away_goals) VALUES (DATETIME('2022-02-03 21:00'), 2,1 );
 INSERT INTO participations (home_team, away_team) VALUES ('Panatha', 'PAOK');
 
-INSERT INTO matches (date, home_team_goals, visiting_team_goals) VALUES (DATE('2022-02-23'), 0,1 );
+INSERT INTO matches (datime, home_goals, away_goals) VALUES (DATETIME('2022-02-23 20:30'), 0,1 );
 INSERT INTO participations (home_team, away_team) VALUES ('ARIS', 'PAOK');
 
-INSERT INTO matches (date, home_team_goals, visiting_team_goals) VALUES (DATE('2022-03-05'), 1,0 );
+INSERT INTO matches (datime, home_goals, away_goals) VALUES (DATETIME('2022-03-05 21:30'), 1,0 );
 INSERT INTO participations (home_team, away_team) VALUES ('Panatha', 'ARIS');
 
 INSERT INTO players VALUES ('PL1', 'AN123456', 'Panatha', 'CF');

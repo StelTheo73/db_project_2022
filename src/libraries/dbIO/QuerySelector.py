@@ -13,11 +13,12 @@ class QuerySelector():  # Maybe make it two different classes?
         for func in entries:
             entries[func].get()
             input = entries[func].get()
-            entries[func].delete(0,'end')
+            try: entries[func].set('')  # for ComboBox
+            except AttributeError: entries[func].delete(0,'end')   # for Entry
             
             inputs[func] = input
 
-        # print(inputs)
+        print(inputs)
         if method != None: method(inputs)
         
 
@@ -62,12 +63,23 @@ class QuerySelector():  # Maybe make it two different classes?
     def update_matches(inputs):
         print("Submited match!")
 
-        ## IMPLEMENT GUI MATCHES
-        return
-        date = '-'.join([inputs['year'], inputs['month'], inputs['day']])
-        QuerySelector.db.execute("INSERT INTO matches VALUES (?,?,?,?)",
-            [inputs['id'], date, inputs['home_score'], inputs['away_score']])
+        datetime = '-'.join([inputs[i] for i in ['year','month','day']]) +' '+ inputs['hour']+':'+inputs['minute']
+        x = QuerySelector.db.execute("INSERT INTO matches (datime, home_goals, away_goals) VALUES (DATETIME(?),?,?)",
+            [datetime, inputs['home_score'], inputs['away_score']])
+        
+        match_id = QuerySelector.db.execute("SELECT id FROM matches").fetchall()[-1][0]
+
+        QuerySelector.db.execute("INSERT INTO participations (home_team, away_team) VALUES (?,?)",
+            [inputs['home_team'], inputs['away_team']])
+        
+        QuerySelector.db.execute("INSERT INTO controls VALUES (?,?)",
+            [match_id, inputs['referee']])
+
         QuerySelector.db.commit()
+
+    @staticmethod
+    def update_stats(inputs):
+        print("Submited statistic!")
 
 
     ## ------------------------------------------------------------------------------------------------------------
@@ -76,21 +88,21 @@ class QuerySelector():  # Maybe make it two different classes?
     @staticmethod
     def getTeams():
         return [club[0] for club in QuerySelector.db.execute("SELECT name FROM clubs")]
-        # ["Team1", "Team2", "Team3", "Team4", "Team5", "Team6", "Team7", "Team8", "Team9", "Team10"]
 
     @staticmethod
     def getPositions():
-        return QuerySelector.getSpecificPositions() #["Attacker", "Midfielder", "Defender", "Goalkeeper"]
-
-    @staticmethod
-    def getSpecificPositions():
+        # return ["Attacker", "Midfielder", "Defender", "Goalkeeper"]
         return [
-            "ST", "CF", "LW", "RW", 
+            "ST", "CF", "LW", "RW",
             "LM", "CM", "CAM", "CDM", "RM",
             "LWB", "LB", "CB", "RB", "RWB",
             "GK"]
     
     @staticmethod
     def getRefPositions():
-        return ["main ref#0", "assistant ref#1", "assistant ref#2"]
+        return ["headref#0", "assistref#1", "assistref#2", "fourthref#4"]
+    
+    @staticmethod
+    def getReferees():
+        return [ref[0] for ref in QuerySelector.db.execute("SELECT * FROM referees")]
 

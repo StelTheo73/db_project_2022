@@ -7,20 +7,20 @@ class AddTeamPage(MainFrame):
         MainFrame.__init__(self, master)
         self.inputs = {}
 
-        self.teamInfoFrame = self.createTeamInfoFrame(self.scrollable_frame)
+        self.teamInfoFrame = self.createTeamInfoFrame()
         tk.Label(self.scrollable_frame, text = "Team Info").grid(row = 2, column = 0, sticky = tk.W)
         self.teamInfoFrame.grid(row = 3, column = 0, columnspan = 6, rowspan = 4, sticky = tk.W)
 
     def onSubmit(self):
         super().onSubmit(self.inputs, 'club')
 
-    def createTeamInfoFrame(self, container):
-        contentFrame = ttk.Frame(container, borderwidth = 5, relief = "ridge")
+    def createTeamInfoFrame(self):
+        contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
 
         nameLabel = ttk.Label(contentFrame, text = "Name")
         nameEntry = ttk.Entry(contentFrame)
         self.inputs["name"] = nameEntry
-        # nameEntry.focus_set()
+        nameEntry.focus_set()
 
         stadiumLabel = ttk.Label(contentFrame, text = "Stadium")
         stadiumEntry = ttk.Entry(contentFrame)

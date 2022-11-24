@@ -8,14 +8,14 @@ class AddRefereePage(AddPersonPage):
         AddPersonPage.__init__(self, master, personType = "Referee")
         tk.Label(self.scrollable_frame, text="Add Referee").grid(row=1, column=0, sticky = tk.W)
 
-        self.refInfoFrame = self.createRefInfoFrame(self.scrollable_frame)
+        self.refInfoFrame = self.createRefInfoFrame()
 
         tk.Label(self.scrollable_frame, text = "Team Info").grid(row = 17, column = 0, sticky = tk.W)
         self.refInfoFrame.grid(row = 18, column = 0, columnspan = 6, rowspan = 10, sticky = tk.W)
     
     
-    def createRefInfoFrame(self, container):
-        contentFrame = ttk.Frame(container, borderwidth = 5, relief = "ridge")
+    def createRefInfoFrame(self):
+        contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
         
         positionsLabel = ttk.Label(contentFrame, text = "Position")
         positionSelector = ttk.Combobox(contentFrame, state = "readonly")
