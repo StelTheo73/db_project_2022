@@ -44,7 +44,7 @@ class MainFrame(ttk.Frame):
         startPageButton.grid(row=0, column=4)
         
         startPageButton = ttk.Button(self.scrollable_frame, text="Submit",
-                  command= self.onSubmit, width=40)
+                  command= self.onSubmit, width=40, padding=5)
         startPageButton.grid(row=100, column=1, columnspan=2)
     
     def onSubmit(self, entries={}, method=''):
@@ -53,7 +53,8 @@ class MainFrame(ttk.Frame):
             'referee': Queries.update_referees,
             'club': Queries.update_clubs,
             'match': Queries.update_matches,
-            'stat':Queries.update_stats,
+            'stat': Queries.update_stats,
+            'query': Queries.run_query,
         }
         Queries.submit(entries, methods[method])
 

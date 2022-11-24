@@ -1,24 +1,22 @@
 import sqlite3
 
-class QuerySelector():  # Maybe make it two different classes?
+class QuerySelector():  # Maybe make it two or more different classes?
 
     ## Static Variables
     DB_PATH = './src/db/database.db'
-    db = sqlite3.connect(DB_PATH)   # These have to be kinda global for all files (or not)
+    db = sqlite3.connect(DB_PATH)
 
 
     @staticmethod
-    def submit(entries={}, method=None): # Needs a looot of Error Handling
-        inputs = {}
-        for func in entries:
-            entries[func].get()
-            input = entries[func].get()
-            try: entries[func].set('')  # for ComboBox
-            except AttributeError: entries[func].delete(0,'end')   # for Entry
-            
-            inputs[func] = input
+    def submit(entries={}, method=None):        ## Needs a looot of Error Handling
+        inputs = {func: entries[func].get() for func in entries}
 
-        print(inputs)
+        if method != QuerySelector.run_query:
+            for func in entries:    # Clear entries
+                try: entries[func].set('')  # for ComboBox
+                except AttributeError: entries[func].delete(0,'end')   # for Entry
+
+        # print(inputs)
         if method != None: method(inputs)
         
 
@@ -80,6 +78,21 @@ class QuerySelector():  # Maybe make it two different classes?
     @staticmethod
     def update_stats(inputs):
         print("Submited statistic!")
+
+
+    @staticmethod
+    def run_query(inputs):
+        print("Submited Query!")
+        query = inputs['query']
+
+        if query.split(' ')[0].upper() != 'SELECT':
+            print("Please enter a SELECT Query..")
+
+        try:
+            data = QuerySelector.db.execute(query).fetchall()
+            [print(d) for d in data]
+        except Exception as e:
+            print(e)
 
 
     ## ------------------------------------------------------------------------------------------------------------
