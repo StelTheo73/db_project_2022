@@ -3,7 +3,6 @@ import sqlite3, json
 class QuerySelector():  # Maybe make it two or more different classes?
 
     ## Static Variables
-    JSON_PATH = './src/libraries/dbIO/'
     DB_PATH = './src/db/database.db'
     db = sqlite3.connect(DB_PATH)
 
@@ -98,7 +97,11 @@ class QuerySelector():  # Maybe make it two or more different classes?
 
     ## ------------------------------------------------------------------------------------------------------------
 
+
+    ## Static Variables
+    JSON_PATH = './src/libraries/JsonFiles/'
     
+
     @staticmethod
     def getTeams():
         return [club[0] for club in QuerySelector.db.execute("SELECT name FROM clubs")]
