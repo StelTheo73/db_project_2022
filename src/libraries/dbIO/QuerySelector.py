@@ -1,8 +1,9 @@
-import sqlite3
+import sqlite3, json
 
 class QuerySelector():  # Maybe make it two or more different classes?
 
     ## Static Variables
+    JSON_PATH = './src/libraries/dbIO/'
     DB_PATH = './src/db/database.db'
     db = sqlite3.connect(DB_PATH)
 
@@ -118,4 +119,10 @@ class QuerySelector():  # Maybe make it two or more different classes?
     @staticmethod
     def getReferees():
         return [ref[0] for ref in QuerySelector.db.execute("SELECT * FROM referees")]
+    
+    @staticmethod
+    def getCountries():
+        with open(QuerySelector.JSON_PATH+'countries.json') as f:
+            countries = [d['name'] for d in json.loads(f.read())]
+        return countries
 

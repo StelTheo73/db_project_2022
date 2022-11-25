@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from libraries.MainFrame import MainFrame
+from libraries.dbIO.QuerySelector import QuerySelector
 
 class AddPersonPage(MainFrame):
     def __init__(self, master, personType:str):
@@ -41,7 +42,8 @@ class AddPersonPage(MainFrame):
 
         ethnicityLabel = ttk.Label(contentFrame, text = "Nationality")
         ethnicitySelector = ttk.Combobox(contentFrame, state = "readonly")
-        ethnicitySelector["values"] = ["Greece", "Country2", "Coutry3", "Country4", "Country5", "Country6"]
+        ethnicitySelector["values"] = QuerySelector.getCountries()
+            #["Greece", "Country2", "Coutry3", "Country4", "Country5", "Country6"]
         # TODO: CREATE FUNCTION THAN RETURNS ALL COUNTRIES
         self.inputs["nationality"] = ethnicitySelector
 
