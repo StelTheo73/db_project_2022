@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from libraries.dbIO.QuerySelector import QuerySelector as Queries
+from libraries.dbIO.DbQueries import DbQueries
 
 class MainFrame(ttk.Frame):
     def __init__(self, master):
@@ -12,9 +12,7 @@ class MainFrame(ttk.Frame):
 
         self.scrollable_frame.bind(
             "<Configure>",
-            lambda e: canvas.configure(
-                scrollregion=canvas.bbox("all")
-            )
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
         )
 
         canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
@@ -49,12 +47,12 @@ class MainFrame(ttk.Frame):
     
     def onSubmit(self, entries={}, method=''):
         methods = {'':None,
-            'player': Queries.update_players,
-            'referee': Queries.update_referees,
-            'club': Queries.update_clubs,
-            'match': Queries.update_matches,
-            'stat': Queries.update_stats,
-            'query': Queries.run_query,
+            'player': DbQueries.update_players,
+            'referee': DbQueries.update_referees,
+            'club': DbQueries.update_clubs,
+            'match': DbQueries.update_matches,
+            'stat': DbQueries.update_stats,
+            'query': DbQueries.run_query,
         }
-        Queries.submit(entries, methods[method])
+        DbQueries.submit(entries, methods[method])
 

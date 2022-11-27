@@ -1,5 +1,5 @@
 import sqlite3
-DB_PATH = './src/db/database.db'
+DB_PATH = './src/data/database.db'
 
 db = sqlite3.connect(DB_PATH)
 

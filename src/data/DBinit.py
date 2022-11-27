@@ -2,8 +2,8 @@
 ## Run pythonw .\src\db\DBinit.py to initialise without printing
 
 import sqlite3, os
-DB_PATH = './src/db/database.db'
-SQL_PATH = './src/db/DBCreationScript.sql'
+DB_PATH = './src/data/database.db'
+SQL_PATH = './src/data/DBCreationScript.sql'
 
 # DELETE ALL DATABASE for initialization purposes
 if os.path.exists(DB_PATH): os.remove(DB_PATH)

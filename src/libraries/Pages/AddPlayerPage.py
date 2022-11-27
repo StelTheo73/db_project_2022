@@ -6,7 +6,6 @@ from libraries.dbIO.QuerySelector import QuerySelector
 class AddPlayerPage(AddPersonPage):
     def __init__(self, master):
         AddPersonPage.__init__(self, master, personType="Player")
-        tk.Label(self.scrollable_frame, text="Add Player").grid(row=1, column=0, sticky = tk.W)
 
         self.teamInfoFrame = self.createTeamInfoFrame()
 

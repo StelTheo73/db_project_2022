@@ -27,7 +27,7 @@ class AddMatchPage(MainFrame):
 
         yearLabel = ttk.Label(contentFrame, text = "Year")
         yearSelector = ttk.Combobox(contentFrame, state="readonly")
-        yearSelector["values"] = [year for year in range(2000, 2024)]  # Better get from function
+        yearSelector["values"] = QuerySelector.getLastYears() #[year for year in range(2000, 2024)]
         self.inputs["year"] = yearSelector
 
         monthLabel = ttk.Label(contentFrame, text = "Month")

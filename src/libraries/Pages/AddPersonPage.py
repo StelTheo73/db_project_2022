@@ -7,6 +7,7 @@ class AddPersonPage(MainFrame):
     def __init__(self, master, personType:str):
         MainFrame.__init__(self, master)
         self.personType, self.inputs = personType, {}
+        # tk.Label(self.scrollable_frame, text="Add "+self.personType).grid(row=1, column=0, sticky = tk.W)
         
         tk.Label(self.scrollable_frame, text = "Personal Info").grid(row = 2, column = 0, sticky = tk.W)
         self.createPersonalInfoFrame().grid(row = 3, column = 0, columnspan = 8, rowspan = 4, sticky = tk.W)
@@ -72,8 +73,8 @@ class AddPersonPage(MainFrame):
         ageYear = ttk.Label(contentFrame, text = "Year")
         selectedYear = tk.IntVar()
         yearSelector = ttk.Combobox(contentFrame, textvariable = selectedYear, state = "readonly")
-        yearSelector["values"] = [year for year in range(1970, 2008)]
-        # TODO : CREATE FUNTCION THAT RETURNS ALL YEARS FROM 1970 TILL CURRENT_YEAR - 15
+        yearSelector["values"] = QuerySelector.getLastYears(max_age=65, min_age=15)
+        # TODO - DONE: CREATE FUNTCION THAT RETURNS ALL YEARS FROM 1970 TILL CURRENT_YEAR - 15
         self.inputs["year"] = yearSelector
         
         
@@ -81,15 +82,15 @@ class AddPersonPage(MainFrame):
         selectedMonth = tk.StringVar()
         monthSelector = ttk.Combobox(contentFrame, textvariable = selectedMonth, state = "readonly")
         monthSelector["values"] = [str(month).zfill(2) for month in range(1, 13)]
-            # [month for month in ["JAN", "FEB", "MAR", "APR", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]]
-        # TODO : CREATE FUNTCION THAT RETURNS ALL MONTHS
+            # ["JAN", "FEB", "MAR", "APR", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
+        # TODO - DONE: CREATE FUNTCION THAT RETURNS ALL MONTHS
         self.inputs["month"] = monthSelector
 
         ageDay = ttk.Label(contentFrame, text = "Day")
         selectedDay = tk.IntVar()
         daySelector = ttk.Combobox(contentFrame, textvariable = selectedDay, state = "readonly")
         daySelector["values"] = [str(day).zfill(2) for day in range(1, 32)]
-        # TODO : CREATE FUNTCION THAT RETURNS DAYS OF SELECTED MONTH
+        # TODO - NO NEED: CREATE FUNTCION THAT RETURNS DAYS OF SELECTED MONTH
         self.inputs["day"] = daySelector
  
         ageYear.grid(row = 0, column = 0, columnspan = 2, padx = 10, sticky = tk.W)

@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from libraries.MainFrame import MainFrame
+from libraries.dbIO.QuerySelector import QuerySelector
 
 class AddTeamPage(MainFrame):
     def __init__(self, master):
@@ -29,7 +30,7 @@ class AddTeamPage(MainFrame):
         foundationYear = ttk.Label(contentFrame, text = "FoundationYear")
         selectedYear = tk.IntVar()
         yearSelector = ttk.Combobox(contentFrame, textvariable = selectedYear, state = "readonly")
-        yearSelector["values"] = [year for year in range(1900, 2022, 1)]
+        yearSelector["values"] = QuerySelector.getLastYears() #[year for year in range(1900, 2022, 1)]
         self.inputs["founded"] = yearSelector
         
 
