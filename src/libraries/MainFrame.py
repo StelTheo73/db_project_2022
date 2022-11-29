@@ -37,9 +37,13 @@ class MainFrame(ttk.Frame):
                   command=lambda: master.switchFrame("Add Match"))
         startPageButton.grid(row=0, column=3)
         
+        startPageButton = ttk.Button(self.scrollable_frame, text="Add Statistic",
+                  command=lambda: master.switchFrame("Add Stat"))
+        startPageButton.grid(row=0, column=4)
+        
         startPageButton = ttk.Button(self.scrollable_frame, text="Open start page",
                   command=lambda: master.switchFrame("StartPage"))
-        startPageButton.grid(row=0, column=4)
+        startPageButton.grid(row=0, column=5)
         
         startPageButton = ttk.Button(self.scrollable_frame, text="Submit",
                   command= self.onSubmit, width=40, padding=5)

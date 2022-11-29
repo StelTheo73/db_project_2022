@@ -54,6 +54,7 @@ home TEXT, founded DATE);
 
 --Matches
 CREATE TABLE IF NOT EXISTS matches(id INTEGER NOT NULL PRIMARY KEY,
+duration INTEGER DEFAULT 90,
 datime DATETIME, home_goals INTEGER, away_goals INTEGER);
 
 --Participations
@@ -82,7 +83,7 @@ INSERT INTO participations (home_team, away_team) VALUES ('Panatha', 'PAOK');
 INSERT INTO matches (datime, home_goals, away_goals) VALUES (DATETIME('2022-02-23 20:30'), 0,1 );
 INSERT INTO participations (home_team, away_team) VALUES ('ARIS', 'PAOK');
 
-INSERT INTO matches (datime, home_goals, away_goals) VALUES (DATETIME('2022-03-05 21:30'), 1,0 );
+INSERT INTO matches (duration, datime, home_goals, away_goals) VALUES (120, DATETIME('2022-03-05 21:30'), 1,0 );
 INSERT INTO participations (home_team, away_team) VALUES ('Panatha', 'ARIS');
 
 INSERT INTO players VALUES ('PL1', 'AN123456', 'Panatha', 'CF');

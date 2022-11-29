@@ -4,6 +4,7 @@ from libraries.Pages.AddPlayerPage import AddPlayerPage
 from libraries.Pages.AddRefereePage import AddRefereePage
 from libraries.Pages.AddTeamPage import AddTeamPage
 from libraries.Pages.AddMatchPage import AddMatchPage
+from libraries.Pages.AddStatsPage import AddStatsPage
 
 class Window(tk.Tk):
     def __init__(self):
@@ -15,6 +16,7 @@ class Window(tk.Tk):
             "Add Referee": AddRefereePage,
             "Add Team"   : AddTeamPage,
             "Add Match"   : AddMatchPage,
+            "Add Stat"   : AddStatsPage,
         }
         
         self.geometry("800x500")

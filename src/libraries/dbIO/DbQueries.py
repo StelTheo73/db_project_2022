@@ -26,7 +26,7 @@ class DbQueries:
 
         DbQueries.update_persons(inputs)
 
-        DbQueries.db.execute("INSERT INTO players VALUES (?,?,?,?)",
+        DbQueries.db.execute("INSERT INTO players (player_id, person_id, club, position) VALUES (?,?,?,?)",
             [inputs['card'], inputs['id'], inputs['club'], inputs['position']])
         DbQueries.db.commit()
     
@@ -36,7 +36,7 @@ class DbQueries:
 
         DbQueries.update_persons(inputs)
 
-        DbQueries.db.execute("INSERT INTO referees VALUES (?,?,?)",
+        DbQueries.db.execute("INSERT INTO referees (referee_id, person_id, position) VALUES (?,?,?)",
             [inputs['card'], inputs['id'], inputs['position']])
         DbQueries.db.commit()
     
@@ -45,7 +45,7 @@ class DbQueries:
         print("Submited person!")
 
         date = '-'.join([inputs['year'], inputs['month'], inputs['day']])
-        DbQueries.db.execute("INSERT INTO people VALUES (?,?,?, DATE(?), ?,?)",
+        DbQueries.db.execute("INSERT INTO people (id, name, surname, birthdate, tel, nationality) VALUES (?,?,?, DATE(?), ?,?)",
             [inputs['id'], inputs['name'], inputs['surname'], date, inputs['tel'], inputs['nationality']])
         DbQueries.db.commit()
     
@@ -54,7 +54,7 @@ class DbQueries:
         print("Submited club!")
 
         date = inputs['founded'] + '-01-01'
-        DbQueries.db.execute("INSERT INTO clubs VALUES (?,?, DATE(?))", [inputs['name'], inputs['home'], date])
+        DbQueries.db.execute("INSERT INTO clubs (name, home, founded) VALUES (?,?, DATE(?))", [inputs['name'], inputs['home'], date])
         DbQueries.db.commit()
 
     @staticmethod
@@ -70,7 +70,7 @@ class DbQueries:
         DbQueries.db.execute("INSERT INTO participations (home_team, away_team) VALUES (?,?)",
             [inputs['home_team'], inputs['away_team']])
         
-        DbQueries.db.execute("INSERT INTO controls VALUES (?,?)",
+        DbQueries.db.execute("INSERT INTO controls (match_id, referee_id) VALUES (?,?)",
             [match_id, inputs['referee']])
 
         DbQueries.db.commit()
@@ -78,6 +78,7 @@ class DbQueries:
     @staticmethod
     def update_stats(inputs):
         print("Submited statistic!")
+        #TODO
 
 
     @staticmethod
