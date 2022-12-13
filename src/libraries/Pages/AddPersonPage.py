@@ -7,7 +7,7 @@ class AddPersonPage(MainFrame):
     def __init__(self, master, personType:str):
         MainFrame.__init__(self, master)
         self.personType, self.inputs = personType, {}
-        # tk.Label(self.scrollable_frame, text="Add "+self.personType).grid(row=1, column=0, sticky = tk.W)
+        tk.Label(self.scrollable_frame, text="Add "+self.personType).grid(row=1, column=0, sticky = tk.W)
         
         tk.Label(self.scrollable_frame, text = "Personal Info").grid(row = 2, column = 0, sticky = tk.W)
         self.createPersonalInfoFrame().grid(row = 3, column = 0, columnspan = 8, rowspan = 4, sticky = tk.W)
@@ -41,14 +41,11 @@ class AddPersonPage(MainFrame):
         athleteCardEntry = ttk.Entry(contentFrame)
         self.inputs["card"] = athleteCardEntry
 
-        ethnicityLabel = ttk.Label(contentFrame, text = "Nationality")
-        ethnicitySelector = ttk.Combobox(contentFrame, state = "readonly")
-        ethnicitySelector["values"] = QuerySelector.getCountries()
-            #["Greece", "Country2", "Coutry3", "Country4", "Country5", "Country6"]
-        # TODO: CREATE FUNCTION THAN RETURNS ALL COUNTRIES
-        self.inputs["nationality"] = ethnicitySelector
+        nationalityLabel = ttk.Label(contentFrame, text = "Nationality")
+        nationalitySelector = ttk.Combobox(contentFrame, state = "readonly")
+        nationalitySelector["values"] = QuerySelector.getCountries()
+        self.inputs["nationality"] = nationalitySelector
 
-        
         nameLabel.grid(row = 0, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
         nameEntry.grid(row = 1, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
         
@@ -61,36 +58,30 @@ class AddPersonPage(MainFrame):
         athleteCardLabel.grid(row = 2, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
         athleteCardEntry.grid(row = 3, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
 
-        ethnicityLabel.grid(row = 2, column = 4, columnspan = 2, padx = 10, sticky = tk.W)
-        ethnicitySelector.grid(row = 3, column = 4, columnspan = 2, padx = 10, sticky = tk.W)
+        nationalityLabel.grid(row = 2, column = 4, columnspan = 2, padx = 10, sticky = tk.W)
+        nationalitySelector.grid(row = 3, column = 4, columnspan = 2, padx = 10, sticky = tk.W)
 
         return contentFrame
 
     def createBirthdayFrame(self):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
 
-
         ageYear = ttk.Label(contentFrame, text = "Year")
         selectedYear = tk.IntVar()
         yearSelector = ttk.Combobox(contentFrame, textvariable = selectedYear, state = "readonly")
         yearSelector["values"] = QuerySelector.getLastYears(max_age=65, min_age=15)
-        # TODO - DONE: CREATE FUNTCION THAT RETURNS ALL YEARS FROM 1970 TILL CURRENT_YEAR - 15
         self.inputs["year"] = yearSelector
-        
         
         ageMonth = ttk.Label(contentFrame, text = "Month")
         selectedMonth = tk.StringVar()
         monthSelector = ttk.Combobox(contentFrame, textvariable = selectedMonth, state = "readonly")
         monthSelector["values"] = [str(month).zfill(2) for month in range(1, 13)]
-            # ["JAN", "FEB", "MAR", "APR", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
-        # TODO - DONE: CREATE FUNTCION THAT RETURNS ALL MONTHS
         self.inputs["month"] = monthSelector
 
         ageDay = ttk.Label(contentFrame, text = "Day")
         selectedDay = tk.IntVar()
         daySelector = ttk.Combobox(contentFrame, textvariable = selectedDay, state = "readonly")
         daySelector["values"] = [str(day).zfill(2) for day in range(1, 32)]
-        # TODO - NO NEED: CREATE FUNTCION THAT RETURNS DAYS OF SELECTED MONTH
         self.inputs["day"] = daySelector
  
         ageYear.grid(row = 0, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
@@ -110,14 +101,7 @@ class AddPersonPage(MainFrame):
         phoneEntry = ttk.Entry(contentFrame)
         self.inputs["tel"] = phoneEntry
 
-        emailLabel = ttk.Label(contentFrame, text = "Email - not needed")
-        emailEntry = ttk.Entry(contentFrame)
-        self.inputs["email"] = emailEntry
-
         phoneLabel.grid(row = 0, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
         phoneEntry.grid(row = 1, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
-
-        emailLabel.grid(row = 0, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
-        emailEntry.grid(row = 1, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
 
         return contentFrame

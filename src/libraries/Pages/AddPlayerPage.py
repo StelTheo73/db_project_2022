@@ -24,7 +24,7 @@ class AddPlayerPage(AddPersonPage):
         selectedPosition = tk.StringVar()
         # https://stackoverflow.com/questions/37414600/python-tkinter-using-a-textvariable-in-a-combobox-seems-useless
         positionSelector = ttk.Combobox(contentFrame, textvariable = selectedPosition, state = "readonly")
-        positionSelector["values"] = QuerySelector.getPositions() # WTF Stel! I use QuerySelector for other shit
+        positionSelector["values"] = QuerySelector.getPositions()
         self.inputs["position"] = positionSelector
  
         teamLabel.grid(row = 0, column = 0, columnspan = 2, padx = 10, sticky = tk.W)

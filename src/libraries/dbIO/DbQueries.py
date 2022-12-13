@@ -1,11 +1,11 @@
 import sqlite3
+from generators import random_generator
 
 class DbQueries:
 
     ## Static Variables
     DB_PATH = './src/data/database.db'
     db = sqlite3.connect(DB_PATH)
-
 
     @staticmethod
     def submit(entries={}, method=None):        ## Needs a looot of Error Handling
@@ -19,14 +19,13 @@ class DbQueries:
         # print(inputs)
         if method != None: method(inputs)
         
-
     @staticmethod
     def update_players(inputs):
         print("Submited player!")
 
         DbQueries.update_persons(inputs)
 
-        DbQueries.db.execute("INSERT INTO players (player_id, person_id, club, position) VALUES (?,?,?,?)",
+        DbQueries.db.execute("INSERT INTO player (player_id, person_id, club, position) VALUES (?,?,?,?)",
             [inputs['card'], inputs['id'], inputs['club'], inputs['position']])
         DbQueries.db.commit()
     
@@ -36,7 +35,7 @@ class DbQueries:
 
         DbQueries.update_persons(inputs)
 
-        DbQueries.db.execute("INSERT INTO referees (referee_id, person_id, position) VALUES (?,?,?)",
+        DbQueries.db.execute("INSERT INTO referee (referee_id, person_id, position) VALUES (?,?,?)",
             [inputs['card'], inputs['id'], inputs['position']])
         DbQueries.db.commit()
     
@@ -51,10 +50,10 @@ class DbQueries:
     
     @staticmethod
     def update_clubs(inputs):
-        print("Submited club!")
+        print("Submited team!")
 
         date = inputs['founded'] + '-01-01'
-        DbQueries.db.execute("INSERT INTO clubs (name, home, founded) VALUES (?,?, DATE(?))", [inputs['name'], inputs['home'], date])
+        DbQueries.db.execute("INSERT INTO team (team_name, home, founded) VALUES (?,?, DATE(?))", [inputs['name'], inputs['home'], date])
         DbQueries.db.commit()
 
     @staticmethod
@@ -62,16 +61,26 @@ class DbQueries:
         print("Submited match!")
 
         datetime = '-'.join([inputs[i] for i in ['year','month','day']]) +' '+ inputs['hour']+':'+inputs['minute']
-        x = DbQueries.db.execute("INSERT INTO matches (datime, home_goals, away_goals) VALUES (DATETIME(?),?,?)",
+
+        DbQueries.db.execute("INSERT INTO match (datime, home_goals, away_goals) VALUES (DATETIME(?),?,?)",
             [datetime, inputs['home_score'], inputs['away_score']])
         
         match_id = DbQueries.db.execute("SELECT id FROM matches").fetchall()[-1][0]
 
-        DbQueries.db.execute("INSERT INTO participations (home_team, away_team) VALUES (?,?)",
-            [inputs['home_team'], inputs['away_team']])
+        DbQueries.db.execute("INSERT INTO participation (match_id, home_team, away_team) VALUES (?,?,?)",
+            [match_id, inputs['home_team'], inputs['away_team']])
         
-        DbQueries.db.execute("INSERT INTO controls (match_id, referee_id) VALUES (?,?)",
-            [match_id, inputs['referee']])
+        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
+            [match_id, inputs['head_ref']])
+
+        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
+            [match_id, inputs['assist_ref_1']])
+
+        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
+            [match_id, inputs['assist_ref_2']])
+
+        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
+            [match_id, inputs['fourth_ref']])
 
         DbQueries.db.commit()
 

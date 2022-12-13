@@ -11,39 +11,39 @@ class QuerySelector:
     @staticmethod
     def getMatches():
         return [f"{home}-{away} (match#{id})" for id,home,away in
-            DbQueries.db.execute("SELECT id, home_team, away_team FROM matches,participations WHERE id=match_id")]
+            DbQueries.db.execute("SELECT match.match_id, home_team, away_team FROM match,participation WHERE match.match_id=participation.match_id")]
     
     @staticmethod
     def getPlayers():
         return [f"{fName} {lName} ({id})" for fName,lName,id in
-            DbQueries.db.execute("SELECT name, surname, player_id FROM players,people WHERE id=person_id")]
+            DbQueries.db.execute("SELECT name, surname, player_id FROM player,people WHERE player.people_id=people.people_id")]
     
     @staticmethod
     def getReferees():
         return [f"{fName} {lName} ({id})" for fName,lName,id in
-            DbQueries.db.execute("SELECT name, surname, referee_id FROM referees,people  WHERE id=person_id")]
+            DbQueries.db.execute("SELECT name, surname, referee_id FROM referee,people  WHERE referee.people_id=people.people_id")]
     
+    @staticmethod
+    def getRefereesByType(type):
+        return [f"{fName} {lName} ({id})" for fName,lName,id in
+            DbQueries.db.execute("SELECT name, surname, referee_id FROM referee,people  WHERE referee.people_id=people.people_id AND referee.type = \"{}\"".format(type))]        
+
     @staticmethod
     def getTeams():
         return [club[0] for club in
-            DbQueries.db.execute("SELECT name FROM clubs")]
+            DbQueries.db.execute("SELECT team_name FROM team")]
     
     @staticmethod
     def getRefPositions():
-        return ["headref#0", "assistref#1", "assistref#2", "fourthref#4"]
+        return ["Head", "Assistant", "Fourth"]
 
     @staticmethod
     def getPositions():
-        # return ["Attacker", "Midfielder", "Defender", "Goalkeeper"]
-        return [
-            "ST", "CF", "LW", "RW",
-            "LM", "CM", "CAM", "CDM", "RM",
-            "LWB", "LB", "CB", "RB", "RWB",
-            "GK"]
+        return ["ATT", "MID", "DEF", "GK"]
     
     @staticmethod
     def getStatsTypes():
-        return ["GOAL", "assist", "foul", "offside"]
+        return ["Goal", "Assist", "Foul", "Penalty", "Offside", "Corner"]
     
     @staticmethod
     def getCountries():

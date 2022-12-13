@@ -21,33 +21,33 @@ class MainFrame(ttk.Frame):
         scrollbarY.pack(side="right", fill="y")
         canvas["yscrollcommand"] = scrollbarY.set
 
-        pageOneButton = ttk.Button(self.scrollable_frame, text="Add Player",
+        addPlayerPageButton = ttk.Button(self.scrollable_frame, text="Add Player",
                   command=lambda: master.switchFrame("Add Player"))
-        pageOneButton.grid(row=0, column=0)
+        addPlayerPageButton.grid(row=0, column=0)
         
-        pageTwoButton = ttk.Button(self.scrollable_frame, text="Add Referee",
+        addRefereePageButton = ttk.Button(self.scrollable_frame, text="Add Referee",
                   command=lambda: master.switchFrame("Add Referee"))
-        pageTwoButton.grid(row=0, column=1)
+        addRefereePageButton.grid(row=0, column=1)
 
-        pageThreeButton = ttk.Button(self.scrollable_frame, text="Add Team",
+        addteamPageButton = ttk.Button(self.scrollable_frame, text="Add Team",
                   command=lambda: master.switchFrame("Add Team"))
-        pageThreeButton.grid(row=0, column=2)
+        addteamPageButton.grid(row=0, column=2)
 
-        startPageButton = ttk.Button(self.scrollable_frame, text="Add Match",
+        addMatchPageButton = ttk.Button(self.scrollable_frame, text="Add Match",
                   command=lambda: master.switchFrame("Add Match"))
-        startPageButton.grid(row=0, column=3)
+        addMatchPageButton.grid(row=0, column=3)
         
-        startPageButton = ttk.Button(self.scrollable_frame, text="Add Statistic",
+        addStatisticPageButton = ttk.Button(self.scrollable_frame, text="Add Statistic",
                   command=lambda: master.switchFrame("Add Stat"))
-        startPageButton.grid(row=0, column=4)
+        addStatisticPageButton.grid(row=0, column=4)
         
         startPageButton = ttk.Button(self.scrollable_frame, text="Open start page",
                   command=lambda: master.switchFrame("StartPage"))
         startPageButton.grid(row=0, column=5)
         
-        startPageButton = ttk.Button(self.scrollable_frame, text="Submit",
+        submitButton = ttk.Button(self.scrollable_frame, text="Submit",
                   command= self.onSubmit, width=40, padding=5)
-        startPageButton.grid(row=100, column=1, columnspan=2)
+        submitButton.grid(row=100, column=1, columnspan=2)
     
     def onSubmit(self, entries={}, method=''):
         methods = {'':None,

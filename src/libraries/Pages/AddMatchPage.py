@@ -8,6 +8,7 @@ class AddMatchPage(MainFrame):
         MainFrame.__init__(self, master)        # STELIOOO CHECKare row column spans etc..
         self.inputs = {}
 
+        tk.Label(self.scrollable_frame, text="Add match").grid(row=1, column=0, sticky = tk.W)
         # ID is assigned automatically
 
         tk.Label(self.scrollable_frame, text = "Match Datetime").grid(row = 2, column = 0, sticky = tk.W)
@@ -98,23 +99,23 @@ class AddMatchPage(MainFrame):
         
         headRefereeLabel = ttk.Label(contentFrame, text = "Head Referee")
         headRefereeEntry = ttk.Combobox(contentFrame, state="readonly")
-        headRefereeEntry["values"] = QuerySelector.getReferees()
-        self.inputs["referee"] = headRefereeEntry
+        headRefereeEntry["values"] = QuerySelector.getRefereesByType("Head")
+        self.inputs["head_ref"] = headRefereeEntry
         
         firstAssistantLabel = ttk.Label(contentFrame, text = "Assistant referee #1")
         firstAssistantEntry = ttk.Combobox(contentFrame, state="readonly")
-        firstAssistantEntry["values"] = QuerySelector.getReferees()
-        self.inputs["assistref#1"] = firstAssistantEntry
+        firstAssistantEntry["values"] = QuerySelector.getRefereesByType("Assistant")
+        self.inputs["assist_ref_1"] = firstAssistantEntry
         
         secondAssistantLabel = ttk.Label(contentFrame, text = "Assistant referee #2")
         secondAssistantEntry = ttk.Combobox(contentFrame, state="readonly")
-        secondAssistantEntry["values"] = QuerySelector.getReferees()
-        self.inputs["assistref#2"] = secondAssistantEntry
+        secondAssistantEntry["values"] = QuerySelector.getRefereesByType("Assistant")
+        self.inputs["assist_ref_2"] = secondAssistantEntry
         
         fourthRefLabel = ttk.Label(contentFrame, text = "Fourth referee")
         fourthRefEntry = ttk.Combobox(contentFrame, state="readonly")
-        fourthRefEntry["values"] = QuerySelector.getReferees()
-        self.inputs["assistref#2"] = fourthRefEntry
+        fourthRefEntry["values"] = QuerySelector.getRefereesByType("Fourth")
+        self.inputs["fourth_ref"] = fourthRefEntry
 
         
         [widget.grid(row = r, column = col, columnspan = 2, padx = 10, sticky = tk.W) for widget,r,col in 

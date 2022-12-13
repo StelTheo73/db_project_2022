@@ -22,18 +22,18 @@ db.commit()
 print("\nPeople:")
 [print(person) for person in db.execute("SELECT * FROM people")]
 print("\nPlayers:")
-[print(player) for player in db.execute("SELECT * FROM players")]
+[print(player) for player in db.execute("SELECT * FROM player")]
 print("\nReferees:")
-[print(referee) for referee in db.execute("SELECT * FROM referees")]
+[print(referee) for referee in db.execute("SELECT * FROM referee")]
 print("\nMatch Controls by refs:")
-[print(control) for control in db.execute("SELECT * FROM controls")]
+[print(control) for control in db.execute("SELECT * FROM control")]
 print("\nPlayers' Statistics:")
-[print(stat) for stat in db.execute("SELECT * FROM stats")]
+[print(stat) for stat in db.execute("SELECT * FROM stat")]
 print("\nClubs:")
-[print(club) for club in db.execute("SELECT * FROM clubs")]
+[print(club) for club in db.execute("SELECT * FROM team")]
 print("\nMatches:")
-[print(match) for match in db.execute("SELECT * FROM matches")]
+[print(match) for match in db.execute("SELECT * FROM match")]
 print("\nParticipations:")
-[print(participation) for participation in db.execute("SELECT * FROM participations")]
+[print(participation) for participation in db.execute("SELECT * FROM participation")]
 
 db.close()
