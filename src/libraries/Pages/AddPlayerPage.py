@@ -7,10 +7,8 @@ class AddPlayerPage(AddPersonPage):
     def __init__(self, master):
         AddPersonPage.__init__(self, master, personType="Player")
 
-        self.teamInfoFrame = self.createTeamInfoFrame()
-
         tk.Label(self.scrollable_frame, text = "Team Info").grid(row = 17, column = 0, sticky = tk.W)
-        self.teamInfoFrame.grid(row = 18, column = 0, columnspan = 6, rowspan = 10, sticky = tk.W)
+        self.createTeamInfoFrame().grid(row = 18, column = 0, columnspan = 6, rowspan = 10, sticky = tk.W)
     
     def createTeamInfoFrame(self):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
@@ -21,9 +19,7 @@ class AddPlayerPage(AddPersonPage):
         self.inputs["club"] = teamSelector
         
         positionsLabel = ttk.Label(contentFrame, text = "Position")
-        selectedPosition = tk.StringVar()
-        # https://stackoverflow.com/questions/37414600/python-tkinter-using-a-textvariable-in-a-combobox-seems-useless
-        positionSelector = ttk.Combobox(contentFrame, textvariable = selectedPosition, state = "readonly")
+        positionSelector = ttk.Combobox(contentFrame, state = "readonly")
         positionSelector["values"] = QuerySelector.getPositions()
         self.inputs["position"] = positionSelector
  

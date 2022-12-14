@@ -67,20 +67,17 @@ class AddPersonPage(MainFrame):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
 
         ageYear = ttk.Label(contentFrame, text = "Year")
-        selectedYear = tk.IntVar()
-        yearSelector = ttk.Combobox(contentFrame, textvariable = selectedYear, state = "readonly")
+        yearSelector = ttk.Combobox(contentFrame, state = "readonly")
         yearSelector["values"] = QuerySelector.getLastYears(max_age=65, min_age=15)
         self.inputs["year"] = yearSelector
         
         ageMonth = ttk.Label(contentFrame, text = "Month")
-        selectedMonth = tk.StringVar()
-        monthSelector = ttk.Combobox(contentFrame, textvariable = selectedMonth, state = "readonly")
+        monthSelector = ttk.Combobox(contentFrame, state = "readonly")
         monthSelector["values"] = [str(month).zfill(2) for month in range(1, 13)]
         self.inputs["month"] = monthSelector
 
         ageDay = ttk.Label(contentFrame, text = "Day")
-        selectedDay = tk.IntVar()
-        daySelector = ttk.Combobox(contentFrame, textvariable = selectedDay, state = "readonly")
+        daySelector = ttk.Combobox(contentFrame, state = "readonly")
         daySelector["values"] = [str(day).zfill(2) for day in range(1, 32)]
         self.inputs["day"] = daySelector
  
