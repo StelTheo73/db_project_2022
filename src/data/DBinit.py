@@ -5,7 +5,7 @@ import sqlite3, os
 DB_PATH = './src/data/database.db'
 SQL_PATH = './src/data/DBCreationScript.sql'
 
-# DELETE ALL DATABASE for initialization purposes
+# DELETE WHOLE DATABASE for initialization purposes
 if os.path.exists(DB_PATH): os.remove(DB_PATH)
 
 # CREATE AND CONNECT DB

@@ -5,10 +5,8 @@ from libraries.dbIO.QuerySelector import QuerySelector
 
 class AddMatchPage(MainFrame):
     def __init__(self, master):
-        MainFrame.__init__(self, master)        # STELIOOO CHECKare row column spans etc..
-        self.inputs = {}
+        MainFrame.__init__(self, master)
 
-        tk.Label(self.scrollable_frame, text="Add match").grid(row=1, column=0, sticky = tk.W)
         # ID is assigned automatically
 
         tk.Label(self.scrollable_frame, text = "Match Datetime").grid(row = 2, column = 0, sticky = tk.W)
@@ -21,7 +19,7 @@ class AddMatchPage(MainFrame):
         self.createRefereesFrame().grid(row = 9, column = 0, columnspan = 8, rowspan = 2, sticky = tk.W)
 
     def onSubmit(self):
-        super().onSubmit(self.inputs, 'match')
+        super().onSubmit('match')
 
     def createMatchDateFrame(self):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
@@ -46,17 +44,12 @@ class AddMatchPage(MainFrame):
         hourSelector["values"] = [str(hour).zfill(2) for hour in range(0, 24)]
         self.inputs["hour"] = hourSelector
 
-        minuteLabel = ttk.Label(contentFrame, text = "Minute")
-        minuteSelector = ttk.Combobox(contentFrame, state="readonly")
-        minuteSelector["values"] = [str(min).zfill(2) for min in range(0, 60, 15)]
-        self.inputs["minute"] = minuteSelector
-
 
         [widget.grid(row = r, column = col, columnspan = 2, padx = 10, sticky = tk.W) for widget,r,col in 
             zip([yearLabel,yearSelector, monthLabel,monthSelector, dayLabel,daySelector,
-                    hourLabel,hourSelector, minuteLabel,minuteSelector],
-                [0,1, 0,1, 0,1, 2,3, 2,3],   # rows
-                [0,0, 2,2, 4,4, 1,1, 3,3])   # columns
+                    hourLabel,hourSelector],
+                [0,1, 0,1, 0,1, 0,1],   # rows
+                [0,0, 2,2, 4,4, 6,6])   # columns
         ]
         
         return contentFrame

@@ -60,7 +60,7 @@ class DbQueries:
     def update_matches(inputs):
         print("Submited match!")
 
-        datetime = '-'.join([inputs[i] for i in ['year','month','day']]) +' '+ inputs['hour']+':'+inputs['minute']
+        datetime = '-'.join([inputs[i] for i in ['year','month','day']]) +' '+ inputs['hour']+':00'
 
         DbQueries.db.execute("INSERT INTO match (datime, home_goals, away_goals) VALUES (DATETIME(?),?,?)",
             [datetime, inputs['home_score'], inputs['away_score']])

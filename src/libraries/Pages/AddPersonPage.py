@@ -6,8 +6,7 @@ from libraries.dbIO.QuerySelector import QuerySelector
 class AddPersonPage(MainFrame):
     def __init__(self, master, personType:str):
         MainFrame.__init__(self, master)
-        self.personType, self.inputs = personType, {}
-        tk.Label(self.scrollable_frame, text="Add "+self.personType).grid(row=1, column=0, sticky = tk.W)
+        self.personType = personType
         
         tk.Label(self.scrollable_frame, text = "Personal Info").grid(row = 2, column = 0, sticky = tk.W)
         self.createPersonalInfoFrame().grid(row = 3, column = 0, columnspan = 8, rowspan = 4, sticky = tk.W)
@@ -19,7 +18,7 @@ class AddPersonPage(MainFrame):
         self.createContactInfoFrame().grid(row = 11, column = 0, columnspan = 6, rowspan = 6, sticky = tk.W)
 
     def onSubmit(self):
-        super().onSubmit(self.inputs, self.personType.lower())
+        super().onSubmit(self.personType.lower())
 
     def createPersonalInfoFrame(self):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")

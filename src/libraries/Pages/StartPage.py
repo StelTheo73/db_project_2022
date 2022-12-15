@@ -5,13 +5,12 @@ from libraries.MainFrame import MainFrame
 class StartPage(MainFrame):
     def __init__(self, master):
         MainFrame.__init__(self, master)
-        self.inputs = {}
 
         tk.Label(self.scrollable_frame, text="This is the Query Page").grid(row=1, column=1)
         self.createQueryFrame().grid(row = 2, column = 1, columnspan = 8, rowspan = 1, sticky = tk.W)
     
     def onSubmit(self,):
-        return super().onSubmit(self.inputs, 'query')
+        super().onSubmit('query')
 
     def createQueryFrame(self):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth=5, relief="ridge")

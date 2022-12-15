@@ -5,10 +5,8 @@ from libraries.dbIO.QuerySelector import QuerySelector
 
 class AddStatsPage(MainFrame):
     def __init__(self, master):
-        MainFrame.__init__(self, master)        # STELIOOO CHECKare row column spans etc..
-        self.inputs = {}
+        MainFrame.__init__(self, master)
 
-        tk.Label(self.scrollable_frame, text="Add Statistic").grid(row=1, column=0, sticky = tk.W)
         # ID is assigned automatically
 
         self.statsInfoFrame = self.createStatsInfoFrame()

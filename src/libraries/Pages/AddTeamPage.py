@@ -6,13 +6,9 @@ from libraries.dbIO.QuerySelector import QuerySelector
 class AddTeamPage(MainFrame):
     def __init__(self, master):
         MainFrame.__init__(self, master)
-        self.inputs = {}
 
-        tk.Label(self.scrollable_frame, text="Add Team").grid(row=1, column=0, sticky = tk.W)
-
-        self.teamInfoFrame = self.createTeamInfoFrame()
         tk.Label(self.scrollable_frame, text = "Team Info").grid(row = 2, column = 0, sticky = tk.W)
-        self.teamInfoFrame.grid(row = 3, column = 0, columnspan = 6, rowspan = 4, sticky = tk.W)
+        self.createTeamInfoFrame().grid(row = 3, column = 0, columnspan = 6, rowspan = 4, sticky = tk.W)
 
     def onSubmit(self):
         super().onSubmit(self.inputs, 'club')

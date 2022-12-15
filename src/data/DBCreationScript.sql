@@ -79,10 +79,10 @@ INSERT INTO club VALUES ('ARIS', 'Salonica', DATE('1914-03-25'));
 INSERT INTO match (datime, home_goals, away_goals) VALUES (DATETIME('2022-02-03 21:00'), 2,1 );
 INSERT INTO participation (home_team, away_team) VALUES ('Panatha', 'PAOK');
 
-INSERT INTO match (datime, home_goals, away_goals) VALUES (DATETIME('2022-02-23 20:30'), 0,1 );
+INSERT INTO match (datime, home_goals, away_goals) VALUES (DATETIME('2022-02-23 21:00'), 0,1 );
 INSERT INTO participation (home_team, away_team) VALUES ('ARIS', 'PAOK');
 
-INSERT INTO match (datime, home_goals, away_goals) VALUES (DATETIME('2022-03-05 21:30'), 1,0 );
+INSERT INTO match (datime, home_goals, away_goals) VALUES (DATETIME('2022-03-05 21:00'), 1,0 );
 INSERT INTO participation (home_team, away_team) VALUES ('Panatha', 'ARIS');
 
 INSERT INTO player VALUES ('PL1', 'AN123456', 'Panatha', 'CF');

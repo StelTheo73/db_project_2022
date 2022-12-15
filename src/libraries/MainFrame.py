@@ -7,6 +7,7 @@ class MainFrame(ttk.Frame):
         ttk.Frame.__init__(self, master)
         canvas = tk.Canvas(self)
         self.scrollable_frame = ttk.Frame(canvas)
+        self.inputs = {}
 
         canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
         self.scrollable_frame.bind("<Configure>",
@@ -52,7 +53,7 @@ class MainFrame(ttk.Frame):
                   command=lambda: master.switchFrame("StartPage"))
         startPageButton.grid(row=0, column=5)
 
-    def onSubmit(self, entries={}, method=''):
+    def onSubmit(self, method=''):
         methods = {'':None,
             'player': DbQueries.update_players,
             'referee': DbQueries.update_referees,
@@ -61,5 +62,5 @@ class MainFrame(ttk.Frame):
             'stat': DbQueries.update_stats,
             'query': DbQueries.run_query,
         }
-        DbQueries.submit(entries, methods[method])
+        DbQueries.submit(self.inputs, methods[method])
 
