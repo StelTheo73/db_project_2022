@@ -2,82 +2,44 @@ import sqlite3, json, os
 from data_generator import generate as generate_data
 from globals import *
 
-DB_PATH = "./src/data/"
-DB_FILE = "database.db"
-
 def insert_person(person, db):
-    db.execute("INSERT INTO people \
-        VALUES (?, ?, ?, ?, ?, ?)\
-        ",
-        [
+    db.execute("INSERT INTO people VALUES (?, ?, ?, ?, ?, ?)", [
             person["id"], person["name"], person["surname"], 
-            person["birthdate"], person["phone"], person["nationality"]
-        ]
-    )
+            person["birthdate"], person["phone"], person["nationality"]])
 
 def insert_player(footballer, db):
-    db.execute("INSERT INTO player \
-        VALUES (?, ?, ?, ?)\
-        ",
-        [
+    db.execute("INSERT INTO player VALUES (?, ?, ?, ?)", [
             footballer["athlete_id"], footballer["id"],
-            footballer["team_name"], footballer["position"]
-        ]
-    )
+            footballer["team_name"], footballer["position"]])
 
 def insert_referee(referee, db):
-    db.execute("INSERT INTO referee \
-        VALUES (?, ?, ?)\
-        ",
-        [
+    db.execute("INSERT INTO referee VALUES (?, ?, ?)", [
             referee["referee_id"], referee["id"],
-            referee["type"]
-        ]
-    )
+            referee["type"]])
 
 def insert_team(team, db):
-    db.execute("INSERT INTO team \
-        VALUES (?, ?, ?)\
-        ",
-        [
+    db.execute("INSERT INTO team VALUES (?, ?, ?)", [
             team["team_name"], 
             team["stadium"],
-            team["foundation_year"]
-        ]
-    )
+            team["foundation_year"]])
 
 def insert_match(match, db):
-    db.execute("INSERT INTO match \
-        VALUES (?, ?, ?, ?)\
-        ",
-        [
+    db.execute("INSERT INTO match VALUES (?, ?, ?, ?)", [
             match["match_id"],
             match["datime"],
             match["home_team_goals"],
-            match["away_team_goals"]
-        ]
-    )
+            match["away_team_goals"]])
 
 def insert_participation(participation, db):
-    db.execute("INSERT INTO participation \
-        VALUES (?, ?, ?)\
-        ",
-        [
+    db.execute("INSERT INTO participation VALUES (?, ?, ?)", [
             participation["match"],
             participation["home_team"],
-            participation["away_team"]
-        ]
-    )
+            participation["away_team"]])
 
 def insert_control(control, db):
-    db.execute("INSERT INTO control \
-        VALUES (?, ?)\
-        ",
-        [
+    db.execute("INSERT INTO control VALUES (?, ?)", [
             control["match_id"],
-            control["referee_id"]
-        ]
-    )
+            control["referee_id"]])
 
 def insert_data(db):
     persons_stream = open(JSONs_PATH+"persons.json", "r")
@@ -123,14 +85,10 @@ def insert_data(db):
         insert_control(control, db)
 
 
-def create_db(path, file):
-    if os.path.exists(path+file): os.remove(path+file)
+def create_db():
+    if os.path.exists(DB_PATH): os.remove(DB_PATH)
 
-    try:
-        db = sqlite3.connect(path+file)
-    except sqlite3.OperationalError:
-        f = open(path+file, "w")
-        f.close()
+    db = sqlite3.connect(DB_PATH)
 
     db.execute("DROP TABLE IF EXISTS people")
     db.execute("DROP TABLE IF EXISTS team")
@@ -206,14 +164,14 @@ def create_db(path, file):
         stat_name TEXT,\
         FOREIGN KEY(match_id) REFERENCES match(match_id),\
         FOREIGN KEY(player_id) REFERENCES player(player_id)\
-        )")
+    )")
 
     return db
 
+
 if __name__ == "__main__":
-    generate_data(200, 50, 3)
-    db = create_db(DB_PATH, DB_FILE)
+    generate_data(200, 50, 10)
+    db = create_db()
     insert_data(db)
     db.commit()
     db.close()
-    #os.system("pause")

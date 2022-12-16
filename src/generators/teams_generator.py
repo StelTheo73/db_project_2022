@@ -3,7 +3,6 @@ import random_generator as rndg
 from globals import *
 
 teams = []
-
 teams_name_list = []
 
 def team_generator():

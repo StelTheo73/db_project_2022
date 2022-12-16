@@ -12,7 +12,7 @@ persons_id_list = []
 footballers_id_list = []
 referees_id_list = []
 
-names = json.load(open("./src/libraries/JsonFiles/names.json"))
+names = json.load(open(JSONs_PATH+"names.json"))
 firstnames = names["firstnames"]
 lastnames = names["lastnames"]
 
