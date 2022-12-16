@@ -16,22 +16,22 @@ class QuerySelector:
     @staticmethod
     def getPlayers():
         return [f"{fName} {lName} ({id})" for fName,lName,id in
-            DbQueries.db.execute("SELECT name, surname, player_id FROM player,people WHERE player.person_id=people.person_id")]
+            DbQueries.db.execute("SELECT name, surname, player_id FROM player,people WHERE player.people_id=people.people_id")]
     
     @staticmethod
     def getReferees():
         return [f"{fName} {lName} ({id})" for fName,lName,id in
-            DbQueries.db.execute("SELECT name, surname, referee_id FROM referee,people  WHERE referee.person_id=people.person_id")]
+            DbQueries.db.execute("SELECT name, surname, referee_id FROM referee,people  WHERE referee.people_id=people.people_id")]
     
     @staticmethod
     def getRefereesByType(type):
         return [f"{fName} {lName} ({id})" for fName,lName,id in
-            DbQueries.db.execute("SELECT name, surname, referee_id FROM referee,people  WHERE referee.person_id=people.person_id AND referee.position = ?",[type])]
+            DbQueries.db.execute("SELECT name, surname, referee_id FROM referee,people  WHERE referee.people_id=people.people_id AND referee.type=?",[type])]
 
     @staticmethod
     def getTeams():
-        return [club[0] for club in
-            DbQueries.db.execute("SELECT club_name FROM club")]
+        return [team[0] for team in
+            DbQueries.db.execute("SELECT team_name FROM team")]
     
     @staticmethod
     def getRefPositions():

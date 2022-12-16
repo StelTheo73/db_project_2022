@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS player;
 DROP TABLE IF EXISTS referee;
 DROP TABLE IF EXISTS gameControl;
 DROP TABLE IF EXISTS stat;
-DROP TABLE IF EXISTS club;
+DROP TABLE IF EXISTSteam;
 DROP TABLE IF EXISTS match;
 DROP TABLE IF EXISTS participation;
 
@@ -16,21 +16,21 @@ DROP TABLE IF EXISTS participation;
 PRAGMA foreign_keys = ON; -- ENABLE FOREIGN KEYS
 
 --People
-CREATE TABLE IF NOT EXISTS people(person_id TEXT NOT NULL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS people(people_id TEXT NOT NULL PRIMARY KEY,
 name TEXT, surname TEXT, birthdate DATE, tel TEXT, nationality TEXT);
 
 --Player
 CREATE TABLE IF NOT EXISTS player(player_id TEXT NOT NULL PRIMARY KEY,
-person_id TEXT, club_name TEXT,
+people_id TEXT,team_name TEXT,
 position TEXT,
-FOREIGN KEY (person_id) REFERENCES people(person_id),
-FOREIGN KEY (club_name) REFERENCES club(club_name)
+FOREIGN KEY (people_id) REFERENCES people(people_id),
+FOREIGN KEY (club_name) REFERENCESteam(club_name)
 );
 
 --Referee
 CREATE TABLE IF NOT EXISTS referee(referee_id TEXT NOT NULL PRIMARY KEY,
-person_id TEXT, position TEXT,
-FOREIGN KEY (person_id) REFERENCES people(person_id)
+people_id TEXT, position TEXT,
+FOREIGN KEY (people_id) REFERENCES people(people_id)
 );
 
 --Control = Diefthinseis Agwnwn
@@ -48,8 +48,8 @@ FOREIGN KEY (player_id) REFERENCES player(player_id),
 FOREIGN KEY (match_id) REFERENCES match(match_id)
 );
 
---Club
-CREATE TABLE IF NOT EXISTS club(club_name TEXT NOT NULL PRIMARY KEY,
+--team
+CREATE TABLE IF NOT EXISTSteam(club_name TEXT NOT NULL PRIMARY KEY,
 home TEXT, founded DATE);
 
 --Match
@@ -61,8 +61,8 @@ CREATE TABLE IF NOT EXISTS participation(
 match_id INTEGER NOT NULL PRIMARY KEY,
 home_team TEXT NOT NULL, away_team TEXT NOT NULL,
 FOREIGN KEY (match_id) REFERENCES match(match_id),
-FOREIGN KEY (home_team) REFERENCES club(club_name),
-FOREIGN KEY (away_team) REFERENCES club(club_name)
+FOREIGN KEY (home_team) REFERENCESteam(club_name),
+FOREIGN KEY (away_team) REFERENCESteam(club_name)
 );
 
 
@@ -72,9 +72,9 @@ INSERT INTO people VALUES
 INSERT INTO people VALUES
 ('AM987654',  'Julian', 'Koulevski', DATE('1989-05-13'), '6946875120', 'French');
 
-INSERT INTO club VALUES ('Panatha', 'Athens', DATE('1908-02-03'));
-INSERT INTO club VALUES ('PAOK', 'Salonica', DATE('1926-04-20'));
-INSERT INTO club VALUES ('ARIS', 'Salonica', DATE('1914-03-25'));
+INSERT INTOteam VALUES ('Panatha', 'Athens', DATE('1908-02-03'));
+INSERT INTOteam VALUES ('PAOK', 'Salonica', DATE('1926-04-20'));
+INSERT INTOteam VALUES ('ARIS', 'Salonica', DATE('1914-03-25'));
 
 INSERT INTO match (datime, home_goals, away_goals) VALUES (DATETIME('2022-02-03 21:00'), 2,1 );
 INSERT INTO participation (home_team, away_team) VALUES ('Panatha', 'PAOK');

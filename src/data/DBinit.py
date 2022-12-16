@@ -32,7 +32,7 @@ db.commit()
 # print("\nPlayers' Statistics:")
 # [print(stat) for stat in db.execute("SELECT * FROM statistic")]
 # print("\nClubs:")
-# [print(club) for club in db.execute("SELECT * FROM club")]
+# [print(team) forteam in db.execute("SELECT * FROMteam")]
 # print("\nMatches:")
 # [print(match) for match in db.execute("SELECT * FROM match")]
 # print("\nParticipations:")

@@ -19,7 +19,7 @@ class AddRefereePage(AddPersonPage):
         positionsLabel = ttk.Label(contentFrame, text = "Position")
         positionSelector = ttk.Combobox(contentFrame, state = "readonly")
         positionSelector["values"] = QuerySelector.getRefPositions()
-        self.inputs["position"] = positionSelector
+        self.inputs["type"] = positionSelector
 
         positionsLabel.grid(row = 0, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
         positionSelector.grid(row = 1, column = 0, columnspan = 2, padx = 10, sticky = tk.W)

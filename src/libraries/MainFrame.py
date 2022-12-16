@@ -57,7 +57,7 @@ class MainFrame(ttk.Frame):
         methods = {'':None,
             'player': DbQueries.update_players,
             'referee': DbQueries.update_referees,
-            'club': DbQueries.update_clubs,
+            'team': DbQueries.update_clubs,
             'match': DbQueries.update_matches,
             'stat': DbQueries.update_stats,
             'query': DbQueries.run_query,

@@ -16,7 +16,7 @@ class AddPlayerPage(AddPersonPage):
         teamLabel = ttk.Label(contentFrame, text = "Team")
         teamSelector = ttk.Combobox(contentFrame, state = "readonly")
         teamSelector["values"] = QuerySelector.getTeams()
-        self.inputs["club"] = teamSelector
+        self.inputs["team"] = teamSelector
         
         positionsLabel = ttk.Label(contentFrame, text = "Position")
         positionSelector = ttk.Combobox(contentFrame, state = "readonly")

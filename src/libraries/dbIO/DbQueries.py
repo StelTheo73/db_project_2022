@@ -25,8 +25,8 @@ class DbQueries:
 
         DbQueries.update_persons(inputs)
 
-        DbQueries.db.execute("INSERT INTO player (player_id, person_id, club_name, position) VALUES (?,?,?,?)",
-            [inputs['card'], inputs['id'], inputs['club'], inputs['position']])
+        DbQueries.db.execute("INSERT INTO player (player_id, people_id,team_name, position) VALUES (?,?,?,?)",
+            [inputs['card'], inputs['id'], inputs['team'], inputs['position']])
         DbQueries.db.commit()
     
     @staticmethod
@@ -35,8 +35,8 @@ class DbQueries:
 
         DbQueries.update_persons(inputs)
 
-        DbQueries.db.execute("INSERT INTO referee (referee_id, person_id, position) VALUES (?,?,?)",
-            [inputs['card'], inputs['id'], inputs['position']])
+        DbQueries.db.execute("INSERT INTO referee (referee_id, people_id, type) VALUES (?,?,?)",
+            [inputs['card'], inputs['id'], inputs['type']])
         DbQueries.db.commit()
     
     @staticmethod
@@ -44,16 +44,16 @@ class DbQueries:
         print("Submited person!")
 
         date = '-'.join([inputs['year'], inputs['month'], inputs['day']])
-        DbQueries.db.execute("INSERT INTO people (person_id, name, surname, birthdate, tel, nationality) VALUES (?,?,?, DATE(?), ?,?)",
+        DbQueries.db.execute("INSERT INTO people (people_id, name, surname, birthdate, tel, nationality) VALUES (?,?,?, DATE(?), ?,?)",
             [inputs['id'], inputs['name'], inputs['surname'], date, inputs['tel'], inputs['nationality']])
         DbQueries.db.commit()
     
     @staticmethod
     def update_clubs(inputs):
-        print("Submited club!")
+        print("Submitedteam!")
 
         date = inputs['founded'] + '-01-01'
-        DbQueries.db.execute("INSERT INTO club (club_name, home, founded) VALUES (?,?, DATE(?))", [inputs['name'], inputs['home'], date])
+        DbQueries.db.execute("INSERT INTO team (club_name, home, founded) VALUES (?,?, DATE(?))", [inputs['name'], inputs['home'], date])
         DbQueries.db.commit()
 
     @staticmethod
