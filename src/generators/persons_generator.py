@@ -1,6 +1,6 @@
-import random
+import random,json
 import random_generator as rndg
-import json
+from globals import *
 
 domains = ["gmail", "hotmail", "yahoo"]
 
@@ -65,9 +65,9 @@ def referee_generator(person_id):
     }
     
 def generate(teams, no_of_footballers = 300, no_of_refs = 50):
-    persons_stream = open("./json_files/persons.json", "w")
-    footballers_stream = open("./json_files/footballers.json", "w")
-    referees_stream = open("./json_files/referees.json", "w")
+    persons_stream = open(JSONs_PATH+"persons.json", "w")
+    footballers_stream = open(JSONs_PATH+"footballers.json", "w")
+    referees_stream = open(JSONs_PATH+"referees.json", "w")
 
     print("Generating footballers...")
     persons_stream.write("[\n")
@@ -100,7 +100,7 @@ def generate(teams, no_of_footballers = 300, no_of_refs = 50):
     persons_stream.close()
 
 if __name__ == "__main__":
-    teams_stream = open("./json_files/teams.json", "r")
+    teams_stream = open(JSONs_PATH+"teams.json", "r")
     teams = json.load(teams_stream)
     teams_stream.close()
     generate(teams, 300, 50)

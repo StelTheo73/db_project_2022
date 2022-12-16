@@ -1,6 +1,6 @@
-import random
+import random, json
 import random_generator as rndg
-import json
+from globals import *
 
 teams = []
 
@@ -22,7 +22,7 @@ def team_generator():
     }
 
 def generate(no_of_teams = 16):
-    teams_stream = open("./json_files/teams.json", "w")
+    teams_stream = open(JSONs_PATH+"teams.json", "w")
     print("Generating teams...")
     teams_stream.write("[\n")
     for i in range(no_of_teams):

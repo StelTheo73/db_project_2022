@@ -1,5 +1,5 @@
-import json
-import random
+import json, random
+from globals import *
 
 def control_generator(ref_type, referees, match_id):
     type = None
@@ -13,7 +13,7 @@ def control_generator(ref_type, referees, match_id):
 
 def generate(matches, referees):
     print("Linking refs with matches...")
-    control_stream = open("./json_files/controls.json", "w")
+    control_stream = open(JSONs_PATH+"controls.json", "w")
     control_stream.write("[\n")
     for i in range(0, len(matches), 1):
         head = control_generator("Head", referees, matches[i]["match_id"])        
@@ -39,8 +39,8 @@ def generate(matches, referees):
     control_stream.close()
         
 if __name__ == "__main__":
-    matches_stream = open("./json_files/matches.json", "r")
-    referees_stream = open("./json_files/referees.json", "r")
+    matches_stream = open(JSONs_PATH+"matches.json", "r")
+    referees_stream = open(JSONs_PATH+"referees.json", "r")
     matches = json.load(matches_stream)
     referees = json.load(referees_stream)
     matches_stream.close()

@@ -1,6 +1,5 @@
-import json
-import random
-import random_generator as rndg
+import json, random
+from globals import *
 
 def participations_generator(teams, matches):
     match_index = 0
@@ -35,8 +34,8 @@ def match_generator(match_id):
 def generate(teams):
     no_of_teams = len(teams)
     no_of_matches = (no_of_teams) * (no_of_teams - 1)
-    matches_stream = open("./json_files/matches.json", "w")
-    participations_stream = open("./json_files/participations.json", "w")
+    matches_stream = open(JSONs_PATH+"matches.json", "w")
+    participations_stream = open(JSONs_PATH+"participations.json", "w")
     print("Generating matches...")
     matches_stream.write("[\n")
     for i in range(no_of_matches):
@@ -48,7 +47,7 @@ def generate(teams):
             matches_stream.write("\n]")
     matches_stream.close()
     
-    matches_stream = open("./json_files/matches.json", "r")
+    matches_stream = open(JSONs_PATH+"matches.json", "r")
     matches = json.load(matches_stream)
     matches_stream.close()
     
@@ -65,7 +64,7 @@ def generate(teams):
     participations_stream.close()
 
 if __name__ == "__main__":
-    teams_stream = open("./json_files/teams.json", "r")
+    teams_stream = open(JSONs_PATH+"teams.json", "r")
     teams = json.load(teams_stream)
     teams_stream.close()
     generate(teams)

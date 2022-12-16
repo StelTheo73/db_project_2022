@@ -1,9 +1,9 @@
 import sqlite3, json, os
 from data_generator import generate as generate_data
+from globals import *
 
 DB_PATH = "./src/data/"
 DB_FILE = "database.db"
-JSONs_PATH = './src/libraries/JsonFiles/'
 
 def insert_person(person, db):
     db.execute("INSERT INTO people \
@@ -80,43 +80,43 @@ def insert_control(control, db):
     )
 
 def insert_data(db):
-    persons_stream = open("./json_files/persons.json", "r")
+    persons_stream = open(JSONs_PATH+"persons.json", "r")
     persons = json.load(persons_stream)
     persons_stream.close()
     for person in persons:
         insert_person(person, db)
 
-    teams_stream = open("./json_files/teams.json", "r")
+    teams_stream = open(JSONs_PATH+"teams.json", "r")
     teams = json.load(teams_stream)
     teams_stream.close()
     for team in teams:
         insert_team(team, db)
 
-    footballers_stream = open("./json_files/footballers.json", "r")
+    footballers_stream = open(JSONs_PATH+"footballers.json", "r")
     footballers = json.load(footballers_stream)
     footballers_stream.close()
     for footballer in footballers:
         insert_player(footballer, db)
     
-    referees_stream = open("./json_files/referees.json", "r")
+    referees_stream = open(JSONs_PATH+"referees.json", "r")
     referees = json.load(referees_stream)
     referees_stream.close()
     for referee in referees:
         insert_referee(referee, db)
 
-    matches_stream = open("./json_files/matches.json", "r")
+    matches_stream = open(JSONs_PATH+"matches.json", "r")
     matches = json.load(matches_stream)
     matches_stream.close()
     for match in matches:
         insert_match(match, db)
 
-    participations_stream = open("./json_files/participations.json", "r")
+    participations_stream = open(JSONs_PATH+"participations.json", "r")
     participations = json.load(participations_stream)
     participations_stream.close()
     for participation in participations:
         insert_participation(participation, db)
 
-    controls_stream = open("./json_files/controls.json", "r")
+    controls_stream = open(JSONs_PATH+"controls.json", "r")
     controls = json.load(controls_stream)
     controls_stream.close()
     for control in controls:
@@ -211,7 +211,7 @@ def create_db(path, file):
     return db
 
 if __name__ == "__main__":
-    generate_data(200, 50, 10)
+    generate_data(200, 50, 3)
     db = create_db(DB_PATH, DB_FILE)
     insert_data(db)
     db.commit()
