@@ -6,6 +6,17 @@ class DbReadyQs:
     DB_PATH = './src/data/database.db'
     db = sqlite3.connect(DB_PATH)
 
+    def get_board():
+        output = {}
+        functions:list(function) = [DbReadyQs.__dict__[func] for func in list(DbReadyQs.__dict__.keys())[5:-3]]
+        for func in functions:
+            out:dict = func()
+            for team in out:
+                if not team in output.keys():
+                    output[team] = {}
+                output[team][func.__name__.rstrip("_for_each_team")] = out[team]
+        return output
+
     def format(cursor: object):
         "This function formats the outputs from the database for the GUI"
         return dict(cursor)
@@ -67,7 +78,9 @@ class DbReadyQs:
         return DbReadyQs.format([(team,points(team)) for team in wins])
 
 
+if __name__ == "__main__":
+    board = DbReadyQs.get_board()
+    for tm in board:
+        # Check that all have same length.. Bug in wins/defeats for teams that have 0 of them
+        print(tm, len(board), board[tm])
 
-
-for func in list(DbReadyQs.__dict__.keys())[4:-3]:
-    print("Function:",func, "\nOutput:", DbReadyQs.__dict__[func](), "\n")
