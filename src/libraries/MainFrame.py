@@ -53,6 +53,27 @@ class MainFrame(ttk.Frame):
                   command=lambda: master.switchFrame("StartPage"))
         startPageButton.grid(row=0, column=5)
 
+        deletePlayerPageButton = ttk.Button(self.scrollable_frame, text="Delete Player",
+                  command=lambda: master.switchFrame("Delete Player"))
+        deletePlayerPageButton.grid(row=1, column=0)
+        
+        deleteRefereePageButton = ttk.Button(self.scrollable_frame, text="Delete Referee",
+                  command=lambda: master.switchFrame("Delete Referee"))
+        deleteRefereePageButton.grid(row=1, column=1)
+
+        deleteTeamPageButton = ttk.Button(self.scrollable_frame, text="Delete Team",
+                  command=lambda: master.switchFrame("Delete Team"))
+        deleteTeamPageButton.grid(row=1, column=2)
+
+        deleteMatchPageButton = ttk.Button(self.scrollable_frame, text="Delete Match",
+                  command=lambda: master.switchFrame("Delete Match"))
+        deleteMatchPageButton.grid(row=1, column=3)
+        
+        deleteStatisticPageButton = ttk.Button(self.scrollable_frame, text="Delete Statistic",
+                  command=lambda: master.switchFrame("Delete Stat"))
+        deleteStatisticPageButton.grid(row=1, column=4)
+
+
     def onSubmit(self, method=''):
         methods = {'':None,
             'player': DbQueries.update_players,
@@ -61,6 +82,7 @@ class MainFrame(ttk.Frame):
             'match': DbQueries.update_matches,
             'stat': DbQueries.update_stats,
             'query': DbQueries.run_query,
+            'update_player' : None
         }
         DbQueries.submit(self.inputs, methods[method])
 

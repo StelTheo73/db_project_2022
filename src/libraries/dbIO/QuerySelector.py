@@ -18,6 +18,11 @@ class QuerySelector:
         return [f"{fName} {lName} ({id})" for fName,lName,id in
             DbQueries.db.execute("SELECT name, surname, player_id FROM player,people WHERE player.people_id=people.people_id")]
     
+    def getPlayersByTeam(team):
+        return [f"{fName} {lName} ({id})" for fName,lName,id in
+            DbQueries.db.execute("SELECT name, surname, player_id FROM player,people WHERE player.people_id=people.people_id AND player.team_name=?",[team])]
+           
+
     @staticmethod
     def getReferees():
         return [f"{fName} {lName} ({id})" for fName,lName,id in
@@ -44,7 +49,6 @@ class QuerySelector:
             "LM", "CM", "CAM", "CDM", "RM",
             "LWB", "LB", "CB", "RB", "RWB",
             "GK"]
-        return ["ATT", "MID", "DEF", "GK"]
     
     @staticmethod
     def getStatsTypes():
