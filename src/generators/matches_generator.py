@@ -34,8 +34,8 @@ def match_generator(match_id):
 def generate(teams):
     no_of_teams = len(teams)
     no_of_matches = (no_of_teams) * (no_of_teams - 1)
-    matches_stream = open(JSONs_PATH+"matches.json", "w")
-    participations_stream = open(JSONs_PATH+"participations.json", "w")
+    matches_stream = open(MATCHES_PATH, "w")
+    participations_stream = open(PARTICIPATIONS_PATH, "w")
     print("Generating matches...")
     matches_stream.write("[\n")
     for i in range(no_of_matches):
@@ -47,7 +47,7 @@ def generate(teams):
             matches_stream.write("\n]")
     matches_stream.close()
     
-    matches_stream = open(JSONs_PATH+"matches.json", "r")
+    matches_stream = open(MATCHES_PATH, "r")
     matches = json.load(matches_stream)
     matches_stream.close()
     
@@ -64,7 +64,7 @@ def generate(teams):
     participations_stream.close()
 
 if __name__ == "__main__":
-    teams_stream = open(JSONs_PATH+"teams.json", "r")
+    teams_stream = open(TEAMS_PATH, "r")
     teams = json.load(teams_stream)
     teams_stream.close()
     generate(teams)

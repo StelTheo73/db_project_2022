@@ -7,15 +7,15 @@ import json
 
 def generate(num_of_footballers = 300, num_of_referees = 50, num_of_teams = 16):
     generate_teams(num_of_teams)
-    teams_stream = open(JSONs_PATH+"teams.json", "r")
+    teams_stream = open(TEAMS_PATH, "r")
     teams = json.load(teams_stream)
     teams_stream.close()
     generate_persons(teams, num_of_footballers, num_of_referees)
     generate_matches(teams)
-    matches_stream = open(JSONs_PATH+"matches.json", "r")
+    matches_stream = open(MATCHES_PATH, "r")
     matches = json.load(matches_stream)
     matches_stream.close()
-    referees_stream = open(JSONs_PATH+"referees.json", "r")
+    referees_stream = open(REFEREES_PATH, "r")
     referees = json.load(referees_stream)
     referees_stream.close()
     generate_control(matches, referees)

@@ -12,7 +12,7 @@ persons_id_list = []
 footballers_id_list = []
 referees_id_list = []
 
-names = json.load(open(JSONs_PATH+"names.json"))
+names = json.load(open(NAMES_PATH))
 firstnames = names["firstnames"]
 lastnames = names["lastnames"]
 
@@ -65,9 +65,9 @@ def referee_generator(person_id):
     }
     
 def generate(teams, no_of_footballers = 300, no_of_refs = 50):
-    persons_stream = open(JSONs_PATH+"persons.json", "w")
-    footballers_stream = open(JSONs_PATH+"footballers.json", "w")
-    referees_stream = open(JSONs_PATH+"referees.json", "w")
+    persons_stream = open(PEOPLE_PATH, "w")
+    footballers_stream = open(FOOTBALLERS_PATH, "w")
+    referees_stream = open(REFEREES_PATH, "w")
 
     print("Generating footballers...")
     persons_stream.write("[\n")

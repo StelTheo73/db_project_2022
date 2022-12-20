@@ -21,7 +21,7 @@ def team_generator():
     }
 
 def generate(no_of_teams = 16):
-    teams_stream = open(JSONs_PATH+"teams.json", "w")
+    teams_stream = open(TEAMS_PATH, "w")
     print("Generating teams...")
     teams_stream.write("[\n")
     for i in range(no_of_teams):
