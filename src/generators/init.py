@@ -42,43 +42,43 @@ def insert_control(control, db):
             control["referee_id"]])
 
 def insert_data(db):
-    persons_stream = open(JSONs_PATH+"persons.json", "r")
+    persons_stream = open(PEOPLE_PATH, "r")
     persons = json.load(persons_stream)
     persons_stream.close()
     for person in persons:
         insert_person(person, db)
 
-    teams_stream = open(JSONs_PATH+"teams.json", "r")
+    teams_stream = open(TEAMS_PATH, "r")
     teams = json.load(teams_stream)
     teams_stream.close()
     for team in teams:
         insert_team(team, db)
 
-    footballers_stream = open(JSONs_PATH+"footballers.json", "r")
+    footballers_stream = open(FOOTBALLERS_PATH, "r")
     footballers = json.load(footballers_stream)
     footballers_stream.close()
     for footballer in footballers:
         insert_player(footballer, db)
     
-    referees_stream = open(JSONs_PATH+"referees.json", "r")
+    referees_stream = open(REFEREES_PATH, "r")
     referees = json.load(referees_stream)
     referees_stream.close()
     for referee in referees:
         insert_referee(referee, db)
 
-    matches_stream = open(JSONs_PATH+"matches.json", "r")
+    matches_stream = open(MATCHES_PATH, "r")
     matches = json.load(matches_stream)
     matches_stream.close()
     for match in matches:
         insert_match(match, db)
 
-    participations_stream = open(JSONs_PATH+"participations.json", "r")
+    participations_stream = open(PARTICIPATIONS_PATH, "r")
     participations = json.load(participations_stream)
     participations_stream.close()
     for participation in participations:
         insert_participation(participation, db)
 
-    controls_stream = open(JSONs_PATH+"controls.json", "r")
+    controls_stream = open(CONTROLS_PATH, "r")
     controls = json.load(controls_stream)
     controls_stream.close()
     for control in controls:
@@ -128,9 +128,9 @@ def create_db():
         home_team TEXT NOT NULL,\
         away_team TEXT NOT NULL,\
         PRIMARY KEY (match_id),\
-        FOREIGN KEY (match_id) REFERENCES match(match_id),\
-        FOREIGN KEY (home_team) REFERENCES team(team_name),\
-        FOREIGN KEY (away_team) REFERENCES team(team_name)\
+        FOREIGN KEY (match_id) REFERENCES match(match_id) ON DELETE CASCADE,\
+        FOREIGN KEY (home_team) REFERENCES team(team_name) ON DELETE CASCADE,\
+        FOREIGN KEY (away_team) REFERENCES team(team_name) ON DELETE CASCADE\
     )")
 
     db.execute("CREATE TABLE IF NOT EXISTS player(\
@@ -138,22 +138,22 @@ def create_db():
         people_id CHAR(10) NOT NULL,\
         team_name TEXT,\
         position VARCHAR(3),\
-        FOREIGN KEY(people_id) REFERENCES people(people_id),\
-        FOREIGN KEY(team_name) REFERENCES team(team_name)\
+        FOREIGN KEY(people_id) REFERENCES people(people_id) ON DELETE CASCADE,\
+        FOREIGN KEY(team_name) REFERENCES team(team_name) ON DELETE CASCADE\
     )")
 
     db.execute("CREATE TABLE IF NOT EXISTS referee(\
         referee_id CHAR(10) NOT NULL PRIMARY KEY,\
         people_id CHAR(10) NOT NULL,\
         type TEXT,\
-        FOREIGN KEY(people_id) REFERENCES people(people_id)\
+        FOREIGN KEY(people_id) REFERENCES people(people_id) ON DELETE CASCADE\
     )")
 
     db.execute("CREATE TABLE IF NOT EXISTS control(\
         match_id INTEGER NOT NULL,\
         referee_id CHAR(10) NOT NULL,\
-        FOREIGN KEY(match_id) REFERENCES match(match_id)\
-        FOREIGN KEY(referee_id) REFERENCES referee(referee_id)\
+        FOREIGN KEY(match_id) REFERENCES match(match_id) ON DELETE CASCADE\
+        FOREIGN KEY(referee_id) REFERENCES referee(referee_id) ON DELETE SET NULL\
     )")
 
     db.execute("CREATE TABLE IF NOT EXISTS statistic(\
@@ -162,8 +162,8 @@ def create_db():
         player_id CHAR(10),\
         minute INTEGER,\
         stat_name TEXT,\
-        FOREIGN KEY(match_id) REFERENCES match(match_id),\
-        FOREIGN KEY(player_id) REFERENCES player(player_id)\
+        FOREIGN KEY(match_id) REFERENCES match(match_id) ON DELETE CASCADE,\
+        FOREIGN KEY(player_id) REFERENCES player(player_id) ON DELETE SET NULL\
     )")
 
     return db

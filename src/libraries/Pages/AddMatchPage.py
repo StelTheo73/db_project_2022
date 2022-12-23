@@ -16,8 +16,10 @@ class AddMatchPage(MainFrame):
         self.createMatchScoreFrame().grid(row = 6, column = 0, columnspan = 6, rowspan = 2, sticky = tk.W)
 
         tk.Label(self.scrollable_frame, text="Referees that control the match").grid(row = 8, column = 0, sticky = tk.W)
-        self.createRefereesFrame().grid(row = 9, column = 0, columnspan = 8, rowspan = 2, sticky = tk.W)
+        self.createRefereesFrame().grid(row = 9, column = 0, columnspan = 6, rowspan = 2, sticky = tk.W)
 
+        self.submitButton.grid(row = 50, column = 0)
+        
     def onSubmit(self):
         super().onSubmit('match')
 

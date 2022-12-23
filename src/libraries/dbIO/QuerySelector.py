@@ -7,31 +7,42 @@ class QuerySelector:
     ## Static Variables
     JSONs_PATH = './src/libraries/JsonFiles/'
     
-
     @staticmethod
     def getMatches():
         return [f"{home}-{away} (match#{id})" for id,home,away in
             DbQueries.db.execute("SELECT match.match_id, home_team, away_team FROM match,participation WHERE match.match_id=participation.match_id")]
     
     @staticmethod
+    def getPeopleId(id):
+        return [f"{people_id}" for people_id in
+            DbQueries.db.execute("SELECT people_id FROM people WHERE people_id = ?",[id])]
+    
+    def getPeopleIdFromPlayerId(player_id):
+        return [f"{people_id}" for people_id in
+            DbQueries.db.execute("SELECT people_id FROM people, player WHERE people.people_id = player.people_id AND player_id = ?",[player_id])]
+
+    def getPeopleIdFromRefereeId(referee_id):
+        return [f"{people_id}" for people_id in
+            DbQueries.db.execute("SELECT people_id FROM people, referee WHERE people.people_id = referee.referee_id AND referee_id = ?",[referee_id])]
+
+    @staticmethod
     def getPlayers():
-        return [f"{fName} {lName} ({id})" for fName,lName,id in
-            DbQueries.db.execute("SELECT name, surname, player_id FROM player,people WHERE player.people_id=people.people_id")]
+        return [f"{lName} {fName} ({id})" for lName,fName,id in
+            DbQueries.db.execute("SELECT surname, name, player_id FROM player,people WHERE player.people_id=people.people_id ORDER BY surname, name, player_id")]
     
     def getPlayersByTeam(team):
-        return [f"{fName} {lName} ({id})" for fName,lName,id in
-            DbQueries.db.execute("SELECT name, surname, player_id FROM player,people WHERE player.people_id=people.people_id AND player.team_name=?",[team])]
-           
+        return [f"{lName} {fName} ({id})" for lName,fName,id in
+            DbQueries.db.execute("SELECT surname, name, player_id FROM player,people WHERE player.people_id=people.people_id AND player.team_name=? ORDER BY surname, name, player_id",[team])]
 
     @staticmethod
     def getReferees():
-        return [f"{fName} {lName} ({id})" for fName,lName,id in
-            DbQueries.db.execute("SELECT name, surname, referee_id FROM referee,people  WHERE referee.people_id=people.people_id")]
+        return [f"{lName} {fName} ({id})" for lName,fName,id in
+            DbQueries.db.execute("SELECT surname, name, referee_id FROM referee,people  WHERE referee.people_id=people.people_id ORDER BY surname, name, referee_id")]
     
     @staticmethod
     def getRefereesByType(type):
-        return [f"{fName} {lName} ({id})" for fName,lName,id in
-            DbQueries.db.execute("SELECT name, surname, referee_id FROM referee,people  WHERE referee.people_id=people.people_id AND referee.type=?",[type])]
+        return [f"{lName} {fName} ({id})" for lName,fName,id in
+            DbQueries.db.execute("SELECT surname, name, referee_id FROM referee,people  WHERE referee.people_id=people.people_id AND referee.type=? ORDER BY surname, name, referee_id",[type])]
 
     @staticmethod
     def getTeams():

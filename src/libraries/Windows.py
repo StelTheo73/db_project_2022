@@ -6,6 +6,8 @@ from libraries.Pages.AddTeamPage import AddTeamPage
 from libraries.Pages.AddMatchPage import AddMatchPage
 from libraries.Pages.AddStatsPage import AddStatsPage
 from libraries.Pages.DeletePlayerPage import DeletePlayerPage
+from libraries.Pages.DeleteRefereePage import DeleteRefereePage
+from libraries.Pages.DeleteTeamPage import DeleteTeamPage
 
 class Window(tk.Tk):
     def __init__(self):
@@ -18,7 +20,9 @@ class Window(tk.Tk):
             "Add Team"   : AddTeamPage,
             "Add Match"  : AddMatchPage,
             "Add Stat"   : AddStatsPage,
-            "Delete Player" : DeletePlayerPage
+            "Delete Player"  : DeletePlayerPage,
+            "Delete Referee" : DeleteRefereePage,
+            "Delete Team"    : DeleteTeamPage
         }
         
         self.geometry("800x500")

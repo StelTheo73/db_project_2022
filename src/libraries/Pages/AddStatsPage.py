@@ -13,6 +13,8 @@ class AddStatsPage(MainFrame):
         tk.Label(self.scrollable_frame, text = "Stats Info").grid(row = 2, column = 0, sticky = tk.W)
         self.statsInfoFrame.grid(row = 3, column = 0, columnspan = 6, rowspan = 4, sticky = tk.W)
 
+        self.submitButton.grid(row = 50, column = 0)
+
     def onSubmit(self):
         super().onSubmit(self.inputs, 'stat')
 

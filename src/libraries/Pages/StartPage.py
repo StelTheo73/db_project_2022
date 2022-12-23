@@ -8,7 +8,9 @@ class StartPage(MainFrame):
 
         tk.Label(self.scrollable_frame, text="This is the Query Page").grid(row=2, column=1)
         self.createQueryFrame().grid(row = 3, column = 1, columnspan = 8, rowspan = 1, sticky = tk.W)
-    
+
+        self.submitButton.grid(row = 50, column = 0)
+
     def onSubmit(self,):
         super().onSubmit('query')
 

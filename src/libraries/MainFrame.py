@@ -10,24 +10,24 @@ class MainFrame(ttk.Frame):
         self.inputs = {}
 
         canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
-        self.scrollable_frame.bind("<Configure>",
-            lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        #self.scrollable_frame.bind("<Configure>",
+        #    lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
         
         # Scroll with wheel TODO: check first if window > screen. else skip
-        canvas.bind_all("<MouseWheel>", lambda e: canvas.yview_scroll(-e.delta//120, "units"))
+        #canvas.bind_all("<MouseWheel>", lambda e: canvas.yview_scroll(-e.delta//120, "units"))
 
         # Set Scrollbar
-        scrollbarY = ttk.Scrollbar(self, orient="vertical", command=canvas.yview)
+        #scrollbarY = ttk.Scrollbar(self, orient="vertical", command=canvas.yview)
         canvas.pack(side="left", fill="both", expand=True)
-        scrollbarY.pack(side="right", fill="y")
-        canvas["yscrollcommand"] = scrollbarY.set
+        #scrollbarY.pack(side="right", fill="y")
+        #canvas["yscrollcommand"] = scrollbarY.set
         
         # General Page Control Buttons
 
         # Submit Button first so it's one TAB after the last input
-        submitButton = ttk.Button(self.scrollable_frame, text="Submit",
-                  command= self.onSubmit, width=40, padding=5)
-        submitButton.grid(row=100, column=1, columnspan=2)
+        self.submitButton = ttk.Button(self.scrollable_frame, text="Submit",
+                  command= self.onSubmit)
+        #submitButton.grid(row=50, column=0, columnspan=2, padx = 10, pady = 10)
 
         addPlayerPageButton = ttk.Button(self.scrollable_frame, text="Add Player",
                   command=lambda: master.switchFrame("Add Player"))
@@ -75,14 +75,17 @@ class MainFrame(ttk.Frame):
 
 
     def onSubmit(self, method=''):
-        methods = {'':None,
-            'player': DbQueries.update_players,
-            'referee': DbQueries.update_referees,
-            'team': DbQueries.update_clubs,
-            'match': DbQueries.update_matches,
-            'stat': DbQueries.update_stats,
-            'query': DbQueries.run_query,
-            'update_player' : None
+        methods = {
+            ''       : None,
+            'player' : DbQueries.insert_player,
+            'referee': DbQueries.insert_referee,
+            'team'   : DbQueries.insert_team,
+            'match'  : DbQueries.insert_match,
+            'stat'   : DbQueries.insert_stat,
+            'delete_player'  : DbQueries.delete_player,
+            'delete_referee' : DbQueries.delete_referee,
+            'delete_team'    : DbQueries.delete_team,
+            'query': DbQueries.run_query
         }
         DbQueries.submit(self.inputs, methods[method])
 
