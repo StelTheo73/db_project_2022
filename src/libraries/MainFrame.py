@@ -85,6 +85,7 @@ class MainFrame(ttk.Frame):
             'delete_player'  : DbQueries.delete_player,
             'delete_referee' : DbQueries.delete_referee,
             'delete_team'    : DbQueries.delete_team,
+            'delete_match'   : DbQueries.delete_match,
             'query': DbQueries.run_query
         }
         DbQueries.submit(self.inputs, methods[method])

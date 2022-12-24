@@ -16,7 +16,7 @@ class DeleteTeamPage(MainFrame):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
 
         teamLabel = ttk.Label(contentFrame, text = "Select team")
-        teamSelector = ttk.Combobox(contentFrame, state = "readonly")
+        teamSelector = ttk.Combobox(contentFrame, state = "readonly", width = 30)
         teamSelector["values"] = QuerySelector.getTeams()
         self.inputs["team"] = teamSelector
 

@@ -18,7 +18,7 @@ class DeleteRefereePage(MainFrame):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
 
         typeLabel = ttk.Label(contentFrame, text = "Select type")
-        typeSelector = ttk.Combobox(contentFrame, state = "readonly")
+        typeSelector = ttk.Combobox(contentFrame, state = "readonly", width = 30)
         typeSelector["values"] = QuerySelector.getRefPositions()
         self.inputs["type"] = typeSelector
 
@@ -36,7 +36,7 @@ class DeleteRefereePage(MainFrame):
         refereeLabel = ttk.Label(contentFrame, text = "Select referee")
         
         print(type)
-        refereeSelector = ttk.Combobox(contentFrame, state = "readonly")
+        refereeSelector = ttk.Combobox(contentFrame, state = "readonly", width = 30)
         refereeSelector["values"] = QuerySelector.getRefereesByType(type)
         self.inputs["referee"] = refereeSelector
         

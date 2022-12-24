@@ -128,9 +128,9 @@ def create_db():
         home_team TEXT NOT NULL,\
         away_team TEXT NOT NULL,\
         PRIMARY KEY (match_id),\
-        FOREIGN KEY (match_id) REFERENCES match(match_id) ON DELETE CASCADE,\
-        FOREIGN KEY (home_team) REFERENCES team(team_name) ON DELETE CASCADE,\
-        FOREIGN KEY (away_team) REFERENCES team(team_name) ON DELETE CASCADE\
+        FOREIGN KEY (match_id) REFERENCES match(match_id),\
+        FOREIGN KEY (home_team) REFERENCES team(team_name),\
+        FOREIGN KEY (away_team) REFERENCES team(team_name)\
     )")
 
     db.execute("CREATE TABLE IF NOT EXISTS player(\
@@ -138,22 +138,22 @@ def create_db():
         people_id CHAR(10) NOT NULL,\
         team_name TEXT,\
         position VARCHAR(3),\
-        FOREIGN KEY(people_id) REFERENCES people(people_id) ON DELETE CASCADE,\
-        FOREIGN KEY(team_name) REFERENCES team(team_name) ON DELETE CASCADE\
+        FOREIGN KEY(people_id) REFERENCES people(people_id),\
+        FOREIGN KEY(team_name) REFERENCES team(team_name)\
     )")
 
     db.execute("CREATE TABLE IF NOT EXISTS referee(\
         referee_id CHAR(10) NOT NULL PRIMARY KEY,\
         people_id CHAR(10) NOT NULL,\
         type TEXT,\
-        FOREIGN KEY(people_id) REFERENCES people(people_id) ON DELETE CASCADE\
+        FOREIGN KEY(people_id) REFERENCES people(people_id)\
     )")
 
     db.execute("CREATE TABLE IF NOT EXISTS control(\
         match_id INTEGER NOT NULL,\
         referee_id CHAR(10) NOT NULL,\
-        FOREIGN KEY(match_id) REFERENCES match(match_id) ON DELETE CASCADE\
-        FOREIGN KEY(referee_id) REFERENCES referee(referee_id) ON DELETE SET NULL\
+        FOREIGN KEY(match_id) REFERENCES match(match_id)\
+        FOREIGN KEY(referee_id) REFERENCES referee(referee_id)\
     )")
 
     db.execute("CREATE TABLE IF NOT EXISTS statistic(\
@@ -162,8 +162,8 @@ def create_db():
         player_id CHAR(10),\
         minute INTEGER,\
         stat_name TEXT,\
-        FOREIGN KEY(match_id) REFERENCES match(match_id) ON DELETE CASCADE,\
-        FOREIGN KEY(player_id) REFERENCES player(player_id) ON DELETE SET NULL\
+        FOREIGN KEY(match_id) REFERENCES match(match_id),\
+        FOREIGN KEY(player_id) REFERENCES player(player_id)\
     )")
 
     return db

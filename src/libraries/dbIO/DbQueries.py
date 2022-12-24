@@ -32,6 +32,7 @@ class QuerySelector:
         return [f"{lName} {fName} ({id})" for lName,fName,id in
             DbQueries.db.execute("SELECT surname, name, player_id FROM player,people WHERE player.people_id=people.people_id ORDER BY surname, name, player_id")]
     
+    @staticmethod
     def getPlayersByTeam(team):
         return [f"{lName} {fName} ({id})" for lName,fName,id in
             DbQueries.db.execute("SELECT surname, name, player_id FROM player,people WHERE player.people_id=people.people_id AND player.team_name=? ORDER BY surname, name, player_id",[team])]
@@ -50,7 +51,19 @@ class QuerySelector:
     def getTeams():
         return [team[0] for team in
             DbQueries.db.execute("SELECT team_name FROM team")]
-    
+
+    @staticmethod
+    def getMatchesByTeam(team):
+        home = [f"Home VS {away_team} ({match_id})" for away_team, match_id in 
+            DbQueries.db.execute("SELECT away_team, match_id FROM PARTICIPATION\
+                WHERE home_team = ? ORDER BY away_team", [team])
+        ]
+        away = [f"Away VS {home_team} ({match_id})" for home_team, match_id in 
+            DbQueries.db.execute("SELECT home_team, match_id FROM PARTICIPATION\
+                WHERE away_team = ? ORDER BY home_team", [team])
+        ]
+        return home + away
+
     @staticmethod
     def getRefPositions():
         return ["Head", "Assistant", "Fourth"]
@@ -198,6 +211,20 @@ class DbQueries:
             [match_id, inputs['fourth_ref']])
 
         DbQueries.db.commit()
+
+    @staticmethod
+    def delete_match(inputs):
+        match = inputs["match"]
+        try:
+            match_id = match.split("(")[1][:-1]
+            print(match_id)
+            DbQueries.db.execute("DELETE FROM participation WHERE match_id = ?",
+            [match_id])
+            DbQueries.db.execute("DELETE FROM match WHERE match_id = ?", 
+            [match_id])
+            DbQueries.db.commit()
+        except IndexError:
+            print("Failed to remove match!")
 
     @staticmethod
     def insert_stat(inputs):
