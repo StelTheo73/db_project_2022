@@ -157,7 +157,7 @@ def create_db():
     )")
 
     db.execute("CREATE TABLE IF NOT EXISTS statistic(\
-        statistics_id INTEGER NOT NULL PRIMARY KEY,\
+        statistic_id INTEGER NOT NULL PRIMARY KEY,\
         match_id INTEGER NOT NULL,\
         player_id CHAR(10),\
         minute INTEGER,\

@@ -78,8 +78,27 @@ class QuerySelector:
     
     @staticmethod
     def getStatsTypes():
-        return ["Goal", "Assist", "Foul", "Penalty", "Offside", "Corner"]
+        return ["Goal", "Assist", "Own Goal",
+                "Foul Kick", "Foul Commited", 
+                "Penalty Kick", "Penalty Commited", 
+                "Offside", "Corner Kick",
+                "Yellow Card", "Red Card"]
     
+    @staticmethod
+    def getStatByMatch(match):
+        #match = inputs["match"]
+        print(match)
+        try:
+            match_id = match.split("(")[1][:-1]
+            return [f"{minute}min: {s_type} {p_name} {p_surname} ({id})" for minute, s_type, p_name, p_surname, id in
+                DbQueries.db.execute("SELECT minute, stat_name, name, surname, statistic_id \
+                    FROM statistic, player, people \
+                    WHERE statistic.match_id = ? AND statistic.player_id = player.player_id AND people.people_id = player.people_id",
+                    [match_id])
+            ]
+        except IndexError:
+            print("Failed to find statistic!")
+
     @staticmethod
     def getCountries():
         return [country['name'] for country in
@@ -229,11 +248,26 @@ class DbQueries:
     @staticmethod
     def insert_stat(inputs):
         print("Submited statistic!")
-
-        DbQueries.db.execute("INSERT INTO statistic (player_id, match_id, minute, stat_name) VALUES (?, ?, ?, ?)",
-            [inputs['player'], inputs['match'], inputs['minute'], inputs['stat_name']])
-        DbQueries.db.commit()
-
+        try:
+            inputs["player"] = inputs["player"].split("(")[1][:-1]
+            inputs["match"] = inputs["match"].split("(")[1][:-1]
+            print(inputs)
+            DbQueries.db.execute("INSERT INTO statistic (player_id, match_id, minute, stat_name) VALUES (?, ?, ?, ?)",
+                [inputs['player'], inputs['match'], inputs['minute'], inputs['stat_name']])
+            DbQueries.db.commit()
+        except IndexError:
+            print("Failed to add statistic!")
+    @staticmethod
+    def delete_stat(inputs):
+        statistic = inputs["statistic"]
+        try:
+            statistic_id = statistic.split("(")[1][:-1]
+            print(statistic_id)
+            DbQueries.db.execute("DELETE FROM statistic WHERE statistic_id = ?",
+            [statistic_id])
+            DbQueries.db.commit()
+        except IndexError:
+            print("Failed to remove statistic!")
 
     @staticmethod
     def run_query(inputs):

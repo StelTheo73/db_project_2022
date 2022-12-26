@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from libraries.MainFrame import MainFrame
-from libraries.dbIO.QuerySelector import QuerySelector
+from libraries.dbIO.DbQueries import QuerySelector
 
 class AddTeamPage(MainFrame):
     def __init__(self, master):
@@ -10,7 +10,7 @@ class AddTeamPage(MainFrame):
         tk.Label(self.scrollable_frame, text = "Team Info").grid(row = 2, column = 0, sticky = tk.W)
         self.createTeamInfoFrame().grid(row = 3, column = 0, columnspan = 4, rowspan = 4, sticky = tk.W)
 
-        self.submitButton.grid(row = 50, column = 0)
+        self.submitButton.grid(row = 7, column = 0)
 
     def onSubmit(self):
         super().onSubmit(self.inputs, 'team')

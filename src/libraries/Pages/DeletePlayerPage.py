@@ -20,6 +20,7 @@ class DeletePlayerPage(MainFrame):
         teamLabel = ttk.Label(contentFrame, text = "Select team")
         teamSelector = ttk.Combobox(contentFrame, state = "readonly", width = 30)
         teamSelector["values"] = QuerySelector.getTeams()
+        teamSelector.focus_set()
         self.inputs["team"] = teamSelector
 
         teamSelectorButton = ttk.Button(contentFrame, text = "Select",

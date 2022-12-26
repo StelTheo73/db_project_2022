@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from libraries.Pages.AddPersonPage import AddPersonPage
-from libraries.dbIO.QuerySelector import QuerySelector
+from libraries.dbIO.DbQueries import QuerySelector
 
 class AddRefereePage(AddPersonPage):
     def __init__(self, master):

@@ -4,11 +4,12 @@ from libraries.Pages.AddPlayerPage import AddPlayerPage
 from libraries.Pages.AddRefereePage import AddRefereePage
 from libraries.Pages.AddTeamPage import AddTeamPage
 from libraries.Pages.AddMatchPage import AddMatchPage
-from libraries.Pages.AddStatsPage import AddStatsPage
+from libraries.Pages.AddStatPage import AddStatPage
 from libraries.Pages.DeletePlayerPage import DeletePlayerPage
 from libraries.Pages.DeleteRefereePage import DeleteRefereePage
 from libraries.Pages.DeleteTeamPage import DeleteTeamPage
 from libraries.Pages.DeleteMatchPage import DeleteMatchPage
+from libraries.Pages.DeleteStatPage import DeleteStatPage
 
 class Window(tk.Tk):
     def __init__(self):
@@ -20,11 +21,12 @@ class Window(tk.Tk):
             "Add Referee": AddRefereePage,
             "Add Team"   : AddTeamPage,
             "Add Match"  : AddMatchPage,
-            "Add Stat"   : AddStatsPage,
+            "Add Stat"   : AddStatPage,
             "Delete Player"  : DeletePlayerPage,
             "Delete Referee" : DeleteRefereePage,
             "Delete Team"    : DeleteTeamPage,
-            "Delete Match"   : DeleteMatchPage
+            "Delete Match"   : DeleteMatchPage,
+            "Delete Stat"    : DeleteStatPage
         }
         
         self.geometry("800x500")
@@ -34,7 +36,7 @@ class Window(tk.Tk):
         self.switchFrame("StartPage")
 
         # Submit on Enter
-        self.bind("<Return>", lambda e: self._frame.onSubmit())
+        # self.bind("<Return>", lambda e: self._frame.onSubmit())
 
     def switchFrame(self, frame_id):
         """Destroys current frame and replaces it with a new one."""

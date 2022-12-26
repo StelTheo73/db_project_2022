@@ -20,6 +20,7 @@ class DeleteRefereePage(MainFrame):
         typeLabel = ttk.Label(contentFrame, text = "Select type")
         typeSelector = ttk.Combobox(contentFrame, state = "readonly", width = 30)
         typeSelector["values"] = QuerySelector.getRefPositions()
+        typeSelector.focus_set()
         self.inputs["type"] = typeSelector
 
         typeSelectorButton = ttk.Button(contentFrame, text = "Select",
