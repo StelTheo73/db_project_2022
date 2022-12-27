@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from libraries.MainFrame import MainFrame
-from libraries.dbIO.QuerySelector import QuerySelector
+from libraries.dbIO.DbQueries import QuerySelector
 
 class DeleteTeamPage(MainFrame):
     def __init__(self, master):

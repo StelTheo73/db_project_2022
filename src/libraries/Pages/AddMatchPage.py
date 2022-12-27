@@ -3,29 +3,25 @@ import tkinter.ttk as ttk
 from libraries.MainFrame import MainFrame
 from libraries.dbIO.DbQueries import QuerySelector
 
+
 class AddMatchPage(MainFrame):
     def __init__(self, master):
         MainFrame.__init__(self, master)
+        tk.Label(self.scrollable_frame, text = "Date & Time").grid(row = 2, column = 0, sticky = tk.W)
+        self.match_frame = self.create_match_date_frame().grid(row = 3, column = 0, columnspan = 6, rowspan = 4, sticky = tk.W)
+        tk.Label(self.scrollable_frame, text = "Match Info").grid(row = 7, column = 0, sticky = tk.W)
+        self.create_match_info_frame().grid(row = 8, column = 0, rowspan = 4, columnspan = 6, sticky = tk.W)
+        tk.Label(self.scrollable_frame, text = "Referees").grid(row = 12, column = 0, sticky = tk.W)
+        self.create_referees_frame().grid(row = 13, column = 0, rowspan = 4, columnspan = 6, sticky = tk.W)
 
-        # ID is assigned automatically
+        self.submitButton.grid(row = 17, column = 0)
 
-        tk.Label(self.scrollable_frame, text = "Match Datetime").grid(row = 2, column = 0, sticky = tk.W)
-        self.createMatchDateFrame().grid(row = 3, column = 0, columnspan = 6, rowspan = 2, sticky = tk.W)
-
-        tk.Label(self.scrollable_frame, text = "Match Score").grid(row = 5, column = 0, sticky = tk.W)
-        self.createMatchScoreFrame().grid(row = 6, column = 0, columnspan = 6, rowspan = 2, sticky = tk.W)
-
-        tk.Label(self.scrollable_frame, text="Referees that control the match").grid(row = 8, column = 0, sticky = tk.W)
-        self.createRefereesFrame().grid(row = 9, column = 0, columnspan = 6, rowspan = 2, sticky = tk.W)
-
-        self.submitButton.grid(row = 50, column = 0)
-        
     def onSubmit(self):
         super().onSubmit('match')
 
-    def createMatchDateFrame(self):
+    def create_match_date_frame(self):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
-
+        
         yearLabel = ttk.Label(contentFrame, text = "Year")
         yearSelector = ttk.Combobox(contentFrame, state="readonly")
         yearSelector["values"] = QuerySelector.getLastYears() #[year for year in range(2000, 2024)]
@@ -46,17 +42,29 @@ class AddMatchPage(MainFrame):
         hourSelector["values"] = [str(hour).zfill(2) for hour in range(0, 24)]
         self.inputs["hour"] = hourSelector
 
+        minuteLabel = ttk.Label(contentFrame, text = "Minute")
+        minuteSelector = ttk.Combobox(contentFrame, state="readonly")
+        minuteSelector["values"] = [str(minute).zfill(2) for minute in range(0, 60)]
+        self.inputs["minute"] = minuteSelector
 
-        [widget.grid(row = r, column = col, columnspan = 2, padx = 10, sticky = tk.W) for widget,r,col in 
-            zip([yearLabel,yearSelector, monthLabel,monthSelector, dayLabel,daySelector,
-                    hourLabel,hourSelector],
-                [0,1, 0,1, 0,1, 0,1],   # rows
-                [0,0, 2,2, 4,4, 6,6])   # columns
-        ]
-        
+        yearLabel.grid(row = 0, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
+        yearSelector.grid(row = 1, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
+
+        monthLabel.grid(row = 0, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
+        monthSelector.grid(row = 1, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
+
+        dayLabel.grid(row = 0, column = 4, columnspan = 2, padx = 10, sticky = tk.W)
+        daySelector.grid(row = 1, column = 4, columnspan = 2, padx = 10, sticky = tk.W)
+
+        hourLabel.grid(row = 2, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
+        hourSelector.grid(row = 3, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
+
+        minuteLabel.grid(row = 2, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
+        minuteSelector.grid(row = 3, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
+
         return contentFrame
 
-    def createMatchScoreFrame(self):
+    def create_match_info_frame(self):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
         
         homeTeamLabel = ttk.Label(contentFrame, text = "Home team")
@@ -78,18 +86,22 @@ class AddMatchPage(MainFrame):
         awayScoreEntry = ttk.Combobox(contentFrame, state="readonly")
         awayScoreEntry["values"] = [goals for goals in range(0, 50)]
         self.inputs["away_score"] = awayScoreEntry
-        
-        
-        [widget.grid(row = r, column = col, columnspan = 2, padx = 10, sticky = tk.W) for widget,r,col in 
-            zip([homeTeamLabel,homeTeamEntry, awayTeamLabel,awayTeamEntry,
-                    homeScoreLabel,homeScoreEntry, awayScoreLabel,awayScoreEntry],
-                [0,1, 0,1, 2,3, 2,3],   # rows
-                [1,1, 3,3, 1,1, 3,3])   # columns
-        ]
+
+        homeTeamLabel.grid(row = 0, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
+        homeTeamEntry.grid(row = 1, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
+
+        awayTeamLabel.grid(row = 0, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
+        awayTeamEntry.grid(row = 1, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
+
+        homeScoreLabel.grid(row = 2, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
+        homeScoreEntry.grid(row = 3, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
+
+        awayScoreLabel.grid(row = 2, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
+        awayScoreEntry.grid(row = 3, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
 
         return contentFrame
 
-    def createRefereesFrame(self):
+    def create_referees_frame(self):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
         
         headRefereeLabel = ttk.Label(contentFrame, text = "Head Referee")
@@ -110,16 +122,19 @@ class AddMatchPage(MainFrame):
         fourthRefLabel = ttk.Label(contentFrame, text = "Fourth referee")
         fourthRefEntry = ttk.Combobox(contentFrame, state="readonly")
         fourthRefEntry["values"] = QuerySelector.getRefereesByType("Fourth")
-        self.inputs["fourth_ref"] = fourthRefEntry
+        self.inputs["fourth_ref"] = fourthRefEntry 
 
-        
-        [widget.grid(row = r, column = col, columnspan = 2, padx = 10, sticky = tk.W) for widget,r,col in 
-            zip([headRefereeLabel, headRefereeEntry, firstAssistantLabel,firstAssistantEntry,
-                    secondAssistantLabel, secondAssistantEntry, fourthRefLabel, fourthRefEntry],
-                [0,1]*4,   # rows
-                [0,0, 2,2, 4,4, 6,6])   # columns
-        ]
+        headRefereeLabel.grid(row = 0, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
+        headRefereeEntry.grid(row = 1, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
+
+        firstAssistantLabel.grid(row = 0, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
+        firstAssistantEntry.grid(row = 1, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
+
+        secondAssistantLabel.grid(row = 2, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
+        secondAssistantEntry.grid(row = 3, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
+
+        fourthRefLabel.grid(row = 2, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
+        fourthRefEntry.grid(row = 3, column = 2, columnspan = 2, padx = 10, sticky = tk.W)
 
         return contentFrame
-
-
+        

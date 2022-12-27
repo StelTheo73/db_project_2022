@@ -6,14 +6,28 @@ from libraries.dbIO.DbReadyQs import DbReadyQs
 class StatisticsPage(MainFrame):
     def __init__(self, master):
         MainFrame.__init__(self, master)
-        tk.Label(self.scrollable_frame, text="Standings").grid(row=2, column=1)
-        contentFrame = self.createTreeview()
-        contentFrame.grid(row = 3, column = 0, columnspan = 10, rowspan = 20)
-        self.create_standings_table()
+        self.contentLabel = None
+        self.contentFrame = None
+        self.create_type_selector_frame().grid(row = 2, column = 0, columnspan = 6, rowspan = 10, sticky = tk.W)
 
-    def type_selector(self):
+    def create_type_selector_frame(self):
         """Select the type of the statistics to show"""
-        pass
+        contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
+        typeLabel = tk.Label(contentFrame, text="Select: ")
+        typeSelector = ttk.Combobox(contentFrame, state = "readonly", width = 20)
+        typeSelector["values"] = ["Standings", "Players' Stats", "Referees' Stats", "Matches' Info"]
+
+        typeSelector.focus_set()
+        self.inputs["type"] = typeSelector
+
+        typeSelectorButton = ttk.Button(contentFrame, text = "Select",
+                        command= self.select_type)
+
+        typeLabel.grid(row = 0, column = 0, columnspan = 6, padx = 10, sticky = tk.W)
+        typeSelector.grid(row = 1, column = 0, columnspan = 6, padx = 10, sticky = tk.W)
+        typeSelectorButton.grid(row = 2, column = 0, columnspan = 6, padx = 10, sticky = tk.W)
+
+        return contentFrame
 
     def createTreeview(self):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
@@ -45,24 +59,24 @@ class StatisticsPage(MainFrame):
             self.tree.heading(str(c), text = headings[c-1])
         
         board = DbReadyQs.get_board()
-        print(board)
+        #print(board)
         sorted_board = []
         for team in board:
             matches = board[team]["matches"]
-            try: #no wins
+            try:
                 won = board[team]["wins"]
-            except KeyError:
+            except KeyError: #no wins
                 won = 0
                 matches+=1
-            try: #no defeats
+            try:
                 lost = board[team]["defeats"]
-            except KeyError:
+            except KeyError: #no defeats
                 lost = 0
                 matches+=1
             try:
                 points = board[team]["points"]
             except KeyError: #only ties
-                print("\n\n{}".format(board[team]["ties"]))
+                #print("\n\n{}".format(board[team]["ties"]))
                 points = board[team]["ties"]
             index = {
                 "team"    : team,
@@ -103,3 +117,17 @@ class StatisticsPage(MainFrame):
 
     def create_referee_stats_table(self):
         pass
+
+    def select_type(self):
+        stat_type = {func: self.inputs[func].get() for func in self.inputs}["type"]
+        #print(stat_type)
+        if self.contentLabel != None:
+            self.contentLabel.destroy()
+        if self.contentFrame != None:
+            self.contentFrame.destroy()
+
+        if stat_type == "Standings":
+            self.contentLabel = ttk.Label(self.scrollable_frame, text="Standings").grid(row=12, column=0) # na mpon ekei pou ginetai h epilogh tou statistic
+            self.contentFrame = self.createTreeview()
+            self.contentFrame.grid(row = 13, column = 0, columnspan = 10, rowspan = 20)
+            self.create_standings_table()

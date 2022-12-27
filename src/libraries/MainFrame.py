@@ -10,17 +10,17 @@ class MainFrame(ttk.Frame):
         self.inputs = {}
 
         canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
-        #self.scrollable_frame.bind("<Configure>",
-        #    lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        self.scrollable_frame.bind("<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
         
         # Scroll with wheel TODO: check first if window > screen. else skip
         #canvas.bind_all("<MouseWheel>", lambda e: canvas.yview_scroll(-e.delta//120, "units"))
 
         # Set Scrollbar
-        #scrollbarY = ttk.Scrollbar(self, orient="vertical", command=canvas.yview)
+        scrollbarY = ttk.Scrollbar(self, orient="vertical", command=canvas.yview)
         canvas.pack(side="left", fill="both", expand=True)
-        #scrollbarY.pack(side="right", fill="y")
-        #canvas["yscrollcommand"] = scrollbarY.set
+        scrollbarY.pack(side="right", fill="y")
+        canvas["yscrollcommand"] = scrollbarY.set
         
         # General Page Control Buttons
 
