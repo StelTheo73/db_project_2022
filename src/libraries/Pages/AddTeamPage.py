@@ -13,7 +13,7 @@ class AddTeamPage(MainFrame):
         self.submitButton.grid(row = 7, column = 0)
 
     def onSubmit(self):
-        super().onSubmit(self.inputs, 'team')
+        super().onSubmit('team')
 
     def createTeamInfoFrame(self):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")

@@ -6,6 +6,7 @@ class DbReadyQs:
     DB_PATH = './src/data/database.db'
     db = sqlite3.connect(DB_PATH)
 
+    @staticmethod
     def get_board():
         output = {}
         functions:list(function) = [DbReadyQs.__dict__[func] for func in list(DbReadyQs.__dict__.keys())[5:-3]]
@@ -17,15 +18,18 @@ class DbReadyQs:
                 output[team][func.__name__.rstrip("_for_each_team")] = out[team]
         return output
 
+    @staticmethod
     def format(cursor: object):
         "This function formats the outputs from the database for the GUI"
         return dict(cursor)
 
+    @staticmethod
     def matches_for_each_team():
         cursor = DbReadyQs.db.execute("SELECT team_name, count(match_id) FROM team, participation \
             WHERE team_name=home_team OR team_name=away_team GROUP BY team_name ORDER BY team_name")
         return DbReadyQs.format(cursor)
 
+    @staticmethod
     def scored_goals_for_each_team():
         "goals that each team scored"
         cursor = DbReadyQs.db.execute("SELECT team_name, sum(goals) FROM \
@@ -36,6 +40,7 @@ class DbReadyQs:
             GROUP BY team_name")
         return DbReadyQs.format(cursor)
 
+    @staticmethod
     def conceded_goals_for_each_team():
         "goals that were scored to each team"
         cursor = DbReadyQs.db.execute("SELECT team_name, sum(goals) FROM \
@@ -46,6 +51,7 @@ class DbReadyQs:
             GROUP BY team_name")
         return DbReadyQs.format(cursor)
 
+    @staticmethod
     def wins_for_each_team():
         cursor = DbReadyQs.db.execute("SELECT team_name, count(match.match_id) FROM team, participation, match \
             WHERE participation.match_id=match.match_id AND \
@@ -53,6 +59,7 @@ class DbReadyQs:
             GROUP BY team_name ORDER BY count(match.match_id) DESC")
         return DbReadyQs.format(cursor)
 
+    @staticmethod
     def ties_for_each_team():
         cursor = DbReadyQs.db.execute("SELECT team_name, count(match.match_id) FROM team \
             JOIN participation ON (team_name=home_team OR team_name=away_team) \
@@ -65,6 +72,7 @@ class DbReadyQs:
         #     GROUP BY team_name ORDER BY count(match.match_id) DESC")
         return DbReadyQs.format(cursor)
 
+    @staticmethod
     def defeats_for_each_team():
         cursor = DbReadyQs.db.execute("SELECT team_name, count(match.match_id) FROM team, participation, match \
             WHERE participation.match_id=match.match_id AND \
@@ -72,6 +80,7 @@ class DbReadyQs:
             GROUP BY team_name ORDER BY count(match.match_id) DESC")
         return DbReadyQs.format(cursor)
     
+    @staticmethod
     def points_for_each_team():
         wins, ties = DbReadyQs.wins_for_each_team(), DbReadyQs.ties_for_each_team()
         points = lambda team: 3*wins[team] + 1*ties[team]

@@ -170,7 +170,7 @@ def create_db():
 
 
 if __name__ == "__main__":
-    generate_data(200, 50, 10)
+    generate_data(400, 50, 20)
     db = create_db()
     insert_data(db)
     db.commit()

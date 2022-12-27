@@ -10,7 +10,7 @@ from libraries.Pages.DeleteRefereePage import DeleteRefereePage
 from libraries.Pages.DeleteTeamPage import DeleteTeamPage
 from libraries.Pages.DeleteMatchPage import DeleteMatchPage
 from libraries.Pages.DeleteStatPage import DeleteStatPage
-from libraries.Pages.StandingsPage import StandingsPage
+from libraries.Pages.StatisticsPage import StatisticsPage
 
 class Window(tk.Tk):
     def __init__(self):
@@ -28,12 +28,12 @@ class Window(tk.Tk):
             "Delete Team"    : DeleteTeamPage,
             "Delete Match"   : DeleteMatchPage,
             "Delete Stat"    : DeleteStatPage,
-            "Standings"      : StandingsPage
+            "Standings"      : StatisticsPage
         }
         
         self.geometry("800x500")
         self.title("My Championship")
-        self.minsize(width=500, height=300)
+        self.minsize(width=550, height=350)
 
         self.switchFrame("StartPage")
 

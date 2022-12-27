@@ -192,7 +192,7 @@ class DbQueries:
         print("Submitedteam!")
 
         date = inputs['founded'] + '-01-01'
-        DbQueries.db.execute("INSERT INTO team (club_name, home, founded) VALUES (?,?, DATE(?))", [inputs['name'], inputs['home'], date])
+        DbQueries.db.execute("INSERT INTO team (team_name, home, founded) VALUES (?,?, DATE(?))", [inputs['name'], inputs['home'], date])
         DbQueries.db.commit()
 
     @staticmethod
@@ -209,7 +209,7 @@ class DbQueries:
 
         datetime = '-'.join([inputs[i] for i in ['year','month','day']]) +' '+ inputs['hour']+':00'
 
-        DbQueries.db.execute("INSERT INTO match (datime, home_goals, away_goals) VALUES (DATETIME(?),?,?)",
+        DbQueries.db.execute("INSERT INTO match (datime, home_team_goals, away_team_goals) VALUES (DATETIME(?),?,?)",
             [datetime, inputs['home_score'], inputs['away_score']])
         
         match_id = DbQueries.db.execute("SELECT match_id FROM match").fetchall()[-1][0]
@@ -217,16 +217,16 @@ class DbQueries:
         DbQueries.db.execute("INSERT INTO participation (match_id, home_team, away_team) VALUES (?,?,?)",
             [match_id, inputs['home_team'], inputs['away_team']])
         
-        DbQueries.db.execute("INSERT INTO gameControl (match_id, referee_id) VALUES (?,?)",
+        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
             [match_id, inputs['head_ref']])
 
-        DbQueries.db.execute("INSERT INTO gameControl (match_id, referee_id) VALUES (?,?)",
+        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
             [match_id, inputs['assist_ref_1']])
 
-        DbQueries.db.execute("INSERT INTO gameControl (match_id, referee_id) VALUES (?,?)",
+        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
             [match_id, inputs['assist_ref_2']])
 
-        DbQueries.db.execute("INSERT INTO gameControl (match_id, referee_id) VALUES (?,?)",
+        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
             [match_id, inputs['fourth_ref']])
 
         DbQueries.db.commit()
