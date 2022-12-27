@@ -72,7 +72,10 @@ class MainFrame(ttk.Frame):
         deleteStatisticPageButton = ttk.Button(self.scrollable_frame, text="Delete Statistic",
                   command=lambda: master.switchFrame("Delete Stat"))
         deleteStatisticPageButton.grid(row=1, column=4)
-
+        
+        standingsPageButton = ttk.Button(self.scrollable_frame, text="Standings",
+                  command=lambda: master.switchFrame("Standings"))
+        standingsPageButton.grid(row=1, column=5)
 
     def onSubmit(self, method=''):
         methods = {
@@ -87,6 +90,7 @@ class MainFrame(ttk.Frame):
             'delete_team'    : DbQueries.delete_team,
             'delete_match'   : DbQueries.delete_match,
             'delete_stat'    : DbQueries.delete_stat,
+            'standings'      : print("Standings"),
             'query': DbQueries.run_query
         }
         DbQueries.submit(self.inputs, methods[method])

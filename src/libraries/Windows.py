@@ -10,6 +10,7 @@ from libraries.Pages.DeleteRefereePage import DeleteRefereePage
 from libraries.Pages.DeleteTeamPage import DeleteTeamPage
 from libraries.Pages.DeleteMatchPage import DeleteMatchPage
 from libraries.Pages.DeleteStatPage import DeleteStatPage
+from libraries.Pages.StandingsPage import StandingsPage
 
 class Window(tk.Tk):
     def __init__(self):
@@ -26,7 +27,8 @@ class Window(tk.Tk):
             "Delete Referee" : DeleteRefereePage,
             "Delete Team"    : DeleteTeamPage,
             "Delete Match"   : DeleteMatchPage,
-            "Delete Stat"    : DeleteStatPage
+            "Delete Stat"    : DeleteStatPage,
+            "Standings"      : StandingsPage
         }
         
         self.geometry("800x500")
