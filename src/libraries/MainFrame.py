@@ -27,7 +27,6 @@ class MainFrame(ttk.Frame):
         # Submit Button first so it's one TAB after the last input
         self.submitButton = ttk.Button(self.scrollable_frame, text="Submit",
                   command= self.onSubmit)
-        #submitButton.grid(row=50, column=0, columnspan=2, padx = 10, pady = 10)
 
         addPlayerPageButton = ttk.Button(self.scrollable_frame, text="Add Player",
                   command=lambda: master.switchFrame("Add Player"))
@@ -93,5 +92,7 @@ class MainFrame(ttk.Frame):
             'standings'      : print("Standings"),
             'query': DbQueries.run_query
         }
+        #print("h"+str(self.submitButton.focus_get()))
+        #if self.submitButton.focus_get():
         DbQueries.submit(self.inputs, methods[method])
 

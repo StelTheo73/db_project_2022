@@ -15,7 +15,7 @@ class StatisticsPage(MainFrame):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
         typeLabel = tk.Label(contentFrame, text="Select: ")
         typeSelector = ttk.Combobox(contentFrame, state = "readonly", width = 20)
-        typeSelector["values"] = ["Standings", "Players' Stats", "Referees' Stats", "Matches' Info"]
+        typeSelector["values"] = ["Standings", "Player Statistics", "Player Info", "Referee Statistics", "Referee Info", "Match Info"]
 
         typeSelector.focus_set()
         self.inputs["type"] = typeSelector
@@ -29,7 +29,7 @@ class StatisticsPage(MainFrame):
 
         return contentFrame
 
-    def createTreeview(self):
+    def create_treeview(self):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
         self.tree = ttk.Treeview(contentFrame, selectmode="browse")
         self.tree_vsb = ttk.Scrollbar(contentFrame, orient="vertical", command=self.tree.yview)
@@ -115,19 +115,35 @@ class StatisticsPage(MainFrame):
     def create_player_stats_table(self):
         pass
 
+    def create_player_info_table(self):
+        pass
+
     def create_referee_stats_table(self):
+        pass
+
+    def create_referee_info_table(self):
         pass
 
     def select_type(self):
         stat_type = {func: self.inputs[func].get() for func in self.inputs}["type"]
-        #print(stat_type)
+        if stat_type == "":
+            return
         if self.contentLabel != None:
             self.contentLabel.destroy()
         if self.contentFrame != None:
             self.contentFrame.destroy()
 
-        if stat_type == "Standings":
-            self.contentLabel = ttk.Label(self.scrollable_frame, text="Standings").grid(row=12, column=0) # na mpon ekei pou ginetai h epilogh tou statistic
-            self.contentFrame = self.createTreeview()
-            self.contentFrame.grid(row = 13, column = 0, columnspan = 10, rowspan = 20)
-            self.create_standings_table()
+        stat_map = {
+            "Standings"          : self.create_standings_table,
+            "Player Statistics"  : self.create_player_stats_table,
+            "Player Info"        : self.create_player_info_table,
+            "Referee Statistics" : self.create_referee_stats_table,
+            "Referee Info"       : self.create_referee_info_table,
+            "Match Info"         : self.create_matches_table 
+        }
+
+        self.contentLabel = ttk.Label(self.scrollable_frame, text = stat_type)
+        self.contentLabel.grid(row = 12, column = 0)
+        self.contentFrame = self.create_treeview()
+        self.contentFrame.grid(row = 13, column = 0, columnspan = 10, rowspan = 20)
+        stat_map[stat_type]()
