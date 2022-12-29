@@ -5,7 +5,7 @@ from libraries.dbIO.DbQueries import DbQueries
 class MainFrame(ttk.Frame):
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
-        canvas = tk.Canvas(self)
+        canvas = tk.Canvas(self, border = 0, highlightthickness = 0)
         self.scrollable_frame = ttk.Frame(canvas)
         self.inputs = {}
 
@@ -17,63 +17,68 @@ class MainFrame(ttk.Frame):
         #canvas.bind_all("<MouseWheel>", lambda e: canvas.yview_scroll(-e.delta//120, "units"))
 
         # Set Scrollbar
+        scrollbarX = ttk.Scrollbar(self, orient="horizontal", command=canvas.xview)
         scrollbarY = ttk.Scrollbar(self, orient="vertical", command=canvas.yview)
-        canvas.pack(side="left", fill="both", expand=True)
-        scrollbarY.pack(side="right", fill="y")
-        canvas["yscrollcommand"] = scrollbarY.set
         
+        scrollbarX.pack(fill=tk.X, side = tk.BOTTOM)
+        canvas.pack(expand = True, fill = tk.BOTH, side = tk.LEFT)
+        scrollbarY.pack(fill = tk.BOTH, side = tk.LEFT)
+
+        canvas["yscrollcommand"] = scrollbarY.set
+        canvas["xscrollcommand"] = scrollbarX.set
+
         # General Page Control Buttons
 
         # Submit Button first so it's one TAB after the last input
         self.submitButton = ttk.Button(self.scrollable_frame, text="Submit",
-                  command= self.onSubmit)
+                  command= self.onSubmit, width = 15)
 
         addPlayerPageButton = ttk.Button(self.scrollable_frame, text="Add Player",
-                  command=lambda: master.switchFrame("Add Player"))
+                  command=lambda: master.switchFrame("Add Player"), width = 15)
         addPlayerPageButton.grid(row=0, column=0)
         
         addRefereePageButton = ttk.Button(self.scrollable_frame, text="Add Referee",
-                  command=lambda: master.switchFrame("Add Referee"))
+                  command=lambda: master.switchFrame("Add Referee"), width = 15)
         addRefereePageButton.grid(row=0, column=1)
 
         addteamPageButton = ttk.Button(self.scrollable_frame, text="Add Team",
-                  command=lambda: master.switchFrame("Add Team"))
+                  command=lambda: master.switchFrame("Add Team"), width = 15)
         addteamPageButton.grid(row=0, column=2)
 
         addMatchPageButton = ttk.Button(self.scrollable_frame, text="Add Match",
-                  command=lambda: master.switchFrame("Add Match"))
+                  command=lambda: master.switchFrame("Add Match"), width = 15)
         addMatchPageButton.grid(row=0, column=3)
         
         addStatisticPageButton = ttk.Button(self.scrollable_frame, text="Add Statistic",
-                  command=lambda: master.switchFrame("Add Stat"))
+                  command=lambda: master.switchFrame("Add Stat"), width = 15)
         addStatisticPageButton.grid(row=0, column=4)
         
         startPageButton = ttk.Button(self.scrollable_frame, text="Open start page",
-                  command=lambda: master.switchFrame("StartPage"))
+                  command=lambda: master.switchFrame("StartPage"), width = 15)
         startPageButton.grid(row=0, column=5)
 
         deletePlayerPageButton = ttk.Button(self.scrollable_frame, text="Delete Player",
-                  command=lambda: master.switchFrame("Delete Player"))
+                  command=lambda: master.switchFrame("Delete Player"), width = 15)
         deletePlayerPageButton.grid(row=1, column=0)
         
         deleteRefereePageButton = ttk.Button(self.scrollable_frame, text="Delete Referee",
-                  command=lambda: master.switchFrame("Delete Referee"))
+                  command=lambda: master.switchFrame("Delete Referee"), width = 15)
         deleteRefereePageButton.grid(row=1, column=1)
 
         deleteTeamPageButton = ttk.Button(self.scrollable_frame, text="Delete Team",
-                  command=lambda: master.switchFrame("Delete Team"))
+                  command=lambda: master.switchFrame("Delete Team"), width = 15)
         deleteTeamPageButton.grid(row=1, column=2)
 
         deleteMatchPageButton = ttk.Button(self.scrollable_frame, text="Delete Match",
-                  command=lambda: master.switchFrame("Delete Match"))
+                  command=lambda: master.switchFrame("Delete Match"), width = 15)
         deleteMatchPageButton.grid(row=1, column=3)
         
         deleteStatisticPageButton = ttk.Button(self.scrollable_frame, text="Delete Statistic",
-                  command=lambda: master.switchFrame("Delete Stat"))
+                  command=lambda: master.switchFrame("Delete Stat"), width = 15)
         deleteStatisticPageButton.grid(row=1, column=4)
         
-        standingsPageButton = ttk.Button(self.scrollable_frame, text="Standings",
-                  command=lambda: master.switchFrame("Standings"))
+        standingsPageButton = ttk.Button(self.scrollable_frame, text="Statistics",
+                  command=lambda: master.switchFrame("Statistics"), width = 15)
         standingsPageButton.grid(row=1, column=5)
 
     def onSubmit(self, method=''):

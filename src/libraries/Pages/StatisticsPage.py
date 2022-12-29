@@ -2,6 +2,8 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from libraries.MainFrame import MainFrame
 from libraries.dbIO.DbReadyQs import DbReadyQs
+from libraries.dbIO.DbQueries import QuerySelector
+from libraries.dbIO.StatInfoQueries import StatInfoQueries
 
 class StatisticsPage(MainFrame):
     def __init__(self, master):
@@ -113,17 +115,124 @@ class StatisticsPage(MainFrame):
         pass
 
     def create_player_stats_table(self):
-        pass
+        headings = ["Team", "Position", "Player Name",
+                "G", "A", "OG",
+                "FK", "FC", 
+                "PK", "PC", 
+                "OS", "CK",
+                "YC", "RC"
+        ]
+        self.tree["columns"] = [c for c in range(1, 15, 1)]
+        self.tree["show"] = "headings"
+
+        for c in range(1, 15, 1):
+            if c == 1:
+                self.tree.column(str(c), width = 100, anchor = "c")
+            elif c == 2:
+                self.tree.column(str(c), width = 50, anchor = "c")
+            elif c == 3:
+                self.tree.column(str(c), width = 120, anchor = "c")
+            else:
+                self.tree.column(str(c), width = 40, anchor = "c")
+            self.tree.heading(str(c), text = headings[c-1])
+
+        player_stat_dict = StatInfoQueries.get_players_stats()
+        player_stat_list = []
+        for player_id in player_stat_dict.keys():
+            for stat_type in QuerySelector.getStatsTypes():
+                if stat_type not in player_stat_dict[player_id].keys():
+                    player_stat_dict[player_id][stat_type] = 0
+            player_stat_list.append(player_stat_dict[player_id])
+        player_stat_list = sorted(player_stat_list, key = lambda d: (d["team_name"], d["position"], d["surname"], d["name"]), reverse = True)
+        
+        line = 1
+        for player in player_stat_list:
+            stat = []
+            for stat_type in QuerySelector.getStatsTypes():
+                stat.append(player[stat_type])  
+            self.tree.insert("", "end", text = "L"+str(line),
+                values = (
+                    player["team_name"],
+                    player["position"],                    
+                    player["surname"] + " " + player["name"],
+                    stat[0], stat[1], stat[2],
+                    stat[3], stat[4], stat[5],
+                    stat[6], stat[7], stat[8],
+                    stat[9], stat[10]
+                ) 
+            )
+            line+=1
 
     def create_player_info_table(self):
-        pass
+        headings = ["Team", "Position", "Player Name", "Nationality", "Player ID", "People ID", "Telephone", "Birthdate"]
+        self.tree["columns"] = [c for c in range(1, 9, 1)]
+        self.tree["show"] = "headings"
 
+        for c in range(1, 9, 1):
+            if c == 1 or c == 5:
+                self.tree.column(str(c), width = 100, anchor = "c")
+            elif c == 2:
+                self.tree.column(str(c), width = 50, anchor = "c")
+            elif c == 3:
+                self.tree.column(str(c), width = 120, anchor = "c")
+            else:
+                self.tree.column(str(c), width = 70, anchor = "c")
+            self.tree.heading(str(c), text = headings[c-1])
+
+        player_info = StatInfoQueries.get_players_info()
+        player_info = sorted(player_info, key = lambda d: (d["team_name"], d["position"], d["surname"], d["name"], d["nationality"], d["birthdate"]), reverse = True)
+
+        line = 1
+        for player in player_info:
+            self.tree.insert("", "end", text = "L"+str(line),
+                values = (
+                    player["team_name"],
+                    player["position"],
+                    player["surname"] + " " + player["name"],
+                    player["nationality"],
+                    player["player_id"],
+                    player["people_id"],
+                    player["telephone"],
+                    player["birthdate"]
+                ) 
+            )
+            line+=1
+            
     def create_referee_stats_table(self):
         pass
 
     def create_referee_info_table(self):
-        pass
+        headings = ["Type", "Referee Name", "Nationality", "Referee ID", "People ID", "Telephone", "Birthdate"]
+        self.tree["columns"] = [c for c in range(1, 8, 1)]
+        self.tree["show"] = "headings"
 
+        for c in range(1, 8, 1):
+            if c == 2:
+                self.tree.column(str(c), width = 120, anchor = "c")
+            elif c == 4:
+                self.tree.column(str(c), width = 100, anchor = "c")
+            else:
+                self.tree.column(str(c), width = 70, anchor = "c")
+            self.tree.heading(str(c), text = headings[c-1])
+
+        referee_info = StatInfoQueries.get_referees_info()
+        referee_info = sorted(referee_info, key = lambda d: (d["type"], d["surname"], d["name"], d["nationality"], d["birthdate"]), reverse = True)
+
+        line = 1
+        for referee in referee_info:
+            self.tree.insert("", "end", text = "L"+str(line),
+                values = (
+                    referee["type"],
+                    referee["surname"] + " " + referee["name"],
+                    referee["nationality"],
+                    referee["player_id"],
+                    referee["people_id"],
+                    referee["telephone"],
+                    referee["birthdate"]
+                ) 
+            )
+            line+=1
+            
     def select_type(self):
         stat_type = {func: self.inputs[func].get() for func in self.inputs}["type"]
         if stat_type == "":
@@ -145,5 +254,5 @@ class StatisticsPage(MainFrame):
         self.contentLabel = ttk.Label(self.scrollable_frame, text = stat_type)
         self.contentLabel.grid(row = 12, column = 0)
         self.contentFrame = self.create_treeview()
-        self.contentFrame.grid(row = 13, column = 0, columnspan = 10, rowspan = 20)
+        self.contentFrame.grid(row = 13, column = 0, columnspan = 6, rowspan = 20)
         stat_map[stat_type]()

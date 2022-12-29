@@ -257,6 +257,7 @@ class DbQueries:
             DbQueries.db.commit()
         except IndexError:
             print("Failed to add statistic!")
+    
     @staticmethod
     def delete_stat(inputs):
         statistic = inputs["statistic"]

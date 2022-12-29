@@ -4,7 +4,12 @@ from globals import *
 
 domains = ["gmail", "hotmail", "yahoo"]
 
-positions = ["ATT", "MID", "DEF", "GK"]
+positions = [
+            "ST", "CF", "LW", "RW",
+            "LM", "CM", "CAM", "CDM", "RM",
+            "LWB", "LB", "CB", "RB", "RWB",
+            "GK"
+        ]
 
 ref_types = ["Head", "Assistant", "Fourth"]
 

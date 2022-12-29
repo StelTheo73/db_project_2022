@@ -39,52 +39,42 @@ def insert_participation(participation, db):
 def insert_control(control, db):
     db.execute("INSERT INTO control VALUES (?, ?)", [
             control["match_id"],
-            control["referee_id"]])
+            control["referee_id"]
+        ])
+
+def insert_statistic(statistic, db):
+    db.execute("INSERT INTO control VALUES (?, ?, ?, ?, ?)",
+    [statistic["statistic_id"],
+     statistic["match_id"],
+     statistic["player_id"],
+     statistic["minute"],
+     statistic["stat_name"]
+    ])
 
 def insert_data(db):
-    persons_stream = open(PEOPLE_PATH, "r")
-    persons = json.load(persons_stream)
-    persons_stream.close()
-    for person in persons:
-        insert_person(person, db)
+    path_map = {
+        PEOPLE_PATH : insert_person,
+        TEAMS_PATH  : insert_team,
+        FOOTBALLERS_PATH : insert_player,
+        REFEREES_PATH : insert_referee,
+        MATCHES_PATH : insert_match,
+        PARTICIPATIONS_PATH : insert_participation,
+        CONTROLS_PATH : insert_control,
+        STATISTICS_PATH : insert_statistic
+    }
 
-    teams_stream = open(TEAMS_PATH, "r")
-    teams = json.load(teams_stream)
-    teams_stream.close()
-    for team in teams:
-        insert_team(team, db)
-
-    footballers_stream = open(FOOTBALLERS_PATH, "r")
-    footballers = json.load(footballers_stream)
-    footballers_stream.close()
-    for footballer in footballers:
-        insert_player(footballer, db)
-    
-    referees_stream = open(REFEREES_PATH, "r")
-    referees = json.load(referees_stream)
-    referees_stream.close()
-    for referee in referees:
-        insert_referee(referee, db)
-
-    matches_stream = open(MATCHES_PATH, "r")
-    matches = json.load(matches_stream)
-    matches_stream.close()
-    for match in matches:
-        insert_match(match, db)
-
-    participations_stream = open(PARTICIPATIONS_PATH, "r")
-    participations = json.load(participations_stream)
-    participations_stream.close()
-    for participation in participations:
-        insert_participation(participation, db)
-
-    controls_stream = open(CONTROLS_PATH, "r")
-    controls = json.load(controls_stream)
-    controls_stream.close()
-    for control in controls:
-        insert_control(control, db)
-
-
+    for path in path_map.keys():
+        try:
+            stream = open(path, "r")
+            content = json.load(stream)
+            stream.close()
+            for item in content:
+                path_map[path](item, db)
+            db.commit()
+        except FileNotFoundError:
+            print("Could not find {}".format(path))
+            continue
+        
 def create_db():
     if os.path.exists(DB_PATH): os.remove(DB_PATH)
 
@@ -102,7 +92,7 @@ def create_db():
     db.execute("PRAGMA foreign_keys = ON")
 
     db.execute("CREATE TABLE IF NOT EXISTS people(\
-    	people_id CHAR(10) NOT NULL PRIMARY KEY,\
+    	people_id CHAR(8) NOT NULL PRIMARY KEY,\
     	name TEXT NOT NULL,\
         surname TEXT NOT NULL,\
         birthdate DATE,\
@@ -135,7 +125,7 @@ def create_db():
 
     db.execute("CREATE TABLE IF NOT EXISTS player(\
         player_id CHAR(10) NOT NULL PRIMARY KEY,\
-        people_id CHAR(10) NOT NULL,\
+        people_id CHAR(8) NOT NULL,\
         team_name TEXT,\
         position VARCHAR(3),\
         FOREIGN KEY(people_id) REFERENCES people(people_id),\
@@ -144,7 +134,7 @@ def create_db():
 
     db.execute("CREATE TABLE IF NOT EXISTS referee(\
         referee_id CHAR(10) NOT NULL PRIMARY KEY,\
-        people_id CHAR(10) NOT NULL,\
+        people_id CHAR(8) NOT NULL,\
         type TEXT,\
         FOREIGN KEY(people_id) REFERENCES people(people_id)\
     )")
@@ -167,7 +157,6 @@ def create_db():
     )")
 
     return db
-
 
 if __name__ == "__main__":
     generate_data(400, 50, 20)

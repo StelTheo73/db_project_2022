@@ -12,7 +12,7 @@ class AddRefereePage(AddPersonPage):
         tk.Label(self.scrollable_frame, text = "Type Info").grid(row = 17, column = 0, sticky = tk.W)
         self.refInfoFrame.grid(row = 18, column = 0, columnspan = 6, rowspan = 10, sticky = tk.W)
     
-        self.submitButton.grid(row = 50, column = 0)
+        self.submitButton.grid(row = 28, column = 0)
     
     def createRefInfoFrame(self):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")

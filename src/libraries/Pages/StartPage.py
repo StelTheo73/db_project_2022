@@ -6,10 +6,10 @@ class StartPage(MainFrame):
     def __init__(self, master):
         MainFrame.__init__(self, master)
 
-        tk.Label(self.scrollable_frame, text="This is the Query Page").grid(row=2, column=1)
-        self.createQueryFrame().grid(row = 3, column = 1, columnspan = 8, rowspan = 1, sticky = tk.W)
+        tk.Label(self.scrollable_frame, text="Query Page").grid(row=2, column=0)
+        self.createQueryFrame().grid(row = 3, column = 0, columnspan = 8, rowspan = 1, sticky = tk.W)
 
-        self.submitButton.grid(row = 50, column = 0)
+        self.submitButton.grid(row = 4, column = 0)
 
     def onSubmit(self,):
         super().onSubmit('query')
@@ -26,7 +26,7 @@ class StartPage(MainFrame):
         queryEntry.focus_set()
 
         
-        queryLabel.grid(row = 0, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
-        queryEntry.grid(row = 1, column = 0, columnspan = 2, padx = 10, sticky = tk.W)
+        queryLabel.grid(row = 0, column = 0, columnspan = 1, padx = 10, sticky = tk.W)
+        queryEntry.grid(row = 1, column = 0, columnspan = 1, padx = 10, sticky = tk.W)
 
         return contentFrame

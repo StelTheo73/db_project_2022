@@ -28,7 +28,7 @@ class Window(tk.Tk):
             "Delete Team"    : DeleteTeamPage,
             "Delete Match"   : DeleteMatchPage,
             "Delete Stat"    : DeleteStatPage,
-            "Standings"      : StatisticsPage
+            "Statistics"      : StatisticsPage
         }
         
         self.geometry("800x500")
