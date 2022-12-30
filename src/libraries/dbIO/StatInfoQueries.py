@@ -62,10 +62,6 @@ class StatInfoQueries(object):
         return players_list_dict
 
     @staticmethod
-    def get_referees_stats():
-        pass
-
-    @staticmethod
     def get_referees_info():
         referees_list = []
         [ referees_list.append(cursor) for cursor in (
@@ -91,7 +87,37 @@ class StatInfoQueries(object):
 
     @staticmethod
     def get_matches_info():
-        pass
+        matches_list = []
+        [ matches_list.append(cursor) for cursor in
+            StatInfoQueries.db.execute("SELECT match.match_id, home_team, away_team, home_team_goals, away_team_goals, datime \
+                                        FROM match, participation, statistic \
+                                        WHERE match.match_id = participation.match_id AND match.match_id = statistic.match_id\
+                                        ORDER BY home_team, away_team, datime"
+        )]
+        matches_dict = {}
+        for match in matches_list:
+            matches_dict[match[0]] = {
+                "match_id"        : match[0],
+                "home_team"       : match[1],
+                "away_team"       : match[2],
+                "home_team_goals" : match[3],
+                "away_team_goals" : match[4],
+                "datime"          : match[5]
+            }
+        
+        stat_types = QuerySelector.getStatsTypes()
+        stat_list_dict = []
+        for stat_type in stat_types:
+            stats = StatInfoQueries.get_stat_for_match_by_type(stat_type)
+            for stat in stats:
+                stat_list_dict.append(stat)
+        
+        for match_stat in stat_list_dict:
+            match_id = match_stat["match_id"]
+            _, stat_name = match_stat.keys()
+            matches_dict[match_id][stat_name] = match_stat[stat_name]
+
+        return matches_dict
 
     @staticmethod
     def get_stat_for_players_by_type(stat_type):
@@ -116,5 +142,22 @@ class StatInfoQueries(object):
             players_list_dict.append(player_dict)
         return players_list_dict
 
+    def get_stat_for_match_by_type(stat_type):
+        matches_list = []
+        [matches_list.append(cursor) for cursor in (
+            StatInfoQueries.db.execute("SELECT match_id, count(stat_name) AS stat_type \
+                                        FROM statistic \
+                                        WHERE stat_name = ? \
+                                        GROUP BY match_id", [stat_type])
+        )]
+        matches_list_dict = []
+        for match in matches_list:
+            match_dict = {
+                "match_id" : match[0],
+                stat_type  : match[1]
+            }
+            matches_list_dict.append(match_dict)
+        return matches_list_dict
+
 if __name__ == "__main__":
-    print(StatInfoQueries.get_players_stats())
+    print(StatInfoQueries.get_matches_info())

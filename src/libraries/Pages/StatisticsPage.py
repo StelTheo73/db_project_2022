@@ -17,7 +17,7 @@ class StatisticsPage(MainFrame):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
         typeLabel = tk.Label(contentFrame, text="Select: ")
         typeSelector = ttk.Combobox(contentFrame, state = "readonly", width = 20)
-        typeSelector["values"] = ["Standings", "Player Statistics", "Player Info", "Referee Statistics", "Referee Info", "Match Info"]
+        typeSelector["values"] = ["Standings", "Player Statistics", "Player Info", "Referee Info", "Match Info"]
 
         typeSelector.focus_set()
         self.inputs["type"] = typeSelector
@@ -112,7 +112,55 @@ class StatisticsPage(MainFrame):
             place+=1
 
     def create_matches_table(self):
-        pass
+        headings = ["Home Team", "Away Team", "Score", "Date",
+                "G", "A", "OG",
+                "FK", "FC", 
+                "PK", "PC", 
+                "OS", "CK",
+                "YC", "RC"
+            ]
+        self.tree["columns"] = [c for c in range(1, 16, 1)]
+        self.tree["show"] = "headings"
+
+        for c in range(1, 16, 1):
+            if c == 1 or c == 2:
+                self.tree.column(str(c), width = 100, anchor = "c")
+            elif c == 3:
+                self.tree.column(str(c), width = 70, anchor = "c")
+            else:
+                self.tree.column(str(c), width = 40, anchor = "c")
+            self.tree.heading(str(c), text = headings[c-1])
+
+        # Retrieve stats
+        match_stat_dict = StatInfoQueries.get_matches_info()
+
+        # Convert dict to list in order to sort
+        match_stat_list = []
+        for match_id in match_stat_dict.keys():
+            for stat_type in QuerySelector.getStatsTypes():
+                if stat_type not in match_stat_dict[match_id].keys():
+                    match_stat_dict[match_id][stat_type] = 0
+            match_stat_list.append(match_stat_dict[match_id])
+        # Sort
+        match_stat_list = sorted(match_stat_list, key = lambda d: (d["home_team"], d["away_team"], d["datime"]))
+        line = 1
+        for match in match_stat_list:
+            stat = []
+            for stat_type in QuerySelector.getStatsTypes():
+                stat.append(match[stat_type])
+            self.tree.insert("", "end", text = "L"+str(line),
+                values = (
+                    match["home_team"],
+                    match["away_team"],
+                    str(match["home_team_goals"]) + ":" + str(match["away_team_goals"]),
+                    match["datime"],
+                    stat[0], stat[1], stat[2],
+                    stat[3], stat[4], stat[5],
+                    stat[6], stat[7], stat[8],
+                    stat[9], stat[10]
+
+                )
+            )
 
     def create_player_stats_table(self):
         headings = ["Team", "Position", "Player Name",
@@ -136,14 +184,18 @@ class StatisticsPage(MainFrame):
                 self.tree.column(str(c), width = 40, anchor = "c")
             self.tree.heading(str(c), text = headings[c-1])
 
+        # Retrieve stats
         player_stat_dict = StatInfoQueries.get_players_stats()
+
+        # Convert dict to list in order to sort
         player_stat_list = []
         for player_id in player_stat_dict.keys():
             for stat_type in QuerySelector.getStatsTypes():
                 if stat_type not in player_stat_dict[player_id].keys():
                     player_stat_dict[player_id][stat_type] = 0
             player_stat_list.append(player_stat_dict[player_id])
-        player_stat_list = sorted(player_stat_list, key = lambda d: (d["team_name"], d["position"], d["surname"], d["name"]), reverse = True)
+        # Sort
+        player_stat_list = sorted(player_stat_list, key = lambda d: (d["team_name"], d["position"], d["surname"], d["name"]))
         
         line = 1
         for player in player_stat_list:
@@ -179,8 +231,10 @@ class StatisticsPage(MainFrame):
                 self.tree.column(str(c), width = 70, anchor = "c")
             self.tree.heading(str(c), text = headings[c-1])
 
+        # Retrieve stats
         player_info = StatInfoQueries.get_players_info()
-        player_info = sorted(player_info, key = lambda d: (d["team_name"], d["position"], d["surname"], d["name"], d["nationality"], d["birthdate"]), reverse = True)
+        # Sort
+        player_info = sorted(player_info, key = lambda d: (d["team_name"], d["position"], d["surname"], d["name"], d["nationality"], d["birthdate"]))
 
         line = 1
         for player in player_info:
@@ -197,9 +251,6 @@ class StatisticsPage(MainFrame):
                 ) 
             )
             line+=1
-            
-    def create_referee_stats_table(self):
-        pass
 
     def create_referee_info_table(self):
         headings = ["Type", "Referee Name", "Nationality", "Referee ID", "People ID", "Telephone", "Birthdate"]
@@ -215,8 +266,10 @@ class StatisticsPage(MainFrame):
                 self.tree.column(str(c), width = 70, anchor = "c")
             self.tree.heading(str(c), text = headings[c-1])
 
+        # Retrieve stats
         referee_info = StatInfoQueries.get_referees_info()
-        referee_info = sorted(referee_info, key = lambda d: (d["type"], d["surname"], d["name"], d["nationality"], d["birthdate"]), reverse = True)
+        # Sort
+        referee_info = sorted(referee_info, key = lambda d: (d["type"], d["surname"], d["name"], d["nationality"], d["birthdate"]))
 
         line = 1
         for referee in referee_info:
@@ -246,7 +299,6 @@ class StatisticsPage(MainFrame):
             "Standings"          : self.create_standings_table,
             "Player Statistics"  : self.create_player_stats_table,
             "Player Info"        : self.create_player_info_table,
-            "Referee Statistics" : self.create_referee_stats_table,
             "Referee Info"       : self.create_referee_info_table,
             "Match Info"         : self.create_matches_table 
         }
@@ -254,5 +306,5 @@ class StatisticsPage(MainFrame):
         self.contentLabel = ttk.Label(self.scrollable_frame, text = stat_type)
         self.contentLabel.grid(row = 12, column = 0)
         self.contentFrame = self.create_treeview()
-        self.contentFrame.grid(row = 13, column = 0, columnspan = 6, rowspan = 20)
+        self.contentFrame.grid(row = 13, column = 0, columnspan = 100, rowspan = 20)
         stat_map[stat_type]()
