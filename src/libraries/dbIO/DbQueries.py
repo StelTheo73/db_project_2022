@@ -71,18 +71,17 @@ class QuerySelector:
     @staticmethod
     def getPositions():
         return [
-            "ST", "CF", "LW", "RW",
-            "LM", "CM", "CAM", "CDM", "RM",
-            "LWB", "LB", "CB", "RB", "RWB",
-            "GK"]
+            "ATT", "MID", "DEF", "GK"
+        ]
     
     @staticmethod
     def getStatsTypes():
         return ["Goal", "Assist", "Own Goal",
-                "Foul Kick", "Foul Commited", 
-                "Penalty Kick", "Penalty Commited", 
-                "Offside", "Corner Kick",
-                "Yellow Card", "Red Card"]
+            "Foul Kick", "Foul Commited", 
+            "Penalty Kick", "Penalty Commited", 
+            "Offside", "Corner Kick",
+            "Yellow Card", "Red Card"
+        ]
     
     @staticmethod
     def getStatByMatch(match):

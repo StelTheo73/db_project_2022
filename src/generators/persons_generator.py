@@ -1,14 +1,12 @@
 import random,json
 import random_generator as rndg
 from globals import *
+from numpy import random as nrandom
 
 domains = ["gmail", "hotmail", "yahoo"]
 
 positions = [
-            "ST", "CF", "LW", "RW",
-            "LM", "CM", "CAM", "CDM", "RM",
-            "LWB", "LB", "CB", "RB", "RWB",
-            "GK"
+            "ATT", "MID", "DEF", "GK"
         ]
 
 ref_types = ["Head", "Assistant", "Fourth"]
@@ -49,7 +47,7 @@ def footballer_generator(person_id, team_name):
     while(card_id in footballers_id_list):
         card_id = rndg.random_choice(rndg.upper_letters+rndg.numbers, 10) 
     footballers_id_list.append(card_id)    
-    position = random.choice(positions)
+    position = nrandom.choice(positions, p = [0.1, 0.3, 0.3, 0.3], size = (1))[0]
     return {
         "id"         : person_id, 
         "athlete_id" : card_id, 

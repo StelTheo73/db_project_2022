@@ -1,6 +1,9 @@
 import sqlite3, json, os
 from data_generator import generate as generate_data
+from statistics_generator import generate as generate_statistics
 from globals import *
+
+db = sqlite3.connect(DB_PATH)
 
 def insert_person(person, db):
     db.execute("INSERT INTO people VALUES (?, ?, ?, ?, ?, ?)", [
@@ -43,26 +46,25 @@ def insert_control(control, db):
         ])
 
 def insert_statistic(statistic, db):
-    db.execute("INSERT INTO control VALUES (?, ?, ?, ?, ?)",
-    [statistic["statistic_id"],
-     statistic["match_id"],
-     statistic["player_id"],
-     statistic["minute"],
-     statistic["stat_name"]
+    db.execute("INSERT INTO statistic VALUES (?, ?, ?, ?, ?)", [
+        statistic["statistic_id"],
+        statistic["match_id"],
+        statistic["player_id"],
+        statistic["minute"],
+        statistic["stat_name"]
     ])
 
-def insert_data(db):
-    path_map = {
-        PEOPLE_PATH : insert_person,
-        TEAMS_PATH  : insert_team,
-        FOOTBALLERS_PATH : insert_player,
-        REFEREES_PATH : insert_referee,
-        MATCHES_PATH : insert_match,
-        PARTICIPATIONS_PATH : insert_participation,
-        CONTROLS_PATH : insert_control,
-        STATISTICS_PATH : insert_statistic
-    }
+path_map = {
+    PEOPLE_PATH : insert_person,
+    TEAMS_PATH  : insert_team,
+    FOOTBALLERS_PATH : insert_player,
+    REFEREES_PATH : insert_referee,
+    MATCHES_PATH : insert_match,
+    PARTICIPATIONS_PATH : insert_participation,
+    CONTROLS_PATH : insert_control,
+}
 
+def insert_data(db):
     for path in path_map.keys():
         try:
             stream = open(path, "r")
@@ -74,20 +76,33 @@ def insert_data(db):
         except FileNotFoundError:
             print("Could not find {}".format(path))
             continue
-        
+
+def clear_data():
+    for path in path_map.keys():
+        os.remove(path)
+    os.remove(STATISTICS_PATH)
+
+def insert_statistics(db):
+    try:
+        stream = open(STATISTICS_PATH, "r")
+        content = json.load(stream)
+        stream.close()
+        for item in content:
+            insert_statistic(item, db)
+        db.commit()
+    except FileNotFoundError:
+        print("Could not find {}".format(STATISTICS_PATH)) 
+
 def create_db():
-    if os.path.exists(DB_PATH): os.remove(DB_PATH)
-
-    db = sqlite3.connect(DB_PATH)
-
-    db.execute("DROP TABLE IF EXISTS people")
-    db.execute("DROP TABLE IF EXISTS team")
-    db.execute("DROP TABLE IF EXISTS match")
-    db.execute("DROP TABLE IF EXISTS participation")
-    db.execute("DROP TABLE IF EXISTS footballer")
-    db.execute("DROP TABLE IF EXISTS referee")
-    db.execute("DROP TABLE IF EXISTS control")
-    db.execute("DROP TABLE IF EXISTS statistic")
+    #if os.path.exists(DB_PATH): os.remove(DB_PATH)
+    db.execute("DROP TABLE people")
+    db.execute("DROP TABLE team")
+    db.execute("DROP TABLE match")
+    db.execute("DROP TABLE participation")
+    db.execute("DROP TABLE player")
+    db.execute("DROP TABLE referee")
+    db.execute("DROP TABLE control")
+    db.execute("DROP TABLE statistic")
 
     db.execute("PRAGMA foreign_keys = ON")
 
@@ -162,5 +177,8 @@ if __name__ == "__main__":
     generate_data(400, 50, 20)
     db = create_db()
     insert_data(db)
+    generate_statistics()
+    insert_statistics(db)
     db.commit()
     db.close()
+    clear_data()
