@@ -1,5 +1,5 @@
 import sqlite3
-from DbQueries import QuerySelector as QC
+from libraries.dbIO.DbQueries import QuerySelector as QC
 
 class DbReadyQs:
 
@@ -73,7 +73,7 @@ class DbReadyQs:
     
     def points_for_each_team():
         wins, ties = DbReadyQs.wins_for_each_team(), DbReadyQs.ties_for_each_team()
-        points = lambda team: 0#3*wins[team] + 1*ties[team]
+        points = lambda team: 3*wins[team] + 1*ties[team]
         return DbReadyQs.format([(team,points(team)) for team in wins])
 
 
