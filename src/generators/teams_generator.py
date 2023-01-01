@@ -1,6 +1,6 @@
 import random, json
-import random_generator as rndg
-from globals import *
+import generators.random_generator as rndg
+from generators.globals import *
 
 teams = []
 teams_name_list = []

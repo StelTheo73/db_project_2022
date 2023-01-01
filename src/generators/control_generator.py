@@ -1,5 +1,5 @@
 import json, random
-from globals import *
+from generators.globals import *
 
 def control_generator(ref_type, referees, match_id):
     type = None

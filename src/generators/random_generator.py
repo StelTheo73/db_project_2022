@@ -273,9 +273,9 @@ def random_choice(string_sequence, length):
 def random_email():
     return  random_choice(numbers, random.randint(3, 5)) + random_choice(lower_letters+upper_letters, random.randint(3, 5)) + "@" + random.choice(domains) + ".com"
 
-def random_date():
-    year = random.randint(1970, 2008)
-    month = random.randint(1, 12)
+def random_date(start_year = 1970, end_year = 2008, start_month = 1, end_month = 12):
+    year = random.randint(start_year, end_year)
+    month = random.randint(start_month, end_month)
 
     if(month == 2):
         day = random.randint(1, 28)
@@ -285,4 +285,3 @@ def random_date():
         day = random.randint(1, 31)
 
     return "{}-{}-{}".format(year, month, day)
-

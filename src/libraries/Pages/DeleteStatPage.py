@@ -38,7 +38,6 @@ class DeleteStatPage(MainFrame):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
         matchLabel = ttk.Label(contentFrame, text = "Select match")
 
-        print(team)
         matchSelector = ttk.Combobox(contentFrame, state = "readonly", width = 30)
         matchSelector["values"] = QuerySelector.getMatchesByTeam(team)
         self.inputs["match"] = matchSelector
@@ -56,7 +55,6 @@ class DeleteStatPage(MainFrame):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
         statisticLabel = ttk.Label(contentFrame, text = "Select statistic")
 
-        print(match)
         statisticSelector = ttk.Combobox(contentFrame, state = "readonly", width = 30)
         statisticSelector["values"] = QuerySelector.getStatByMatch(match)
         self.inputs["statistic"] = statisticSelector

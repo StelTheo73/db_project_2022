@@ -1,7 +1,7 @@
 import sqlite3, json, os
-from data_generator import generate as generate_data
-from statistics_generator import generate as generate_statistics
-from globals import *
+from generators.data_generator import generate as generate_data
+from generators.statistics_generator import generate as generate_statistics
+from generators.globals import *
 
 db = sqlite3.connect(DB_PATH)
 
@@ -95,15 +95,9 @@ def insert_statistics(db):
 
 def create_db():
     #if os.path.exists(DB_PATH): os.remove(DB_PATH)
-    db.execute("DROP TABLE people")
-    db.execute("DROP TABLE team")
-    db.execute("DROP TABLE match")
-    db.execute("DROP TABLE participation")
-    db.execute("DROP TABLE player")
-    db.execute("DROP TABLE referee")
-    db.execute("DROP TABLE control")
-    db.execute("DROP TABLE statistic")
-
+    db = sqlite3.connect(DB_PATH)
+    flush()
+    
     db.execute("PRAGMA foreign_keys = ON")
 
     db.execute("CREATE TABLE IF NOT EXISTS people(\
@@ -173,12 +167,29 @@ def create_db():
 
     return db
 
-if __name__ == "__main__":
-    generate_data(400, 50, 20)
+def initialize(players, referees, teams, season):
+    generate_data(players, referees, teams, season)
     db = create_db()
     insert_data(db)
     generate_statistics()
     insert_statistics(db)
     db.commit()
     db.close()
+    print("Initialization completed!")
     clear_data()
+
+def flush():
+    db = sqlite3.connect(DB_PATH)
+    db.execute("DROP TABLE IF EXISTS people")
+    db.execute("DROP TABLE IF EXISTS team")
+    db.execute("DROP TABLE IF EXISTS match")
+    db.execute("DROP TABLE IF EXISTS participation")
+    db.execute("DROP TABLE IF EXISTS player")
+    db.execute("DROP TABLE IF EXISTS referee")
+    db.execute("DROP TABLE IF EXISTS control")
+    db.execute("DROP TABLE IF EXISTS statistic")
+    db.close()
+    print("Flush completed!")
+
+if __name__ == "__main__":
+    initialize()

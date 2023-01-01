@@ -1,5 +1,7 @@
-import json, random
-from globals import *
+import json
+from generators.random_generator import random_date
+from numpy import random as nrandom
+from generators.globals import *
 
 def participations_generator(teams, matches):
     match_index = 0
@@ -20,18 +22,21 @@ def participations_generator(teams, matches):
                 #print(home_team, away_team, match_index, sep="    ")
     return participations
 
-def match_generator(match_id):
-    home_team_goals = random.randint(0, 7)
-    away_team_goals = random.randint(0, 7)
+def match_generator(match_id, season):
+    prob = [0.15, 0.15, 0.2, 0.15, 0.15, 0.1, 0.05, 0.05]
+    goals = [0, 1, 2, 3, 4, 5, 6, 7]
+    home_team_goals = int(nrandom.choice(goals, p = prob, size=(1))[0])
+    away_team_goals = int(nrandom.choice(goals, p = prob, size=(1))[0])
+    date = random_date(start_year=season, end_year=season+1)
     return {
         "match_id"        : match_id,
-        "datime"          : None,
+        "datime"          : date,
         "home_team_goals" : home_team_goals,
         "away_team_goals" : away_team_goals
     }
 
 
-def generate(teams):
+def generate(teams, season):
     no_of_teams = len(teams)
     no_of_matches = (no_of_teams) * (no_of_teams - 1)
     matches_stream = open(MATCHES_PATH, "w")
@@ -39,7 +44,7 @@ def generate(teams):
     print("Generating matches...")
     matches_stream.write("[\n")
     for i in range(no_of_matches):
-        mymatch = match_generator(i)
+        mymatch = match_generator(i, season)
         matches_stream.write(json.dumps(mymatch))
         if (i < no_of_matches - 1): 
             matches_stream.write(",\n")

@@ -36,7 +36,6 @@ class DeleteMatchPage(MainFrame):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
         matchLabel = ttk.Label(contentFrame, text = "Select match")
 
-        print(team)
         matchSelector = ttk.Combobox(contentFrame, state = "readonly", width = 30)
         matchSelector["values"] = QuerySelector.getMatchesByTeam(team)
         self.inputs["match"] = matchSelector

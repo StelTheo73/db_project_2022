@@ -2,7 +2,7 @@ import sqlite3
 import random
 import json
 import os
-from globals import *
+from generators.globals import *
 from numpy import random as nrandom
 
 db = sqlite3.connect(DB_PATH)
@@ -146,11 +146,13 @@ def simulate_match(match, stat_id):
                 player = random.choice(home_team_on_players)
             statistics_list.append(generate_statistic("Goal", minute, match["match_id"], player["player_id"], stat_id))
             stat_id+=1
-            assist_player = random.choice(home_team_on_players)
-            while assist_player["player_id"] == player["player_id"]:
+            assist = nrandom.choice([0, 1], p = [0.5, 0.5], size=1)[0]
+            if assist:
                 assist_player = random.choice(home_team_on_players)
-            statistics_list.append(generate_statistic("Assist", minute, match["match_id"], assist_player["player_id"], stat_id))
-            stat_id+=1
+                while assist_player["player_id"] == player["player_id"]:
+                    assist_player = random.choice(home_team_on_players)
+                statistics_list.append(generate_statistic("Assist", minute, match["match_id"], assist_player["player_id"], stat_id))
+                stat_id+=1
 
     # Away Team Goals & Assists
     goals = match["away_team_goals"]

@@ -9,60 +9,90 @@ class QuerySelector:
     
     @staticmethod
     def getMatches():
-        return [f"{home}-{away} (match#{id})" for id,home,away in
-            DbQueries.db.execute("SELECT match.match_id, home_team, away_team FROM match,participation WHERE match.match_id=participation.match_id")]
-    
+        try:
+            return [f"{home}-{away} (match#{id})" for id,home,away in
+                DbQueries.db.execute("SELECT match.match_id, home_team, away_team FROM match,participation WHERE match.match_id=participation.match_id")]
+        except sqlite3.OperationalError:
+            return []
+
     @staticmethod
     def getPeopleId(id):
-        return [f"{people_id}" for people_id in
-            DbQueries.db.execute("SELECT people_id FROM people WHERE people_id = ?",[id])]
-    
+        try:
+            return [f"{people_id}" for people_id in
+                DbQueries.db.execute("SELECT people_id FROM people WHERE people_id = ?",[id])]
+        except sqlite3.OperationalError:
+            return []
+
     @staticmethod
     def getPeopleIdFromPlayerId(player_id):
-        return [f"{people_id}" for people_id in
-            DbQueries.db.execute("SELECT people.people_id FROM people, player WHERE people.people_id = player.people_id AND player.player_id = ?",[player_id])]
+        try:
+            return [f"{people_id}" for people_id in
+                DbQueries.db.execute("SELECT people.people_id FROM people, player WHERE people.people_id = player.people_id AND player.player_id = ?",[player_id])]
+        except sqlite3.OperationalError:
+            return []
 
     @staticmethod
     def getPeopleIdFromRefereeId(referee_id):
-        return [f"{people_id}" for people_id in
-            DbQueries.db.execute("SELECT people.people_id FROM people, referee WHERE people.people_id = referee.people_id AND referee_id = ?",[referee_id])]
+        try:
+            return [f"{people_id}" for people_id in
+                DbQueries.db.execute("SELECT people.people_id FROM people, referee WHERE people.people_id = referee.people_id AND referee_id = ?",[referee_id])]
+        except sqlite3.OperationalError:
+            return []
 
     @staticmethod
     def getPlayers():
-        return [f"{lName} {fName} ({id})" for lName,fName,id in
-            DbQueries.db.execute("SELECT surname, name, player_id FROM player,people WHERE player.people_id=people.people_id ORDER BY surname, name, player_id")]
-    
+        try: 
+            return [f"{lName} {fName} ({id})" for lName,fName,id in
+                DbQueries.db.execute("SELECT surname, name, player_id FROM player,people WHERE player.people_id=people.people_id ORDER BY surname, name, player_id")]
+        except sqlite3.OperationalError:
+            return []
+
     @staticmethod
     def getPlayersByTeam(team):
-        return [f"{lName} {fName} ({id})" for lName,fName,id in
-            DbQueries.db.execute("SELECT surname, name, player_id FROM player,people WHERE player.people_id=people.people_id AND player.team_name=? ORDER BY surname, name, player_id",[team])]
+        try:
+            return [f"{lName} {fName} ({id})" for lName,fName,id in
+                DbQueries.db.execute("SELECT surname, name, player_id FROM player,people WHERE player.people_id=people.people_id AND player.team_name=? ORDER BY surname, name, player_id",[team])]
+        except sqlite3.OperationalError:
+            return []
 
     @staticmethod
     def getReferees():
-        return [f"{lName} {fName} ({id})" for lName,fName,id in
-            DbQueries.db.execute("SELECT surname, name, referee_id FROM referee,people  WHERE referee.people_id=people.people_id ORDER BY surname, name, referee_id")]
-    
+        try: 
+            return [f"{lName} {fName} ({id})" for lName,fName,id in
+                DbQueries.db.execute("SELECT surname, name, referee_id FROM referee,people  WHERE referee.people_id=people.people_id ORDER BY surname, name, referee_id")]
+        except sqlite3.OperationalError:
+            return []
+
     @staticmethod
     def getRefereesByType(type):
-        return [f"{lName} {fName} ({id})" for lName,fName,id in
-            DbQueries.db.execute("SELECT surname, name, referee_id FROM referee,people  WHERE referee.people_id=people.people_id AND referee.type=? ORDER BY surname, name, referee_id",[type])]
+        try:
+            return [f"{lName} {fName} ({id})" for lName,fName,id in
+                DbQueries.db.execute("SELECT surname, name, referee_id FROM referee,people  WHERE referee.people_id=people.people_id AND referee.type=? ORDER BY surname, name, referee_id",[type])]
+        except sqlite3.OperationalError:
+            return []
 
     @staticmethod
     def getTeams():
-        return [team[0] for team in
-            DbQueries.db.execute("SELECT team_name FROM team")]
+        try:
+            return [team[0] for team in
+                DbQueries.db.execute("SELECT team_name FROM team")]
+        except sqlite3.OperationalError:
+            return []
 
     @staticmethod
     def getMatchesByTeam(team):
-        home = [f"Home VS {away_team} ({match_id})" for away_team, match_id in 
-            DbQueries.db.execute("SELECT away_team, match_id FROM PARTICIPATION\
-                WHERE home_team = ? ORDER BY away_team", [team])
-        ]
-        away = [f"Away VS {home_team} ({match_id})" for home_team, match_id in 
-            DbQueries.db.execute("SELECT home_team, match_id FROM PARTICIPATION\
-                WHERE away_team = ? ORDER BY home_team", [team])
-        ]
-        return home + away
+        try: 
+            home = [f"Home VS {away_team} ({match_id})" for away_team, match_id in 
+                DbQueries.db.execute("SELECT away_team, match_id FROM PARTICIPATION\
+                    WHERE home_team = ? ORDER BY away_team", [team])
+            ]
+            away = [f"Away VS {home_team} ({match_id})" for home_team, match_id in 
+                DbQueries.db.execute("SELECT home_team, match_id FROM PARTICIPATION\
+                    WHERE away_team = ? ORDER BY home_team", [team])
+            ]
+            return home + away
+        except sqlite3.OperationalError:
+            return []
 
     @staticmethod
     def getRefPositions():
@@ -85,8 +115,6 @@ class QuerySelector:
     
     @staticmethod
     def getStatByMatch(match):
-        #match = inputs["match"]
-        print(match)
         try:
             match_id = match.split("(")[1][:-1]
             return [f"{minute}min: {s_type} {p_name} {p_surname} ({id})" for minute, s_type, p_name, p_surname, id in
@@ -96,7 +124,10 @@ class QuerySelector:
                     [match_id])
             ]
         except IndexError:
-            print("Failed to find statistic!")
+            #print("Failed to find statistic!")
+            return []
+        except sqlite3.OperationalError:
+            return []
 
     @staticmethod
     def getCountries():
@@ -127,14 +158,14 @@ class DbQueries:
     
     @staticmethod
     def insert_player(inputs):
-        print("Submited player!")
-
         DbQueries.insert_people(inputs)
+        try:
+            DbQueries.db.execute("INSERT INTO player (player_id, people_id,team_name, position) VALUES (?,?,?,?)",
+                [inputs['card'], inputs['id'], inputs['team'], inputs['position']])
+            DbQueries.db.commit()
+        except sqlite3.OperationalError:
+            return
 
-        DbQueries.db.execute("INSERT INTO player (player_id, people_id,team_name, position) VALUES (?,?,?,?)",
-            [inputs['card'], inputs['id'], inputs['team'], inputs['position']])
-        DbQueries.db.commit()
-    
     @staticmethod
     def delete_player(inputs):
         player = inputs["player"]
@@ -142,25 +173,31 @@ class DbQueries:
         try:
             people_id = str(QuerySelector.getPeopleIdFromPlayerId(player_id)).split("\'")[1]
         except IndexError:
-            print("Failed to remove person!")
+            #print("Failed to remove person!")
             return
-        print(player_id, people_id)
-        DbQueries.db.execute("DELETE FROM player WHERE player_id = ?",
-            [player_id])
-        DbQueries.db.execute("DELETE FROM people WHERE people_id = ?",
-            [people_id])
-        DbQueries.db.commit()
+        #print(player_id, people_id)
+        try:
+            DbQueries.db.execute("DELETE FROM player WHERE player_id = ?",
+                [player_id])
+            DbQueries.db.execute("DELETE FROM people WHERE people_id = ?",
+                [people_id])
+            DbQueries.db.commit()
+        except sqlite3.OperationalError:
+            return
 
     @staticmethod
     def insert_referee(inputs):
-        print("Submited referee!")
+        #print("Submited referee!")
 
         DbQueries.insert_people(inputs)
 
-        DbQueries.db.execute("INSERT INTO referee (referee_id, people_id, type) VALUES (?,?,?)",
-            [inputs['card'], inputs['id'], inputs['type']])
-        DbQueries.db.commit()
-    
+        try:
+            DbQueries.db.execute("INSERT INTO referee (referee_id, people_id, type) VALUES (?,?,?)",
+                [inputs['card'], inputs['id'], inputs['type']])
+            DbQueries.db.commit()
+        except sqlite3.OperationalError:
+            return
+
     @staticmethod
     def delete_referee(inputs):
         referee = inputs["referee"]
@@ -168,85 +205,101 @@ class DbQueries:
         try:
             people_id = str(QuerySelector.getPeopleIdFromRefereeId(referee_id)).split("\'")[1]
         except IndexError:
-            print("Failed to remove person!")
+            #print("Failed to remove person!")
             return
-        print(referee_id, people_id)
-        DbQueries.db.execute("DELETE FROM referee WHERE referee_id = ?",
-            [referee_id])
-        DbQueries.db.execute("DELETE FROM people WHERE people_id = ?",
-            [people_id])
-        DbQueries.db.commit()
+        #print(referee_id, people_id)
+        try:
+            DbQueries.db.execute("DELETE FROM referee WHERE referee_id = ?",
+                [referee_id])
+            DbQueries.db.execute("DELETE FROM people WHERE people_id = ?",
+                [people_id])
+            DbQueries.db.commit()
+        except sqlite3.OperationalError:
+            return
 
     @staticmethod
     def insert_people(inputs):
-        print("Submited person!")
+        #print("Submited person!")
+        try:
+            date = '-'.join([inputs['year'], inputs['month'], inputs['day']])
+            DbQueries.db.execute("INSERT INTO people (people_id, name, surname, birthdate, tel, nationality) VALUES (?,?,?, DATE(?), ?,?)",
+                [inputs['id'], inputs['name'], inputs['surname'], date, inputs['tel'], inputs['nationality']])
+            DbQueries.db.commit()
+        except sqlite3.OperationalError:
+            return
 
-        date = '-'.join([inputs['year'], inputs['month'], inputs['day']])
-        DbQueries.db.execute("INSERT INTO people (people_id, name, surname, birthdate, tel, nationality) VALUES (?,?,?, DATE(?), ?,?)",
-            [inputs['id'], inputs['name'], inputs['surname'], date, inputs['tel'], inputs['nationality']])
-        DbQueries.db.commit()
-    
     @staticmethod
     def insert_team(inputs):
-        print("Submitedteam!")
-
-        date = inputs['founded'] + '-01-01'
-        DbQueries.db.execute("INSERT INTO team (team_name, home, founded) VALUES (?,?, DATE(?))", [inputs['name'], inputs['home'], date])
-        DbQueries.db.commit()
+        #print("Submitedteam!")
+        try:
+            date = inputs['founded'] + '-01-01'
+            DbQueries.db.execute("INSERT INTO team (team_name, home, founded) VALUES (?,?, DATE(?))", [inputs['name'], inputs['home'], date])
+            DbQueries.db.commit()
+        except sqlite3.OperationalError:
+            return
 
     @staticmethod
     def delete_team(inputs):
-        team_name = inputs["team"]
-        print(team_name)
-        DbQueries.db.execute("DELETE FROM team WHERE team_name = ?",
-            [team_name])
-        DbQueries.db.commit()
+        try:
+            team_name = inputs["team"]
+        #print(team_name)
+            DbQueries.db.execute("DELETE FROM team WHERE team_name = ?",
+                [team_name])
+            DbQueries.db.commit()
+        except sqlite3.OperationalError:
+            return
 
     @staticmethod
     def insert_match(inputs):
-        print("Submited match!")
+        #print("Submited match!")
+        try: 
+            datetime = '-'.join([inputs[i] for i in ['year','month','day']]) +' '+ inputs['hour']+':00'
 
-        datetime = '-'.join([inputs[i] for i in ['year','month','day']]) +' '+ inputs['hour']+':00'
+            DbQueries.db.execute("INSERT INTO match (datime, home_team_goals, away_team_goals) VALUES (DATETIME(?),?,?)",
+                [datetime, inputs['home_score'], inputs['away_score']])
+            
+            match_id = DbQueries.db.execute("SELECT match_id FROM match").fetchall()[-1][0]
 
-        DbQueries.db.execute("INSERT INTO match (datime, home_team_goals, away_team_goals) VALUES (DATETIME(?),?,?)",
-            [datetime, inputs['home_score'], inputs['away_score']])
-        
-        match_id = DbQueries.db.execute("SELECT match_id FROM match").fetchall()[-1][0]
+            DbQueries.db.execute("INSERT INTO participation (match_id, home_team, away_team) VALUES (?,?,?)",
+                [match_id, inputs['home_team'], inputs['away_team']])
+            
+            DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
+                [match_id, inputs['head_ref']])
 
-        DbQueries.db.execute("INSERT INTO participation (match_id, home_team, away_team) VALUES (?,?,?)",
-            [match_id, inputs['home_team'], inputs['away_team']])
-        
-        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
-            [match_id, inputs['head_ref']])
+            DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
+                [match_id, inputs['assist_ref_1']])
 
-        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
-            [match_id, inputs['assist_ref_1']])
+            DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
+                [match_id, inputs['assist_ref_2']])
 
-        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
-            [match_id, inputs['assist_ref_2']])
+            DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
+                [match_id, inputs['fourth_ref']])
 
-        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
-            [match_id, inputs['fourth_ref']])
+            DbQueries.db.commit()
+        except sqlite3.OperationalError:
+            return
 
-        DbQueries.db.commit()
 
     @staticmethod
     def delete_match(inputs):
-        match = inputs["match"]
         try:
+            match = inputs["match"]
             match_id = match.split("(")[1][:-1]
-            print(match_id)
+            #print(match_id)
             DbQueries.db.execute("DELETE FROM participation WHERE match_id = ?",
             [match_id])
             DbQueries.db.execute("DELETE FROM match WHERE match_id = ?", 
             [match_id])
             DbQueries.db.commit()
         except IndexError:
-            print("Failed to remove match!")
+            #print("Failed to remove match!")
+            return
+        except sqlite3.OperationalError:
+            return
 
     @staticmethod
     def insert_stat(inputs):
-        print("Submited statistic!")
+        #print("Submited statistic!")
         try:
             inputs["player"] = inputs["player"].split("(")[1][:-1]
             inputs["match"] = inputs["match"].split("(")[1][:-1]
@@ -255,8 +308,11 @@ class DbQueries:
                 [inputs['player'], inputs['match'], inputs['minute'], inputs['stat_name']])
             DbQueries.db.commit()
         except IndexError:
-            print("Failed to add statistic!")
-    
+            #print("Failed to add statistic!")
+            return
+        except sqlite3.OperationalError:
+            return
+
     @staticmethod
     def delete_stat(inputs):
         statistic = inputs["statistic"]
@@ -267,8 +323,11 @@ class DbQueries:
             [statistic_id])
             DbQueries.db.commit()
         except IndexError:
-            print("Failed to remove statistic!")
-
+            #print("Failed to remove statistic!")
+            return
+        except sqlite3.OperationalError:
+            return
+            
     @staticmethod
     def run_query(inputs):
         print("Submited Query!")

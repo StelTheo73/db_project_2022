@@ -53,7 +53,7 @@ class MainFrame(ttk.Frame):
                   command=lambda: master.switchFrame("Add Stat"), width = 15)
         addStatisticPageButton.grid(row=0, column=4)
         
-        startPageButton = ttk.Button(self.scrollable_frame, text="Open start page",
+        startPageButton = ttk.Button(self.scrollable_frame, text="Home Page",
                   command=lambda: master.switchFrame("StartPage"), width = 15)
         startPageButton.grid(row=0, column=5)
 

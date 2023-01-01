@@ -35,8 +35,7 @@ class DeletePlayerPage(MainFrame):
     def create_player_selector(self, team):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
         playerLabel = ttk.Label(contentFrame, text = "Select player")
-        
-        print(team)
+
         playerSelector = ttk.Combobox(contentFrame, state = "readonly", width = 30)
         playerSelector["values"] = QuerySelector.getPlayersByTeam(team)
         self.inputs["player"] = playerSelector

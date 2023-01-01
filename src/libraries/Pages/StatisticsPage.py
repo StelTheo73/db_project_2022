@@ -114,18 +114,17 @@ class StatisticsPage(MainFrame):
     def create_matches_table(self):
         headings = ["Home Team", "Away Team", "Score", "Date",
                 "G", "A", "OG",
-                "FK", "FC", 
-                "PK", "PC", 
+                "F", "P", 
                 "OS", "CK",
                 "YC", "RC"
             ]
-        self.tree["columns"] = [c for c in range(1, 16, 1)]
+        self.tree["columns"] = [c for c in range(1, 14, 1)]
         self.tree["show"] = "headings"
 
-        for c in range(1, 16, 1):
+        for c in range(1, 14, 1):
             if c == 1 or c == 2:
                 self.tree.column(str(c), width = 100, anchor = "c")
-            elif c == 3:
+            elif c == 3 or c == 4:
                 self.tree.column(str(c), width = 70, anchor = "c")
             else:
                 self.tree.column(str(c), width = 40, anchor = "c")
@@ -154,11 +153,10 @@ class StatisticsPage(MainFrame):
                     match["away_team"],
                     str(match["home_team_goals"]) + ":" + str(match["away_team_goals"]),
                     match["datime"],
-                    stat[0], stat[1], stat[2],
-                    stat[3], stat[4], stat[5],
-                    stat[6], stat[7], stat[8],
-                    stat[9], stat[10]
-
+                    stat[0], stat[1], stat[2], # goals, assists, own goals 
+                    stat[4], stat[6],          # fouls, penalties
+                    stat[7], stat[8],          # offsides, corners
+                    stat[9], stat[10]          # yellows, reds
                 )
             )
 
