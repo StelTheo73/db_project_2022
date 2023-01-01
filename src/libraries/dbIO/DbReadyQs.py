@@ -1,5 +1,8 @@
 import sqlite3
-from DbQueries import QuerySelector as QC
+if __name__ == "__main__":
+    from DbQueries import QuerySelector as QC
+else:
+    from libraries.dbIO.DbQueries import QuerySelector as QC
 
 class DbReadyQs:
 
@@ -11,7 +14,8 @@ class DbReadyQs:
         output = {team:{} for team in QC.getTeams()}
         
         for team in output:
-            output[team]['wins'] = output[team]['defeats'] = 0
+            team = output[team]
+            team['wins'] = team['defeats'] = team['ties'] = 0
 
         functions:list(function) = [DbReadyQs.__dict__[func] for func in list(DbReadyQs.__dict__.keys())[5:-3]]
         for func in functions:
@@ -81,6 +85,5 @@ if __name__ == "__main__":
     board = DbReadyQs.get_board()
     for tm in board:
         # Check that all have same length.. Bug in wins/defeats for teams that have 0 of them
-        if len(board[tm])!=1:
-            print(tm, len(board[tm]), board[tm])
+        print(tm, len(board[tm]), board[tm])
 
