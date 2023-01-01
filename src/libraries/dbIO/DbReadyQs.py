@@ -1,8 +1,5 @@
 import sqlite3
-if __name__ == "__main__":
-    from DbQueries import QuerySelector as QC
-else:
-    from libraries.dbIO.DbQueries import QuerySelector as QC
+from DbQueries import QuerySelector as QC
 
 class DbReadyQs:
 
