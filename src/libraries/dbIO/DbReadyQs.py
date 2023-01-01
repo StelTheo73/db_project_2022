@@ -1,4 +1,5 @@
 import sqlite3
+from DbQueries import QuerySelector as QC
 
 class DbReadyQs:
 
@@ -6,30 +7,29 @@ class DbReadyQs:
     DB_PATH = './src/data/database.db'
     db = sqlite3.connect(DB_PATH)
 
-    @staticmethod
     def get_board():
-        output = {}
+        output = {team:{} for team in QC.getTeams()}
+        
+        for team in output:
+            output[team]['wins'] = output[team]['defeats'] = 0
+
         functions:list(function) = [DbReadyQs.__dict__[func] for func in list(DbReadyQs.__dict__.keys())[5:-3]]
         for func in functions:
-            out:dict = func()
-            for team in out:
-                if not team in output.keys():
-                    output[team] = {}
-                output[team][func.__name__.rstrip("_for_each_team")] = out[team]
+            value:dict = func()
+            for team in value:
+                output[team][func.__name__.rstrip("_for_each_team")] = value[team]
+        
         return output
 
-    @staticmethod
     def format(cursor: object):
         "This function formats the outputs from the database for the GUI"
         return dict(cursor)
 
-    @staticmethod
     def matches_for_each_team():
         cursor = DbReadyQs.db.execute("SELECT team_name, count(match_id) FROM team, participation \
             WHERE team_name=home_team OR team_name=away_team GROUP BY team_name ORDER BY team_name")
         return DbReadyQs.format(cursor)
 
-    @staticmethod
     def scored_goals_for_each_team():
         "goals that each team scored"
         cursor = DbReadyQs.db.execute("SELECT team_name, sum(goals) FROM \
@@ -40,7 +40,6 @@ class DbReadyQs:
             GROUP BY team_name")
         return DbReadyQs.format(cursor)
 
-    @staticmethod
     def conceded_goals_for_each_team():
         "goals that were scored to each team"
         cursor = DbReadyQs.db.execute("SELECT team_name, sum(goals) FROM \
@@ -51,7 +50,6 @@ class DbReadyQs:
             GROUP BY team_name")
         return DbReadyQs.format(cursor)
 
-    @staticmethod
     def wins_for_each_team():
         cursor = DbReadyQs.db.execute("SELECT team_name, count(match.match_id) FROM team, participation, match \
             WHERE participation.match_id=match.match_id AND \
@@ -59,20 +57,13 @@ class DbReadyQs:
             GROUP BY team_name ORDER BY count(match.match_id) DESC")
         return DbReadyQs.format(cursor)
 
-    @staticmethod
     def ties_for_each_team():
         cursor = DbReadyQs.db.execute("SELECT team_name, count(match.match_id) FROM team \
             JOIN participation ON (team_name=home_team OR team_name=away_team) \
             LEFT JOIN match ON participation.match_id=match.match_id AND home_team_goals=away_team_goals \
             GROUP BY team_name ORDER BY count(match.match_id) DESC")
-        # Test for the case where wins=0 or defeats=0
-        # cursor = DbReadyQs.db.execute("SELECT team_name, count(match.match_id) FROM team \
-        #     LEFT JOIN participation ON ((team_name=home_team AND home_team_goals=away_team_goals) OR (team_name=away_team AND home_team_goals=away_team_goals)) \
-        #     LEFT JOIN match ON participation.match_id=match.match_id \
-        #     GROUP BY team_name ORDER BY count(match.match_id) DESC")
         return DbReadyQs.format(cursor)
 
-    @staticmethod
     def defeats_for_each_team():
         cursor = DbReadyQs.db.execute("SELECT team_name, count(match.match_id) FROM team, participation, match \
             WHERE participation.match_id=match.match_id AND \
@@ -80,10 +71,9 @@ class DbReadyQs:
             GROUP BY team_name ORDER BY count(match.match_id) DESC")
         return DbReadyQs.format(cursor)
     
-    @staticmethod
     def points_for_each_team():
         wins, ties = DbReadyQs.wins_for_each_team(), DbReadyQs.ties_for_each_team()
-        points = lambda team: 3*wins[team] + 1*ties[team]
+        points = lambda team: 0#3*wins[team] + 1*ties[team]
         return DbReadyQs.format([(team,points(team)) for team in wins])
 
 
@@ -91,5 +81,6 @@ if __name__ == "__main__":
     board = DbReadyQs.get_board()
     for tm in board:
         # Check that all have same length.. Bug in wins/defeats for teams that have 0 of them
-        print(tm, len(board), board[tm])
+        if len(board[tm])!=1:
+            print(tm, len(board[tm]), board[tm])
 

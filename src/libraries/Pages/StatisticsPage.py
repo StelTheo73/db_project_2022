@@ -65,27 +65,16 @@ class StatisticsPage(MainFrame):
         sorted_board = []
         for team in board:
             matches = board[team]["matches"]
-            try:
-                won = board[team]["wins"]
-            except KeyError: #no wins
-                won = 0
-                matches+=1
-            try:
-                lost = board[team]["defeats"]
-            except KeyError: #no defeats
-                lost = 0
-                matches+=1
-            try:
-                points = board[team]["points"]
-            except KeyError: #only ties
-                #print("\n\n{}".format(board[team]["ties"]))
-                points = board[team]["ties"]
+            won = board[team]["wins"]
+            lost = board[team]["defeats"]
+            tied = board[team]["ties"]
+            points = board[team]["points"]
             index = {
                 "team"    : team,
                 "matches" : matches,
                 "points"  : points,
                 "won"     : won,
-                "drawed"  : board[team]["ties"],
+                "drawed"  : tied,
                 "lost"    : lost,
                 "goals_for" : board[team]["scored_goals"],
                 "goals_against" : board[team]["conceded_goals"],
