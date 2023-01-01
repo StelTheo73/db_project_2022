@@ -157,7 +157,7 @@ class DbQueries:
         if method != None: method(inputs)
     
     @staticmethod
-    def insert_player(inputs):
+    def insert_player(inputs:dict):
         DbQueries.insert_people(inputs)
         try:
             DbQueries.db.execute("INSERT INTO player (player_id, people_id,team_name, position) VALUES (?,?,?,?)",
@@ -167,26 +167,27 @@ class DbQueries:
             return
 
     @staticmethod
-    def delete_player(inputs):
+    def delete_player(inputs:dict):
         player = inputs["player"]
         player_id = player.split(" (")[1][:-1] # split id from name and remove ( )
         try:
-            people_id = str(QuerySelector.getPeopleIdFromPlayerId(player_id)).split("\'")[1]
+            people_id = QuerySelector.getPeopleIdFromPlayerId(player_id)[0].split("'")[1]
         except IndexError:
-            #print("Failed to remove person!")
+            print("Failed to remove person!")
             return
-        #print(player_id, people_id)
         try:
             DbQueries.db.execute("DELETE FROM player WHERE player_id = ?",
                 [player_id])
             DbQueries.db.execute("DELETE FROM people WHERE people_id = ?",
                 [people_id])
+            DbQueries.db.execute("DELETE FROM statistic WHERE player_id = ?",
+                [player_id])
             DbQueries.db.commit()
         except sqlite3.OperationalError:
             return
 
     @staticmethod
-    def insert_referee(inputs):
+    def insert_referee(inputs:dict):
         #print("Submited referee!")
 
         DbQueries.insert_people(inputs)
@@ -199,7 +200,7 @@ class DbQueries:
             return
 
     @staticmethod
-    def delete_referee(inputs):
+    def delete_referee(inputs:dict):
         referee = inputs["referee"]
         referee_id = referee.split(" (")[1][:-1] # split id from name and remove ( )
         try:
@@ -218,7 +219,7 @@ class DbQueries:
             return
 
     @staticmethod
-    def insert_people(inputs):
+    def insert_people(inputs:dict):
         #print("Submited person!")
         try:
             date = '-'.join([inputs['year'], inputs['month'], inputs['day']])
@@ -229,7 +230,7 @@ class DbQueries:
             return
 
     @staticmethod
-    def insert_team(inputs):
+    def insert_team(inputs:dict):
         #print("Submitedteam!")
         try:
             date = inputs['founded'] + '-01-01'
@@ -239,18 +240,17 @@ class DbQueries:
             return
 
     @staticmethod
-    def delete_team(inputs):
-        try:
-            team_name = inputs["team"]
-        #print(team_name)
-            DbQueries.db.execute("DELETE FROM team WHERE team_name = ?",
-                [team_name])
-            DbQueries.db.commit()
-        except sqlite3.OperationalError:
-            return
+    def delete_team(inputs:dict):
+        team = inputs["team"]
+        DbQueries.db.execute("DELETE FROM team WHERE team_name = ?", [team])
+        for player in QuerySelector.getPlayersByTeam(team):
+            DbQueries.db.execute("UPDATE player SET team_name=NULL WHERE team_name=?", [team])
+        for match in QuerySelector.getMatchesByTeam(team):
+            DbQueries.delete_match({"match":match})
+        DbQueries.db.commit()
 
     @staticmethod
-    def insert_match(inputs):
+    def insert_match(inputs:dict):
         #print("Submited match!")
         try: 
             datetime = '-'.join([inputs[i] for i in ['year','month','day']]) +' '+ inputs['hour']+':00'
@@ -281,24 +281,19 @@ class DbQueries:
 
 
     @staticmethod
-    def delete_match(inputs):
+    def delete_match(inputs:dict):
         try:
-            match = inputs["match"]
-            match_id = match.split("(")[1][:-1]
-            #print(match_id)
-            DbQueries.db.execute("DELETE FROM participation WHERE match_id = ?",
-            [match_id])
-            DbQueries.db.execute("DELETE FROM match WHERE match_id = ?", 
-            [match_id])
+            match_id:str = inputs["match"].split("(")[1][:-1]
+            DbQueries.db.execute("DELETE FROM participation WHERE match_id = ?", [match_id])
+            DbQueries.db.execute("DELETE FROM match WHERE match_id = ?",  [match_id])
+            DbQueries.db.execute("DELETE FROM statistic WHERE match_id = ?",  [match_id])
             DbQueries.db.commit()
         except IndexError:
-            #print("Failed to remove match!")
-            return
-        except sqlite3.OperationalError:
+            print("Failed to remove match!")
             return
 
     @staticmethod
-    def insert_stat(inputs):
+    def insert_stat(inputs:dict):
         #print("Submited statistic!")
         try:
             inputs["player"] = inputs["player"].split("(")[1][:-1]
@@ -314,7 +309,7 @@ class DbQueries:
             return
 
     @staticmethod
-    def delete_stat(inputs):
+    def delete_stat(inputs:dict):
         statistic = inputs["statistic"]
         try:
             statistic_id = statistic.split("(")[1][:-1]
@@ -329,7 +324,7 @@ class DbQueries:
             return
             
     @staticmethod
-    def run_query(inputs):
+    def run_query(inputs:dict):
         print("Submited Query!")
         query = inputs['query']
 

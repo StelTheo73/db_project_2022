@@ -1,5 +1,5 @@
 import sqlite3
-from DbQueries import QuerySelector as QC
+from libraries.dbIO.DbQueries import QuerySelector as QC
 
 class DbReadyQs:
 
@@ -9,16 +9,13 @@ class DbReadyQs:
 
     def get_board():
         output = {team:{} for team in QC.getTeams()}
-        
-        for team in output:
-            team = output[team]
-            team['wins'] = team['defeats'] = team['ties'] = 0
 
         functions:list(function) = [DbReadyQs.__dict__[func] for func in list(DbReadyQs.__dict__.keys())[5:-3]]
         for func in functions:
             value:dict = func()
-            for team in value:
-                output[team][func.__name__.rstrip("_for_each_team")] = value[team]
+            func_name:str = func.__name__.rstrip("_for_each_team")
+            for team in output:
+                output[team][func_name] = value[team] if team in value else 0
         
         return output
 
@@ -74,8 +71,8 @@ class DbReadyQs:
     
     def points_for_each_team():
         wins, ties = DbReadyQs.wins_for_each_team(), DbReadyQs.ties_for_each_team()
-        points = lambda team: ties[team] if team not in wins else 3*wins[team] + 1*ties[team]
-        return DbReadyQs.format([(team,points(team)) for team in wins])
+        points = lambda team: (3*wins[team] if team in wins else 0) + ties[team]
+        return DbReadyQs.format([(team, points(team)) for team in wins])
 
 
 if __name__ == "__main__":

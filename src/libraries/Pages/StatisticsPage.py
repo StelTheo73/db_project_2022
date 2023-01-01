@@ -225,7 +225,8 @@ class StatisticsPage(MainFrame):
         # Retrieve stats
         player_info = StatInfoQueries.get_players_info()
         # Sort
-        player_info = sorted(player_info, key = lambda d: (d["team_name"], d["position"], d["surname"], d["name"], d["nationality"], d["birthdate"]))
+        player_info = sorted(player_info, key = lambda d:
+            (d["team_name"] if d["team_name"] else '~', d["position"], d["surname"], d["name"], d["nationality"], d["birthdate"]))
 
         line = 1
         for player in player_info:
