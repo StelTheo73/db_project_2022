@@ -38,7 +38,7 @@ class Window(tk.Tk):
         self.switchFrame("StartPage")
 
         # Submit on Enter
-        #self.bind("<Return>", lambda e: self._frame.onSubmit())
+        self.bind("<Return>", lambda e: self._frame.onSubmit())
 
     def switchFrame(self, frame_id):
         """Destroys current frame and replaces it with a new one."""

@@ -1,5 +1,4 @@
-import sqlite3
-import json
+import sqlite3, json, ctypes
 from datetime import date
 
 class QuerySelector:
@@ -139,6 +138,8 @@ class QuerySelector:
         if not from_year: from_year = date.today().year - max_age if max_age else 1900
         return list(range(date.today().year-min_age, from_year, -1))
 
+
+
 class DbQueries:
 
     ## Static Variables
@@ -148,23 +149,143 @@ class DbQueries:
 
     @staticmethod
     def submit(entries={}, method=None):        ## Needs a looot of Error Handling
-        inputs = {func: entries[func].get() for func in entries}
-        if method != DbQueries.run_query:
-            for func in entries:    # Clear entries
-                try: entries[func].set('')  # for ComboBox
-                except AttributeError: entries[func].delete(0,'end')   # for Entry
+        inputs = {entry: entries[entry].get() for entry in entries} # create a dict of {entry:input} ex. 'year':2021
 
-        if method != None: method(inputs)
+        if method != None:
+            error:str = method(inputs)
+            if error:
+                userAction = ctypes.windll.user32.MessageBoxW(0, error, "ERROR", 1)
+                if userAction==2:
+                    error = None    # User wants to cancel and clear the entries
+
+            # Clear all GUI entries
+            if not error and method != DbQueries.run_query: # If there are no errors and it's not the RunQuery page
+                for entry in entries:
+                    try: entries[entry].set('')  # for ComboBox
+                    except AttributeError: entries[entry].delete(0,'end')   # for Entry
+
+    
+    # ****************************** INSERTIONS ******************************
+
+    @staticmethod
+    def insert_any(inputs:dict):
+        for input in inputs:
+            if inputs[input]=='':
+                return f"Please add a value for {input.upper()}"
+        return None
+
+    @staticmethod
+    def insert_people(inputs:dict):
+        error = DbQueries.insert_any(inputs)
+        if error: return error
+        
+        # Error Checking
+        if len(inputs['id']) != 8:
+            return "Please add an 8-chars Identity Card Number for this person."
+        
+        if len(inputs['tel'])<10 or not inputs['tel'][-10:].isdigit():
+            return "The Phone number must be ending in a 10-digits number."
+        
+        # Queries
+        date = '-'.join([inputs['year'], inputs['month'], inputs['day']])
+        DbQueries.db.execute("INSERT INTO people (people_id, name, surname, birthdate, tel, nationality) VALUES (?,?,?, DATE(?), ?,?)",
+            [inputs['id'], inputs['name'], inputs['surname'], date, inputs['tel'], inputs['nationality']])
+        DbQueries.db.commit()
+
+        print("Submited person!")
+        return None
     
     @staticmethod
     def insert_player(inputs:dict):
-        DbQueries.insert_people(inputs)
-        try:
-            DbQueries.db.execute("INSERT INTO player (player_id, people_id,team_name, position) VALUES (?,?,?,?)",
-                [inputs['card'], inputs['id'], inputs['team'], inputs['position']])
-            DbQueries.db.commit()
-        except sqlite3.OperationalError:
-            return
+        error = DbQueries.insert_people(inputs)
+        if error: return error
+        
+        # Error Checking
+        if len(inputs['card']) != 10:
+            return "Please add an 10-chars Player Card Number for this person."
+
+        # Queries
+        DbQueries.db.execute("INSERT INTO player (player_id, people_id,team_name, position) VALUES (?,?,?,?)",
+            [inputs['card'], inputs['id'], inputs['team'], inputs['position']])
+        DbQueries.db.commit()
+
+        print("Submited player!")
+        return None
+
+    @staticmethod
+    def insert_referee(inputs:dict):
+        error = DbQueries.insert_people(inputs)
+        if error: return error
+        
+        # Error Checking
+        if len(inputs['card']) != 10:
+            return "Please add an 10-chars Referee Card Number for this person."
+
+        # Queries
+        DbQueries.db.execute("INSERT INTO referee (referee_id, people_id, type) VALUES (?,?,?)",
+            [inputs['card'], inputs['id'], inputs['type']])
+        DbQueries.db.commit()
+
+        print("Submited referee!")
+        return None
+
+    @staticmethod
+    def insert_team(inputs:dict):
+        error = DbQueries.insert_any(inputs)
+        if error: return error
+
+        date = inputs['founded'] + '-01-01'
+        DbQueries.db.execute("INSERT INTO team (team_name, home, founded) VALUES (?,?, DATE(?))", [inputs['name'], inputs['home'], date])
+        DbQueries.db.commit()
+
+        print("Submited club!")
+        return None
+
+    @staticmethod
+    def insert_match(inputs:dict):
+        error = DbQueries.insert_any(inputs)
+        if error: return error
+
+        datetime = '-'.join([inputs[i] for i in ['year','month','day']]) +' '+ inputs['hour']+':00'
+
+        DbQueries.db.execute("INSERT INTO match (datime, home_team_goals, away_team_goals) VALUES (DATETIME(?),?,?)",
+            [datetime, inputs['home_score'], inputs['away_score']])
+        
+        match_id = DbQueries.db.execute("SELECT match_id FROM match").fetchall()[-1][0]
+
+        DbQueries.db.execute("INSERT INTO participation (match_id, home_team, away_team) VALUES (?,?,?)",
+            [match_id, inputs['home_team'], inputs['away_team']])
+        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
+            [match_id, inputs['head_ref']])
+        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
+            [match_id, inputs['assist_ref_1']])
+        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
+            [match_id, inputs['assist_ref_2']])
+        DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
+            [match_id, inputs['fourth_ref']])
+
+        DbQueries.db.commit()
+        
+        print("Submited match!")
+        return None
+
+    @staticmethod
+    def insert_stat(inputs:dict):
+        error = DbQueries.insert_any(inputs)
+        if error: return error
+
+        inputs["player"] = inputs["player"].split("(")[1][:-1]
+        inputs["match"] = inputs["match"].split("(")[1][:-1]
+        print(inputs)
+        DbQueries.db.execute("INSERT INTO statistic (player_id, match_id, minute, stat_name) VALUES (?, ?, ?, ?)",
+            [inputs['player'], inputs['match'], inputs['minute'], inputs['stat_name']])
+        DbQueries.db.commit()
+
+        print("Submited statistic!")
+        return None
+
+    
+    # ****************************** DELETIONS ******************************
 
     @staticmethod
     def delete_player(inputs:dict):
@@ -182,19 +303,6 @@ class DbQueries:
                 [people_id])
             DbQueries.db.execute("DELETE FROM statistic WHERE player_id = ?",
                 [player_id])
-            DbQueries.db.commit()
-        except sqlite3.OperationalError:
-            return
-
-    @staticmethod
-    def insert_referee(inputs:dict):
-        #print("Submited referee!")
-
-        DbQueries.insert_people(inputs)
-
-        try:
-            DbQueries.db.execute("INSERT INTO referee (referee_id, people_id, type) VALUES (?,?,?)",
-                [inputs['card'], inputs['id'], inputs['type']])
             DbQueries.db.commit()
         except sqlite3.OperationalError:
             return
@@ -219,27 +327,6 @@ class DbQueries:
             return
 
     @staticmethod
-    def insert_people(inputs:dict):
-        #print("Submited person!")
-        try:
-            date = '-'.join([inputs['year'], inputs['month'], inputs['day']])
-            DbQueries.db.execute("INSERT INTO people (people_id, name, surname, birthdate, tel, nationality) VALUES (?,?,?, DATE(?), ?,?)",
-                [inputs['id'], inputs['name'], inputs['surname'], date, inputs['tel'], inputs['nationality']])
-            DbQueries.db.commit()
-        except sqlite3.OperationalError:
-            return
-
-    @staticmethod
-    def insert_team(inputs:dict):
-        #print("Submitedteam!")
-        try:
-            date = inputs['founded'] + '-01-01'
-            DbQueries.db.execute("INSERT INTO team (team_name, home, founded) VALUES (?,?, DATE(?))", [inputs['name'], inputs['home'], date])
-            DbQueries.db.commit()
-        except sqlite3.OperationalError:
-            return
-
-    @staticmethod
     def delete_team(inputs:dict):
         team = inputs["team"]
         DbQueries.db.execute("DELETE FROM team WHERE team_name = ?", [team])
@@ -248,37 +335,6 @@ class DbQueries:
         for match in QuerySelector.getMatchesByTeam(team):
             DbQueries.delete_match({"match":match})
         DbQueries.db.commit()
-
-    @staticmethod
-    def insert_match(inputs:dict):
-        #print("Submited match!")
-        try: 
-            datetime = '-'.join([inputs[i] for i in ['year','month','day']]) +' '+ inputs['hour']+':00'
-
-            DbQueries.db.execute("INSERT INTO match (datime, home_team_goals, away_team_goals) VALUES (DATETIME(?),?,?)",
-                [datetime, inputs['home_score'], inputs['away_score']])
-            
-            match_id = DbQueries.db.execute("SELECT match_id FROM match").fetchall()[-1][0]
-
-            DbQueries.db.execute("INSERT INTO participation (match_id, home_team, away_team) VALUES (?,?,?)",
-                [match_id, inputs['home_team'], inputs['away_team']])
-            
-            DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
-                [match_id, inputs['head_ref']])
-
-            DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
-                [match_id, inputs['assist_ref_1']])
-
-            DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
-                [match_id, inputs['assist_ref_2']])
-
-            DbQueries.db.execute("INSERT INTO control (match_id, referee_id) VALUES (?,?)",
-                [match_id, inputs['fourth_ref']])
-
-            DbQueries.db.commit()
-        except sqlite3.OperationalError:
-            return
-
 
     @staticmethod
     def delete_match(inputs:dict):
@@ -290,22 +346,6 @@ class DbQueries:
             DbQueries.db.commit()
         except IndexError:
             print("Failed to remove match!")
-            return
-
-    @staticmethod
-    def insert_stat(inputs:dict):
-        #print("Submited statistic!")
-        try:
-            inputs["player"] = inputs["player"].split("(")[1][:-1]
-            inputs["match"] = inputs["match"].split("(")[1][:-1]
-            print(inputs)
-            DbQueries.db.execute("INSERT INTO statistic (player_id, match_id, minute, stat_name) VALUES (?, ?, ?, ?)",
-                [inputs['player'], inputs['match'], inputs['minute'], inputs['stat_name']])
-            DbQueries.db.commit()
-        except IndexError:
-            #print("Failed to add statistic!")
-            return
-        except sqlite3.OperationalError:
             return
 
     @staticmethod

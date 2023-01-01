@@ -105,8 +105,24 @@ def create_db():
     	name TEXT NOT NULL,\
         surname TEXT NOT NULL,\
         birthdate DATE,\
-        tel TEXT,\
+        tel CHAR(14),\
         nationality TEXT\
+    )")
+
+    db.execute("CREATE TABLE IF NOT EXISTS player(\
+        player_id CHAR(10) NOT NULL PRIMARY KEY,\
+        people_id CHAR(8) NOT NULL,\
+        team_name TEXT,\
+        position VARCHAR(3),\
+        FOREIGN KEY(people_id) REFERENCES people(people_id),\
+        FOREIGN KEY(team_name) REFERENCES team(team_name)\
+    )")
+
+    db.execute("CREATE TABLE IF NOT EXISTS referee(\
+        referee_id CHAR(10) NOT NULL PRIMARY KEY,\
+        people_id CHAR(8) NOT NULL,\
+        type TEXT,\
+        FOREIGN KEY(people_id) REFERENCES people(people_id)\
     )")
 
     db.execute("CREATE TABLE IF NOT EXISTS team(\
@@ -130,22 +146,6 @@ def create_db():
         FOREIGN KEY (match_id) REFERENCES match(match_id),\
         FOREIGN KEY (home_team) REFERENCES team(team_name),\
         FOREIGN KEY (away_team) REFERENCES team(team_name)\
-    )")
-
-    db.execute("CREATE TABLE IF NOT EXISTS player(\
-        player_id CHAR(10) NOT NULL PRIMARY KEY,\
-        people_id CHAR(8) NOT NULL,\
-        team_name TEXT,\
-        position VARCHAR(3),\
-        FOREIGN KEY(people_id) REFERENCES people(people_id),\
-        FOREIGN KEY(team_name) REFERENCES team(team_name)\
-    )")
-
-    db.execute("CREATE TABLE IF NOT EXISTS referee(\
-        referee_id CHAR(10) NOT NULL PRIMARY KEY,\
-        people_id CHAR(8) NOT NULL,\
-        type TEXT,\
-        FOREIGN KEY(people_id) REFERENCES people(people_id)\
     )")
 
     db.execute("CREATE TABLE IF NOT EXISTS control(\
