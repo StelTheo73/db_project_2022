@@ -144,7 +144,7 @@ class DbQueries:
 
 
     @staticmethod
-    def submit(entries={}, method=None):        ## Needs a looot of Error Handling
+    def submit(entries={}, method=None):
         inputs = {entry: entries[entry].get() for entry in entries} # create a dict of {entry:input} ex. 'year':2021
 
         if method != None:
@@ -171,7 +171,7 @@ class DbQueries:
         return None
 
     @staticmethod
-    def insert_people(inputs:dict):
+    def insert_people(inputs:dict, people_type:str):
         error = DbQueries.insert_any(inputs)
         if error: return error
         
@@ -182,45 +182,49 @@ class DbQueries:
         if len(inputs['tel'])<10 or not inputs['tel'][-10:].isdigit():
             return "The Phone number must be ending in a 10-digits number."
         
+        if len(inputs['card']) != 10:
+            return f"Please add an 10-chars {people_type} Card Number for this person."
+        
         # Queries
         date = '-'.join([inputs['year'], inputs['month'], inputs['day']])
-        DbQueries.db.execute("INSERT INTO people (people_id, name, surname, birthdate, tel, nationality) VALUES (?,?,?, DATE(?), ?,?)",
-            [inputs['id'], inputs['name'], inputs['surname'], date, inputs['tel'], inputs['nationality']])
-        DbQueries.db.commit()
+        try:
+            DbQueries.db.execute("INSERT INTO people (people_id, name, surname, birthdate, tel, nationality) VALUES (?,?,?, DATE(?), ?,?)",
+                [inputs['id'], inputs['name'], inputs['surname'], date, inputs['tel'], inputs['nationality']])
+            DbQueries.db.commit()
+        except sqlite3.IntegrityError as err:
+            return err
 
         print("Submited person!")
         return None
     
     @staticmethod
     def insert_player(inputs:dict):
-        error = DbQueries.insert_people(inputs)
+        error = DbQueries.insert_people(inputs, "Player")
         if error: return error
-        
-        # Error Checking
-        if len(inputs['card']) != 10:
-            return "Please add an 10-chars Player Card Number for this person."
 
         # Queries
-        DbQueries.db.execute("INSERT INTO player (player_id, people_id,team_name, position) VALUES (?,?,?,?)",
-            [inputs['card'], inputs['id'], inputs['team'], inputs['position']])
-        DbQueries.db.commit()
+        try:
+            DbQueries.db.execute("INSERT INTO player (player_id, people_id,team_name, position) VALUES (?,?,?,?)",
+                [inputs['card'], inputs['id'], inputs['team'], inputs['position']])
+            DbQueries.db.commit()
+        except sqlite3.IntegrityError as err:
+            return err
 
         print("Submited player!")
         return None
 
     @staticmethod
     def insert_referee(inputs:dict):
-        error = DbQueries.insert_people(inputs)
+        error = DbQueries.insert_people(inputs, "Referee")
         if error: return error
-        
-        # Error Checking
-        if len(inputs['card']) != 10:
-            return "Please add an 10-chars Referee Card Number for this person."
 
         # Queries
-        DbQueries.db.execute("INSERT INTO referee (referee_id, people_id, type) VALUES (?,?,?)",
-            [inputs['card'], inputs['id'], inputs['type']])
-        DbQueries.db.commit()
+        try:
+            DbQueries.db.execute("INSERT INTO referee (referee_id, people_id, type) VALUES (?,?,?)",
+                [inputs['card'], inputs['id'], inputs['type']])
+            DbQueries.db.commit()
+        except sqlite3.IntegrityError as err:
+            return err
 
         print("Submited referee!")
         return None
@@ -272,7 +276,6 @@ class DbQueries:
 
         inputs["player"] = inputs["player"].split("(")[1][:-1]
         inputs["match"] = inputs["match"].split("(")[1][:-1]
-        print(inputs)
         DbQueries.db.execute("INSERT INTO statistic (player_id, match_id, minute, stat_name) VALUES (?, ?, ?, ?)",
             [inputs['player'], inputs['match'], inputs['minute'], inputs['stat_name']])
         DbQueries.db.commit()
@@ -289,8 +292,8 @@ class DbQueries:
         player_id = player.split(" (")[1][:-1] # split id from name and remove ( )
         try:
             people_id = QuerySelector.getPeopleIdFromPlayerId(player_id)[0].split("'")[1]
-        except IndexError:
-            print("Failed to remove person!")
+        except IndexError as e:
+            print(e)
             return
         try:
             DbQueries.db.execute("DELETE FROM player WHERE player_id = ?",
@@ -300,8 +303,11 @@ class DbQueries:
             DbQueries.db.execute("DELETE FROM statistic WHERE player_id = ?",
                 [player_id])
             DbQueries.db.commit()
-        except sqlite3.OperationalError:
+        except sqlite3.OperationalError as e:
+            print(e)
             return
+        print("Deleted player!")
+        return None
 
     @staticmethod
     def delete_referee(inputs:dict):
@@ -309,28 +315,32 @@ class DbQueries:
         referee_id = referee.split(" (")[1][:-1] # split id from name and remove ( )
         try:
             people_id = str(QuerySelector.getPeopleIdFromRefereeId(referee_id)).split("\'")[1]
-        except IndexError:
-            #print("Failed to remove person!")
+        except IndexError as e:
+            print(e)
             return
-        #print(referee_id, people_id)
         try:
             DbQueries.db.execute("DELETE FROM referee WHERE referee_id = ?",
                 [referee_id])
             DbQueries.db.execute("DELETE FROM people WHERE people_id = ?",
                 [people_id])
             DbQueries.db.commit()
-        except sqlite3.OperationalError:
+        except sqlite3.OperationalError as e:
+            print(e)
             return
+        print("Deleted referee!")
+        return None
+
 
     @staticmethod
     def delete_team(inputs:dict):
         team = inputs["team"]
         DbQueries.db.execute("DELETE FROM team WHERE team_name = ?", [team])
-        for player in QuerySelector.getPlayersByTeam(team):
-            DbQueries.db.execute("UPDATE player SET team_name=NULL WHERE team_name=?", [team])
+        DbQueries.db.execute("UPDATE player SET team_name=NULL WHERE team_name=?", [team])
         for match in QuerySelector.getMatchesByTeam(team):
             DbQueries.delete_match({"match":match})
         DbQueries.db.commit()
+        print("Deleted team!")
+        return None
 
     @staticmethod
     def delete_match(inputs:dict):
@@ -340,9 +350,11 @@ class DbQueries:
             DbQueries.db.execute("DELETE FROM match WHERE match_id = ?",  [match_id])
             DbQueries.db.execute("DELETE FROM statistic WHERE match_id = ?",  [match_id])
             DbQueries.db.commit()
-        except IndexError:
-            print("Failed to remove match!")
+        except IndexError as e:
+            print(e)
             return
+        print("Deleted match!")
+        return None
 
     @staticmethod
     def delete_stat(inputs:dict):
@@ -353,11 +365,14 @@ class DbQueries:
             DbQueries.db.execute("DELETE FROM statistic WHERE statistic_id = ?",
             [statistic_id])
             DbQueries.db.commit()
-        except IndexError:
-            #print("Failed to remove statistic!")
+        except IndexError as e:
+            print(e)
             return
-        except sqlite3.OperationalError:
+        except sqlite3.OperationalError as e:
+            print(e)
             return
+        print("Deleted statistic!")
+        return None
             
     @staticmethod
     def run_query(inputs:dict):

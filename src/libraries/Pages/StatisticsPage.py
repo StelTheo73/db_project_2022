@@ -61,19 +61,13 @@ class StatisticsPage(MainFrame):
             self.tree.heading(str(c), text = headings[c-1])
         
         board = DbReadyQs.get_board()
-        #print(board)
         sorted_board = []
         for team in board:
-            try:
-                points = board[team]["points"]
-            except KeyError as e: # bug if team has only ties
-                try: points = board[team]["ties"]
-                except KeyError: continue
             try:                
                 index = {
                     "team"    : team,
                     "matches" : board[team]["matches"],
-                    "points"  : points,
+                    "points"  : board[team]["points"],
                     "won"     : board[team]["wins"],
                     "drawed"  : board[team]["ties"],
                     "lost"    : board[team]["defeats"],
