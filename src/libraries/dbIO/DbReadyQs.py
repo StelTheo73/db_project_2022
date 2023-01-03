@@ -73,7 +73,7 @@ class DbReadyQs:
     
     def points_for_each_team():
         wins, ties = DbReadyQs.wins_for_each_team(), DbReadyQs.ties_for_each_team()
-        teams = set(list(ties.keys()) + list(wins.keys()))
+        teams = set(list(ties) + list(wins))
         
         get_points = lambda team: (3*wins[team] if team in wins else 0) + ties[team]
         return DbReadyQs.format([(team, get_points(team)) for team in teams])
