@@ -39,7 +39,6 @@ class AddStatPage(MainFrame):
         contentFrame = ttk.Frame(self.scrollable_frame, borderwidth = 5, relief = "ridge")
         matchLabel = ttk.Label(contentFrame, text = "Select match")
 
-        print(team)
         matchSelector = ttk.Combobox(contentFrame, state = "readonly", width = 30)
         matchSelector["values"] = QuerySelector.getMatchesByTeam(team)
         self.inputs["match"] = matchSelector
@@ -95,7 +94,6 @@ class AddStatPage(MainFrame):
     def select_match(self):
         team = {func: self.inputs[func].get() for func in self.inputs}["team"]
         match = {func: self.inputs[func].get() for func in self.inputs}["match"]
-        print(match)
         self.statistic_info.destroy()
         self.statistic_info = self.create_statistic_info(team)
         self.statistic_info.grid(row = 22, column = 0, columnspan = 6, rowspan = 10, sticky = tk.W)

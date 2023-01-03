@@ -61,7 +61,6 @@ class StatisticsPage(MainFrame):
             self.tree.heading(str(c), text = headings[c-1])
         
         board = DbReadyQs.get_board()
-        #print(board)
         sorted_board = []
         for team in board:
             try:                

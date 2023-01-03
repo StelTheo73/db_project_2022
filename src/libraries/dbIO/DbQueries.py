@@ -272,7 +272,6 @@ class DbQueries:
 
         inputs["player"] = inputs["player"].split("(")[1][:-1]
         inputs["match"] = inputs["match"].split("(")[1][:-1]
-        print(inputs)
         DbQueries.db.execute("INSERT INTO statistic (player_id, match_id, minute, stat_name) VALUES (?, ?, ?, ?)",
             [inputs['player'], inputs['match'], inputs['minute'], inputs['stat_name']])
         DbQueries.db.commit()
@@ -304,6 +303,7 @@ class DbQueries:
             print(e)
             return
         print("Deleted player!")
+        return None
 
     @staticmethod
     def delete_referee(inputs:dict):
@@ -324,6 +324,7 @@ class DbQueries:
             print(e)
             return
         print("Deleted referee!")
+        return None
 
 
     @staticmethod
@@ -335,6 +336,7 @@ class DbQueries:
             DbQueries.delete_match({"match":match})
         DbQueries.db.commit()
         print("Deleted team!")
+        return None
 
     @staticmethod
     def delete_match(inputs:dict):
@@ -348,6 +350,7 @@ class DbQueries:
             print(e)
             return
         print("Deleted match!")
+        return None
 
     @staticmethod
     def delete_stat(inputs:dict):
@@ -365,6 +368,7 @@ class DbQueries:
             print(e)
             return
         print("Deleted statistic!")
+        return None
             
     @staticmethod
     def run_query(inputs:dict):
