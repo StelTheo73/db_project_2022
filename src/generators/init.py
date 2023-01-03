@@ -96,7 +96,6 @@ def insert_statistics(db):
 def create_db():
     #if os.path.exists(DB_PATH): os.remove(DB_PATH)
     db = sqlite3.connect(DB_PATH)
-    flush()
     
     db.execute("PRAGMA foreign_keys = ON")
 
@@ -168,8 +167,9 @@ def create_db():
     return db
 
 def initialize(players, referees, teams, season):
-    generate_data(players, referees, teams, season)
+    flush()
     db = create_db()
+    generate_data(players, referees, teams, season)
     insert_data(db)
     generate_statistics()
     insert_statistics(db)

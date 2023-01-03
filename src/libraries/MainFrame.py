@@ -12,9 +12,6 @@ class MainFrame(ttk.Frame):
         canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
         self.scrollable_frame.bind("<Configure>",
             lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
-        
-        # Scroll with wheel TODO: check first if window > screen. else skip
-        #canvas.bind_all("<MouseWheel>", lambda e: canvas.yview_scroll(-e.delta//120, "units"))
 
         # Set Scrollbar
         scrollbarX = ttk.Scrollbar(self, orient="horizontal", command=canvas.xview)
@@ -28,8 +25,6 @@ class MainFrame(ttk.Frame):
         canvas["xscrollcommand"] = scrollbarX.set
 
         # General Page Control Buttons
-
-        # Submit Button first so it's one TAB after the last input
         self.submitButton = ttk.Button(self.scrollable_frame, text="Submit",
                   command= self.onSubmit, width = 15)
 
@@ -94,10 +89,7 @@ class MainFrame(ttk.Frame):
             'delete_team'    : DbQueries.delete_team,
             'delete_match'   : DbQueries.delete_match,
             'delete_stat'    : DbQueries.delete_stat,
-            'standings'      : print("Standings"),
             'query': DbQueries.run_query
         }
-        #print("h"+str(self.submitButton.focus_get()))
-        #if self.submitButton.focus_get():
         DbQueries.submit(self.inputs, methods[method])
 
