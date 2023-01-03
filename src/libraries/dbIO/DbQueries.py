@@ -72,11 +72,7 @@ class QuerySelector:
 
     @staticmethod
     def getTeams():
-        try:
-            return [team[0] for team in
-                DbQueries.db.execute("SELECT team_name FROM team")]
-        except sqlite3.OperationalError:
-            return []
+        return [team[0] for team in DbQueries.db.execute("SELECT team_name FROM team")]
 
     @staticmethod
     def getMatchesByTeam(team):
