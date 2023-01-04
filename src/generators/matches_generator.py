@@ -1,5 +1,5 @@
 import json
-from generators.random_generator import random_date
+from generators.random_generator import random_date, random_time
 from numpy import random as nrandom
 from generators.globals import *
 
@@ -28,9 +28,10 @@ def match_generator(match_id, season):
     home_team_goals = int(nrandom.choice(goals, p = prob, size=(1))[0])
     away_team_goals = int(nrandom.choice(goals, p = prob, size=(1))[0])
     date = random_date(start_year=season, end_year=season+1)
+    time = random_time()
     return {
         "match_id"        : match_id,
-        "datime"          : date,
+        "datime"          : date+" "+time,
         "home_team_goals" : home_team_goals,
         "away_team_goals" : away_team_goals
     }

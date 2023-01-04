@@ -10,7 +10,29 @@ class StatisticsPage(MainFrame):
         MainFrame.__init__(self, master)
         self.contentLabel = None
         self.contentFrame = None
+        self.info_label = None
         self.create_type_selector_frame().grid(row = 2, column = 0, columnspan = 6, rowspan = 10, sticky = tk.W)
+
+        self.stat_map = {
+            "W"  : "Wins",
+            "D"  : "Draws",
+            "L"  : "Losses",
+            "G"  : "Goals",
+            "A"  : "Assists",
+            "OG" : "Own Goals",
+            "FK" : "Foul Kicks",
+            "F"  : "Fouls",
+            "FC" : "Fouls Commited",
+            "P"  : "Penalties",
+            "PK" : "Penalty Kicks",
+            "PC" : "Penalties Commited",
+            "OS" : "Offsides",
+            "CK" : "Corner Kicks",
+            "YC" : "Yellow Cards",
+            "RC" : "Red Cards",
+            "GF:GA" : "Goals For : Goals Against",
+            "+/-"   : "Goal Differece = Goals For - Goals Against"
+        }
 
     def create_type_selector_frame(self):
         """Select the type of the statistics to show"""
@@ -81,7 +103,7 @@ class StatisticsPage(MainFrame):
 
             sorted_board.append(index)
 
-        sorted_board = sorted(sorted_board, key = lambda d: (d["points"], -d["matches"], d["won"], d["goal_difference"], d["goals_for"], -d["goals_against"]), reverse = True)
+        sorted_board = sorted(sorted_board, key = lambda d: (d["points"], -d["matches"], d["goal_difference"], d["won"], d["goals_for"], -d["goals_against"]), reverse = True)
 
         place = 1
         for index in sorted_board:
@@ -97,6 +119,8 @@ class StatisticsPage(MainFrame):
                         index["goal_difference"])
             )            
             place+=1
+
+        return headings
 
     def create_matches_table(self):
         headings = ["Home Team", "Away Team", "Score", "Date",
@@ -128,7 +152,7 @@ class StatisticsPage(MainFrame):
                     match_stat_dict[match_id][stat_type] = 0
             match_stat_list.append(match_stat_dict[match_id])
         # Sort
-        match_stat_list = sorted(match_stat_list, key = lambda d: (d["home_team"], d["away_team"], d["datime"]))
+        match_stat_list = sorted(match_stat_list, key = lambda d: (d["home_team"], d["away_team"]))
         line = 1
         for match in match_stat_list:
             stat = []
@@ -146,6 +170,8 @@ class StatisticsPage(MainFrame):
                     stat[9], stat[10]          # yellows, reds
                 )
             )
+
+        return headings
 
     def create_player_stats_table(self):
         headings = ["Team", "Position", "Player Name",
@@ -200,6 +226,8 @@ class StatisticsPage(MainFrame):
             )
             line+=1
 
+        return headings
+
     def create_player_info_table(self):
         headings = ["Team", "Position", "Player Name", "Nationality", "Player ID", "People ID", "Telephone", "Birthdate"]
         self.tree["columns"] = [c for c in range(1, 9, 1)]
@@ -237,6 +265,8 @@ class StatisticsPage(MainFrame):
                 ) 
             )
             line+=1
+        
+        return headings
 
     def create_referee_info_table(self):
         headings = ["Type", "Referee Name", "Nationality", "Referee ID", "People ID", "Telephone", "Birthdate"]
@@ -271,7 +301,16 @@ class StatisticsPage(MainFrame):
                 ) 
             )
             line+=1
-            
+        
+        return headings
+    
+    def create_info_label(self, headings_list):
+        text = ""
+        for heading in headings_list:
+            if heading in self.stat_map.keys():
+                text+=heading + " : " + self.stat_map[heading] + "\n"
+        self.info_label = ttk.Label(self.scrollable_frame, text = text)
+
     def select_type(self):
         stat_type = {func: self.inputs[func].get() for func in self.inputs}["type"]
         if stat_type == "":
@@ -280,6 +319,8 @@ class StatisticsPage(MainFrame):
             self.contentLabel.destroy()
         if self.contentFrame != None:
             self.contentFrame.destroy()
+        if self.info_label != None:
+            self.info_label.destroy()
 
         stat_map = {
             "Standings"          : self.create_standings_table,
@@ -293,4 +334,6 @@ class StatisticsPage(MainFrame):
         self.contentLabel.grid(row = 12, column = 0)
         self.contentFrame = self.create_treeview()
         self.contentFrame.grid(row = 13, column = 0, columnspan = 100, rowspan = 20)
-        stat_map[stat_type]()
+        headings = stat_map[stat_type]()
+        self.create_info_label(headings)
+        self.info_label.grid(row = 33, column = 0, columnspan = 6, rowspan = 8, sticky = tk.W)

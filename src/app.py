@@ -5,5 +5,9 @@ if __name__=="__main__":
     print("@author: StelTheo73")
     print("Championship App")
     print("Starting GUI...")
-    window = Window()
-    window.mainloop()
+    try:
+        window = Window()
+        window.mainloop()
+    except KeyboardInterrupt:
+        print("\n\nTerminating...")
+        exit(0)

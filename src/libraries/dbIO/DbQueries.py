@@ -72,7 +72,10 @@ class QuerySelector:
 
     @staticmethod
     def getTeams():
-        return [team[0] for team in DbQueries.db.execute("SELECT team_name FROM team")]
+        try:
+            return [team[0] for team in DbQueries.db.execute("SELECT team_name FROM team")]
+        except sqlite3.OperationalError as e:
+            return []
 
     @staticmethod
     def getMatchesByTeam(team):
@@ -246,7 +249,7 @@ class DbQueries:
         error = DbQueries.insert_any(inputs)
         if error: return error
 
-        datetime = '-'.join([inputs[i] for i in ['year','month','day']]) +' '+ inputs['hour']+':00'
+        datetime = '-'.join([inputs[i] for i in ['year','month','day']]) +' '+ inputs['hour']+':'+inputs['minute']
 
         DbQueries.db.execute("INSERT INTO match (datime, home_team_goals, away_team_goals) VALUES (DATETIME(?),?,?)",
             [datetime, inputs['home_score'], inputs['away_score']])
@@ -289,8 +292,8 @@ class DbQueries:
     @staticmethod
     def delete_player(inputs:dict):
         player = inputs["player"]
-        player_id = player.split(" (")[1][:-1] # split id from name and remove ( )
         try:
+            player_id = player.split(" (")[1][:-1] # split id from name and remove ( )
             people_id = QuerySelector.getPeopleIdFromPlayerId(player_id)[0].split("'")[1]
         except IndexError as e:
             print(e)
@@ -312,8 +315,8 @@ class DbQueries:
     @staticmethod
     def delete_referee(inputs:dict):
         referee = inputs["referee"]
-        referee_id = referee.split(" (")[1][:-1] # split id from name and remove ( )
         try:
+            referee_id = referee.split(" (")[1][:-1] # split id from name and remove ( )
             people_id = str(QuerySelector.getPeopleIdFromRefereeId(referee_id)).split("\'")[1]
         except IndexError as e:
             print(e)
@@ -334,11 +337,16 @@ class DbQueries:
     @staticmethod
     def delete_team(inputs:dict):
         team = inputs["team"]
-        DbQueries.db.execute("DELETE FROM team WHERE team_name = ?", [team])
-        DbQueries.db.execute("UPDATE player SET team_name=NULL WHERE team_name=?", [team])
-        for match in QuerySelector.getMatchesByTeam(team):
-            DbQueries.delete_match({"match":match})
-        DbQueries.db.commit()
+        try:
+            DbQueries.db.execute("DELETE FROM team WHERE team_name = ?", [team])
+            for player in QuerySelector.getPlayersByTeam(team):
+                DbQueries.delete_player({"player":player})
+            for match in QuerySelector.getMatchesByTeam(team):
+                DbQueries.delete_match({"match":match})
+            DbQueries.db.commit()
+        except sqlite3.OperationalError as e:
+            print(e)
+            return
         print("Deleted team!")
         return None
 

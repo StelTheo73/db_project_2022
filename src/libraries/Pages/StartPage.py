@@ -67,7 +67,7 @@ class StartPage(MainFrame):
 
         teamLabel = ttk.Label(contentFrame, text = "No. of teams")
         teamSelector = ttk.Combobox(contentFrame, state = "readonly", width = 30)
-        teamSelector["values"] = [x for x in range(2, 34, 2)]
+        teamSelector["values"] = [x for x in range(2, 30, 2)]
         self.inputs["teams"] = teamSelector
 
         seasonLabel = ttk.Label(contentFrame, text = "Season")
@@ -77,12 +77,12 @@ class StartPage(MainFrame):
         
         playerLabel = ttk.Label(contentFrame, text = "No. of players")
         playerSelector = ttk.Combobox(contentFrame, state = "readonly", width = 30)
-        playerSelector["values"] = [x for x in range(100, 10100, 100)]
+        playerSelector["values"] = [x for x in range(100, 2100, 100)]
         self.inputs["players"] = playerSelector
 
         refereeLabel = ttk.Label(contentFrame, text = "No. of referees")
         refereeSelector = ttk.Combobox(contentFrame, state = "readonly", width = 30)
-        refereeSelector["values"] = [x for x in range(100, 1100, 50)]
+        refereeSelector["values"] = [x for x in range(100, 1050, 50)]
         self.inputs["referees"] = refereeSelector
 
         teamLabel.grid(row = 0, column = 0, columnspan = 4, padx = 10, sticky = tk.W)

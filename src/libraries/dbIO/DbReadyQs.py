@@ -26,57 +26,78 @@ class DbReadyQs:
         return dict(cursor)
 
     def matches_for_each_team():
-        cursor = DbReadyQs.db.execute("SELECT team_name, count(match_id) FROM team, participation \
-            WHERE team_name=home_team OR team_name=away_team GROUP BY team_name ORDER BY team_name")
-        return DbReadyQs.format(cursor)
+        try:
+            cursor = DbReadyQs.db.execute("SELECT team_name, count(match_id) FROM team, participation \
+                WHERE team_name=home_team OR team_name=away_team GROUP BY team_name ORDER BY team_name")
+            return DbReadyQs.format(cursor)
+        except sqlite3.OperationalError as e:
+            return
 
     def scored_goals_for_each_team():
         "goals that each team scored"
-        cursor = DbReadyQs.db.execute("SELECT team_name, sum(goals) FROM \
-            (SELECT team_name, sum(home_team_goals) AS goals FROM team, participation, match \
-                WHERE team_name=home_team AND participation.match_id=match.match_id GROUP BY team_name \
-            UNION SELECT team_name, sum(away_team_goals) AS goals FROM team, participation, match \
-                WHERE team_name=away_team AND participation.match_id=match.match_id GROUP BY team_name) \
-            GROUP BY team_name")
-        return DbReadyQs.format(cursor)
+        try:
+            cursor = DbReadyQs.db.execute("SELECT team_name, sum(goals) FROM \
+                (SELECT team_name, sum(home_team_goals) AS goals FROM team, participation, match \
+                    WHERE team_name=home_team AND participation.match_id=match.match_id GROUP BY team_name \
+                UNION SELECT team_name, sum(away_team_goals) AS goals FROM team, participation, match \
+                    WHERE team_name=away_team AND participation.match_id=match.match_id GROUP BY team_name) \
+                GROUP BY team_name")
+            return DbReadyQs.format(cursor)
+        except sqlite3.OperationalError as e:
+            return
 
     def conceded_goals_for_each_team():
         "goals that were scored to each team"
-        cursor = DbReadyQs.db.execute("SELECT team_name, sum(goals) FROM \
-            (SELECT team_name, sum(away_team_goals) AS goals FROM team, participation, match \
-                WHERE team_name=home_team AND participation.match_id=match.match_id GROUP BY team_name \
-            UNION SELECT team_name, sum(home_team_goals) AS goals FROM team, participation, match \
-                WHERE team_name=away_team AND participation.match_id=match.match_id GROUP BY team_name) \
-            GROUP BY team_name")
-        return DbReadyQs.format(cursor)
+        try:
+            cursor = DbReadyQs.db.execute("SELECT team_name, sum(goals) FROM \
+                (SELECT team_name, sum(away_team_goals) AS goals FROM team, participation, match \
+                    WHERE team_name=home_team AND participation.match_id=match.match_id GROUP BY team_name \
+                UNION SELECT team_name, sum(home_team_goals) AS goals FROM team, participation, match \
+                    WHERE team_name=away_team AND participation.match_id=match.match_id GROUP BY team_name) \
+                GROUP BY team_name")
+            return DbReadyQs.format(cursor)
+        except sqlite3.OperationalError as e:
+            return
 
     def wins_for_each_team():
-        cursor = DbReadyQs.db.execute("SELECT team_name, count(match.match_id) FROM team, participation, match \
-            WHERE participation.match_id=match.match_id AND \
-            ((team_name=home_team AND home_team_goals>away_team_goals) OR (team_name=away_team AND home_team_goals<away_team_goals)) \
-            GROUP BY team_name ORDER BY count(match.match_id) DESC")
-        return DbReadyQs.format(cursor)
+        try:
+            cursor = DbReadyQs.db.execute("SELECT team_name, count(match.match_id) FROM team, participation, match \
+                WHERE participation.match_id=match.match_id AND \
+                ((team_name=home_team AND home_team_goals>away_team_goals) OR (team_name=away_team AND home_team_goals<away_team_goals)) \
+                GROUP BY team_name ORDER BY count(match.match_id) DESC")
+            return DbReadyQs.format(cursor)
+        except sqlite3.OperationalError as e:
+            return
 
     def ties_for_each_team():
-        cursor = DbReadyQs.db.execute("SELECT team_name, count(match.match_id) FROM team \
-            JOIN participation ON (team_name=home_team OR team_name=away_team) \
-            LEFT JOIN match ON participation.match_id=match.match_id AND home_team_goals=away_team_goals \
-            GROUP BY team_name ORDER BY count(match.match_id) DESC")    # Returns values for all teams as long as they have at least one partitipation
-        return DbReadyQs.format(cursor)
+        try:
+            cursor = DbReadyQs.db.execute("SELECT team_name, count(match.match_id) FROM team \
+                JOIN participation ON (team_name=home_team OR team_name=away_team) \
+                LEFT JOIN match ON participation.match_id=match.match_id AND home_team_goals=away_team_goals \
+                GROUP BY team_name ORDER BY count(match.match_id) DESC")    # Returns values for all teams as long as they have at least one partitipation
+            return DbReadyQs.format(cursor)
+        except sqlite3.OperationalError as e:
+            return
 
     def defeats_for_each_team():
-        cursor = DbReadyQs.db.execute("SELECT team_name, count(match.match_id) FROM team, participation, match \
-            WHERE participation.match_id=match.match_id AND \
-            ((team_name=home_team AND home_team_goals<away_team_goals) OR (team_name=away_team AND home_team_goals>away_team_goals)) \
-            GROUP BY team_name ORDER BY count(match.match_id) DESC")
-        return DbReadyQs.format(cursor)
-    
+        try:
+            cursor = DbReadyQs.db.execute("SELECT team_name, count(match.match_id) FROM team, participation, match \
+                WHERE participation.match_id=match.match_id AND \
+                ((team_name=home_team AND home_team_goals<away_team_goals) OR (team_name=away_team AND home_team_goals>away_team_goals)) \
+                GROUP BY team_name ORDER BY count(match.match_id) DESC")
+            return DbReadyQs.format(cursor)
+        except sqlite3.OperationalError as e:
+            return
+
     def points_for_each_team():
-        wins, ties = DbReadyQs.wins_for_each_team(), DbReadyQs.ties_for_each_team()
-        teams = set(list(ties) + list(wins))
-        
-        get_points = lambda team: (3*wins[team] if team in wins else 0) + ties[team]
-        return DbReadyQs.format([(team, get_points(team)) for team in teams])
+        try:
+            wins, ties = DbReadyQs.wins_for_each_team(), DbReadyQs.ties_for_each_team()
+            teams = set(list(ties) + list(wins))
+            
+            get_points = lambda team: (3*wins[team] if team in wins else 0) + ties[team]
+            return DbReadyQs.format([(team, get_points(team)) for team in teams])
+        except TypeError as e:
+            return
 
 
 if __name__ == "__main__":

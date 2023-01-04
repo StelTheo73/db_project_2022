@@ -285,3 +285,13 @@ def random_date(start_year = 1970, end_year = 2008, start_month = 1, end_month =
         day = random.randint(1, 31)
 
     return "{}-{}-{}".format(year, month, day)
+
+def random_time():
+    hour = str(random.randint(0, 23))
+    minute = str(random.choice([0, 15, 30, 45]))
+    if len(hour) == 1:
+        hour = "0" + hour
+    if len(minute) == 1:
+        minute = "0" + minute
+    return "{}:{}:00".format(hour, minute)
+
