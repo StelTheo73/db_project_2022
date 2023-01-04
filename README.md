@@ -7,8 +7,10 @@
 
 
 > Myron
-1. ##### Decide on queries
-2. ##### Add coach
+1. ##### Presentation
+2. ##### Word Format
+3. ##### Add coach
 
 > Stelios
+
 
