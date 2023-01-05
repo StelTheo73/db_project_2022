@@ -1,8 +1,8 @@
 
-# **  Football Championship App **
+# Football Championship App
 
 ## Authors
-[Giannakis Myron](https://github.com/G-Myron)
+[Giannakis Myron](https://github.com/G-Myron)\
 [Theofilou Stylianos](https://github.com/StelTheo73)
 
 ## Installation & Execution
