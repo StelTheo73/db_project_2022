@@ -1,12 +1,12 @@
-#### **Concerns:**
 
-> Myron
-1. ##### Presentation
-2. ##### Word Format
-3. ##### Add coach
+# **  Football Championship App **
 
-> Stelios
-1. ##### An sbhsw match xwris na sbhsw statistic, xtypaei error sto board (Match Info) 
---> Dior8w8hke me try/except 
---> 8a ly8ei me cascade afou 8a sbhnontai ta statistika?
+## Authors
+[Giannakis Myron](https://github.com/G-Myron)
+[Theofilou Stylianos](https://github.com/StelTheo73)
 
+## Installation & Execution
+1. Open terminal and choose a folder.
+2. `git clone https://github.com/StelTheo73/db_project_2022.git`
+3. `cd db_project_2022`
+4. `python src/app.py`
