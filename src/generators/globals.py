@@ -1,6 +1,8 @@
 
 DB_PATH = "./src/data/database.db"
 JSONs_PATH = "./src/libraries/JsonFiles/"
+SQL_PATH = "./src/generators/createTables.sql"
+
 
 NAMES_PATH  = JSONs_PATH + "/names.json"
 TEAMS_PATH = JSONs_PATH + "/teams.json"

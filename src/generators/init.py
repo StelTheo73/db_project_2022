@@ -94,81 +94,16 @@ def insert_statistics(db):
         print("Could not find {}".format(STATISTICS_PATH)) 
 
 def create_db():
-    #if os.path.exists(DB_PATH): os.remove(DB_PATH)
-    db = sqlite3.connect(DB_PATH)
-    
-    db.execute("PRAGMA foreign_keys = ON")
+    # EXECUTE THE EXTERNAL SQL SCRIPT
+    with open(SQL_PATH, 'r') as sql_file:
+        db.executescript(sql_file.read())
+    db.commit()
+    # db.close()
 
-    db.execute("CREATE TABLE IF NOT EXISTS people(\
-    	people_id CHAR(8) NOT NULL PRIMARY KEY,\
-    	name TEXT NOT NULL,\
-        surname TEXT NOT NULL,\
-        birthdate DATE,\
-        tel CHAR(14),\
-        nationality TEXT\
-    )")
-
-    db.execute("CREATE TABLE IF NOT EXISTS player(\
-        player_id CHAR(10) NOT NULL PRIMARY KEY,\
-        people_id CHAR(8) NOT NULL,\
-        team_name TEXT,\
-        position VARCHAR(3),\
-        FOREIGN KEY(people_id) REFERENCES people(people_id),\
-        FOREIGN KEY(team_name) REFERENCES team(team_name)\
-    )")
-
-    db.execute("CREATE TABLE IF NOT EXISTS referee(\
-        referee_id CHAR(10) NOT NULL PRIMARY KEY,\
-        people_id CHAR(8) NOT NULL,\
-        type TEXT,\
-        FOREIGN KEY(people_id) REFERENCES people(people_id)\
-    )")
-
-    db.execute("CREATE TABLE IF NOT EXISTS team(\
-    	team_name TEXT NOT NULL PRIMARY KEY,\
-    	home TEXT,\
-        founded DATE\
-    )")
-
-    db.execute("CREATE TABLE IF NOT EXISTS match(\
-    	match_id INTEGER NOT NULL PRIMARY KEY,\
-        datime DATETIME,\
-        home_team_goals INTEGER,\
-        away_team_goals INTEGER\
-    )")
-
-    db.execute("CREATE TABLE IF NOT EXISTS participation(\
-        match_id INTEGER NOT NULL,\
-        home_team TEXT NOT NULL,\
-        away_team TEXT NOT NULL,\
-        PRIMARY KEY (match_id),\
-        FOREIGN KEY (match_id) REFERENCES match(match_id),\
-        FOREIGN KEY (home_team) REFERENCES team(team_name),\
-        FOREIGN KEY (away_team) REFERENCES team(team_name)\
-    )")
-
-    db.execute("CREATE TABLE IF NOT EXISTS control(\
-        match_id INTEGER NOT NULL,\
-        referee_id CHAR(10) NOT NULL,\
-        FOREIGN KEY(match_id) REFERENCES match(match_id)\
-        FOREIGN KEY(referee_id) REFERENCES referee(referee_id)\
-    )")
-
-    db.execute("CREATE TABLE IF NOT EXISTS statistic(\
-        statistic_id INTEGER NOT NULL PRIMARY KEY,\
-        match_id INTEGER NOT NULL,\
-        player_id CHAR(10),\
-        minute INTEGER,\
-        stat_name TEXT,\
-        FOREIGN KEY(match_id) REFERENCES match(match_id),\
-        FOREIGN KEY(player_id) REFERENCES player(player_id)\
-    )")
-
-    return db
 
 def initialize(players, referees, teams, season):
     flush()
-    db = create_db()
+    # create_db()
     generate_data(players, referees, teams, season)
     insert_data(db)
     generate_statistics()
@@ -179,16 +114,9 @@ def initialize(players, referees, teams, season):
     clear_data()
 
 def flush():
-    db = sqlite3.connect(DB_PATH)
-    db.execute("DROP TABLE IF EXISTS people")
-    db.execute("DROP TABLE IF EXISTS team")
-    db.execute("DROP TABLE IF EXISTS match")
-    db.execute("DROP TABLE IF EXISTS participation")
-    db.execute("DROP TABLE IF EXISTS player")
-    db.execute("DROP TABLE IF EXISTS referee")
-    db.execute("DROP TABLE IF EXISTS control")
-    db.execute("DROP TABLE IF EXISTS statistic")
-    db.close()
+    if os.path.exists(DB_PATH):
+        os.remove(DB_PATH)
+    create_db()
     print("Flush completed!")
 
 if __name__ == "__main__":

@@ -4,7 +4,6 @@ from libraries.MainFrame import MainFrame
 from libraries.dbIO.DbQueries import QuerySelector
 from generators.init import initialize, flush
 from ctypes import windll
-#from threading import Thread
 
 class StartPage(MainFrame):
     def __init__(self, master):
@@ -33,9 +32,7 @@ class StartPage(MainFrame):
         season = {func: self.inputs[func].get() for func in self.inputs}["season"]
         if teams and season and players and referees:
             userAction = windll.user32.MessageBoxW(0, "This action will overwrite the data of the database.\nDo you wish to proceed?", "WARNING", 1)
-            if userAction == 1:
-                #init_thread = Thread(target = initialize, args = (int(players), int(referees), int(teams), int(season)))
-                #init_thread.start()
+            if userAction == 1: # Answered OK
                 initialize(int(players), int(referees), int(teams), int(season))
         else:
             windll.user32.MessageBoxW(0, "Please provide information for teams, season, players and referees.", "ERROR", 1)
