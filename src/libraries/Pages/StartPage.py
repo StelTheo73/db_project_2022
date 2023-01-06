@@ -1,9 +1,9 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+from tkinter.messagebox import askyesno, askokcancel
 from libraries.MainFrame import MainFrame
 from libraries.dbIO.DbQueries import QuerySelector
 from generators.init import initialize, flush
-from ctypes import windll
 
 class StartPage(MainFrame):
     def __init__(self, master):
@@ -12,15 +12,20 @@ class StartPage(MainFrame):
         tk.Label(self.scrollable_frame, text="Custom Query").grid(row=2, column=0)
         self.createQueryFrame().grid(row = 3, column = 0, columnspan = 8, rowspan = 1, sticky = tk.W)
 
-        self.submitButton.grid(row = 4, column = 0, pady = 10, sticky = tk.W)
+        self.submitButton.destroy()
+        self.submitQueryButton = ttk.Button(self.scrollable_frame, text="Submit",
+            command= self.onSubmit, width = 15)
+        self.submitQueryButton.grid(row = 4, column = 0, pady = 10, sticky = tk.W)
         
         self.createInitFrame().grid(row = 5, column = 0, pady = 10, rowspan = 4, columnspan = 8, sticky = tk.W)
 
         self.initButton = ttk.Button(self.scrollable_frame, text = "Initialize DB", command = self.initializeDB, width = 15)
         self.initButton.grid(row = 9, column = 0, pady = 10, columnspan = 2, sticky = tk.W)
+        self.initButton.bind("<Return>", lambda e: self.initializeDB())
 
         self.flushButton = ttk.Button(self.scrollable_frame, text = "Flush BD", command = self.flushDB, width = 15)
         self.flushButton.grid(row = 9, column = 1, pady = 10, columnspan = 2, sticky = tk.W)
+        self.flushButton.bind("<Return>", lambda e: self.flushDB())
 
     def onSubmit(self):
         super().onSubmit('query')
@@ -31,15 +36,16 @@ class StartPage(MainFrame):
         referees = {func: self.inputs[func].get() for func in self.inputs}["referees"]
         season = {func: self.inputs[func].get() for func in self.inputs}["season"]
         if teams and season and players and referees:
-            userAction = windll.user32.MessageBoxW(0, "This action will overwrite the data of the database.\nDo you wish to proceed?", "WARNING", 1)
+            userAction = askyesno(title = "Warning!", message = "This action will overwrite the data of the database.\nDo you wish to proceed?")
             if userAction == 1: # Answered OK
                 initialize(int(players), int(referees), int(teams), int(season))
         else:
-            windll.user32.MessageBoxW(0, "Please provide information for teams, season, players and referees.", "ERROR", 1)
+            askokcancel(title = "Incomplete input!", message = "Please provide information for teams, season, players and referees.")
 
     def flushDB(self):
-        userAction = windll.user32.MessageBoxW(0, "This action will permanently delete all data from the database.\nDo you wish to proceed?", "WARNING", 1)
-        if userAction == 1:
+        userAction = askyesno(title = "Warning!", message = "This action will permanently delete all data from the database.\nDo you wish to proceed?")
+        print(userAction)
+        if userAction:
             flush()
 
     def createQueryFrame(self):

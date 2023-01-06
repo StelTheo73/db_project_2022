@@ -1,4 +1,5 @@
-import sqlite3, json, ctypes
+import sqlite3, json
+from tkinter.messagebox import askokcancel
 from datetime import date
 
 class QuerySelector:
@@ -153,8 +154,8 @@ class DbQueries:
         if method != None:
             error:str = method(inputs)
             if error:
-                userAction = ctypes.windll.user32.MessageBoxW(0, error, "ERROR", 1)
-                if userAction==2:
+                userAction = askokcancel(title = "Error!", message = error)
+                if not(userAction):
                     error = None    # User wants to cancel and clear the entries
 
             # Clear all GUI entries

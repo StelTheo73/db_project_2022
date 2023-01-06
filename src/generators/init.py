@@ -3,8 +3,6 @@ from generators.data_generator import generate as generate_data
 from generators.statistics_generator import generate as generate_statistics
 from generators.globals import *
 
-db = sqlite3.connect(DB_PATH)
-
 def insert_person(person, db):
     db.execute("INSERT INTO people VALUES (?, ?, ?, ?, ?, ?)", [
             person["id"], person["name"], person["surname"], 
@@ -93,15 +91,14 @@ def insert_statistics(db):
     except FileNotFoundError:
         print("Could not find {}".format(STATISTICS_PATH)) 
 
-def create_db():
+def create_db(db):
     # EXECUTE THE EXTERNAL SQL SCRIPT
     with open(SQL_PATH, 'r') as sql_file:
         db.executescript(sql_file.read())
     db.commit()
-    # db.close()
-
 
 def initialize(players, referees, teams, season):
+    db = sqlite3.connect(DB_PATH)
     flush()
     # create_db()
     generate_data(players, referees, teams, season)
@@ -109,17 +106,15 @@ def initialize(players, referees, teams, season):
     generate_statistics()
     insert_statistics(db)
     db.commit()
-    db.close()
     print("Initialization completed!")
     clear_data()
+    db.close()
 
 def flush():
-    global db   # Have access to global db
-    if os.path.exists(DB_PATH):
-        os.remove(DB_PATH)              # Delete old db file
-        db = sqlite3.connect(DB_PATH)   # Renew db connection
-    create_db()
+    db = sqlite3.connect(DB_PATH)   # Renew db connection
+    create_db(db)
     print("Flush completed!")
+    db.close()
 
 if __name__ == "__main__":
     initialize()
