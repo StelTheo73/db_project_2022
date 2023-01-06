@@ -114,8 +114,10 @@ def initialize(players, referees, teams, season):
     clear_data()
 
 def flush():
+    global db   # Have access to global db
     if os.path.exists(DB_PATH):
-        os.remove(DB_PATH)
+        os.remove(DB_PATH)              # Delete old db file
+        db = sqlite3.connect(DB_PATH)   # Renew db connection
     create_db()
     print("Flush completed!")
 
