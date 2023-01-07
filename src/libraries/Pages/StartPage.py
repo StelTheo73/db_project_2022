@@ -53,7 +53,7 @@ class StartPage(MainFrame):
         
         queryLabel = ttk.Label(contentFrame, text = "Query")
         
-        queryEntry = ttk.Entry(contentFrame, width=80,\
+        queryEntry = ttk.Entry(contentFrame, width=110,\
             validate='key', validatecommand=(contentFrame.register(lambda txt: txt[:7]=='SELECT '), '%P'))
         queryEntry.insert(0, 'SELECT ')
         self.inputs['query'] = queryEntry
