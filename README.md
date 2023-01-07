@@ -1,3 +1,4 @@
+
 # Football Championship App
 
 ## Authors
@@ -9,4 +10,4 @@
 2. `git clone https://github.com/StelTheo73/db_project_2022.git`
 3. `cd db_project_2022`
 4. `pip install -r requirements.txt`
-5. `python3 src/app.py` or just `./src/app.py`
+5. `python3 src/app.py`

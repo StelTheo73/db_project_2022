@@ -31,7 +31,7 @@ class Window(tk.Tk):
             "Statistics"      : StatisticsPage
         }
         
-        self.geometry("1000x600")
+        self.geometry("800x500")
         self.title("My Championship")
         self.minsize(width=550, height=350)
 
