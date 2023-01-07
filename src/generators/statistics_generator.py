@@ -60,23 +60,11 @@ def simulate_match(match, stat_id):
     home_team_players = get_players(match["home_team"])
     away_team_players = get_players(match["away_team"])
     minutes = [m for m in range(0, 91)]
-    #print(home_team_players)
-    #print(away_team_players)
-    #home_team_on_players = select_random_players_by_position(home_team_players, "GK", 1) + \
-    #                        select_random_players_by_position(home_team_players, "DEF", 4) + \
-    #                        select_random_players_by_position(home_team_players, "MID", 3) + \
-    #                        select_random_players_by_position(home_team_players, "ATT", 3)
-    
-    #away_team_on_players = select_random_players_by_position(away_team_players, "GK", 1) + \
-    #                        select_random_players_by_position(away_team_players, "DEF", 4) + \
-    #                        select_random_players_by_position(away_team_players, "MID", 3) + \
-    #                        select_random_players_by_position(away_team_players, "ATT", 3)
+
     home_team_on_players = home_team_players
     away_team_on_players = away_team_players
-    #print("selected_eleven")
 
     # Penalties & Fouls
-    #print("penalties & fouls")
     red_players = []
     yellow_players = []
     penalties = nrandom.choice([0, 1, 2], p = [0.88, 0.1, 0.02], size=(1))[0]
@@ -132,7 +120,6 @@ def simulate_match(match, stat_id):
 
     # Home Team Goals & Assists
     goals = match["home_team_goals"]
-    #print("home goals")
     for _ in range(goals):
         minute = random.choice(minutes)
         is_own_goal = nrandom.choice([0, 1], p=[0.98, 0.02], size=(1))[0]
@@ -156,7 +143,6 @@ def simulate_match(match, stat_id):
 
     # Away Team Goals & Assists
     goals = match["away_team_goals"]
-    #print("away goals")
     for _ in range(goals):
         minute = random.choice(minutes)
         is_own_goal = nrandom.choice([0, 1], p=[0.98, 0.02], size=(1))[0]
@@ -177,7 +163,6 @@ def simulate_match(match, stat_id):
             stat_id+=1
 
     # Offsides and Corners
-    #print("offsides & corners")
     offsides = nrandom.choice([0, 1, 2, 3, 4, 5], p = [0.05, 0.15, 0.3, 0.3, 0.15, 0.05], size=(1))[0]
     corners = nrandom.choice([0, 1, 2, 3, 4, 5, 6, 7], p = [0.05, 0.1, 0.15, 0.2, 0.2, 0.15, 0.1, 0.05], size=(1))[0]
     for i in range(1, offsides+corners+1, 1):
@@ -199,7 +184,6 @@ def simulate_match(match, stat_id):
             stat_id+=1
 
     return statistics_list, stat_id
-
 
 def generate_statistic(stat_name, minute, match_id, player_id, statistic_id):
     stat = {
