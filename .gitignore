@@ -4,4 +4,9 @@ pyvenv.cfg
 Lib/
 Scripts/
 ~$*
+
+# Files for submision
 github_repository.txt
+Presentation.*
+REPORT.*
+acm_submission_template.*
